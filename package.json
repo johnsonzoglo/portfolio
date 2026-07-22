@@ -1,0 +1,10 @@
+{
+  "name": "jz-portfolio-market",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Johnson Zoglo portfolio, stream vault, and local commerce platform",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check server.js && node --check shop.js && node --check checkout.js && node --check admin.js"
+  }
+}

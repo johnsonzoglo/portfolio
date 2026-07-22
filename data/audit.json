@@ -1,0 +1,30 @@
+[
+  {
+    "id": "1b4b5555-d16a-4b85-948d-d50b371ba042",
+    "at": "2026-07-15T14:44:25.214Z",
+    "user": "owner",
+    "action": "auth.login",
+    "detail": "owner"
+  },
+  {
+    "id": "3aeee266-c8ad-4a99-a6b6-7353226a699e",
+    "at": "2026-07-15T14:41:25.513Z",
+    "user": "owner",
+    "action": "discount.deleted",
+    "detail": "078d99e4-48c2-419c-9373-f77975ba7cf0"
+  },
+  {
+    "id": "1b547d0b-f232-4ae7-bd7d-20bb64441326",
+    "at": "2026-07-15T14:41:25.494Z",
+    "user": "owner",
+    "action": "discount.created",
+    "detail": "TEST10"
+  },
+  {
+    "id": "4b41237e-5ae2-4c39-a01c-84e903f87226",
+    "at": "2026-07-15T14:41:25.264Z",
+    "user": "owner",
+    "action": "auth.login",
+    "detail": "owner"
+  }
+]

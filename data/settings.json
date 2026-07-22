@@ -1,0 +1,1 @@
+{"currency":"USD","lowStockThreshold":3,"taxRate":0,"contactEmail":"hello@johnsonzoglo.com","contactPhone":"","bankInstructions":"Provided after order confirmation","deliveryZones":[{"id":"pickup","name":"Collection / Pickup","fee":0},{"id":"local","name":"Local delivery","fee":10},{"id":"national","name":"National delivery","fee":25}]}

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="JZ Market — shop games, phones, laptops, cars and useful gadgets." />
+  <meta name="theme-color" content="#090a0f" /><title>JZ Market — Tech, Games, Cars & More</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" /><link rel="stylesheet" href="social-icons.css" /><link rel="stylesheet" href="shop.css" /><link rel="stylesheet" href="market.css" /><link rel="stylesheet" href="commerce.css" />
+</head>
+<body class="shop-page">
+  <div class="grain" aria-hidden="true"></div>
+  <header class="site-header shop-header">
+    <a class="brand" href="index.html"><span>JZ</span><i>MARKET</i></a>
+    <nav class="nav"><a href="index.html">Portfolio</a><a href="streams.html">Streams</a><a href="#catalog">Market</a></nav>
+    <button class="cart-trigger" id="cartTrigger" type="button">My cart <span id="cartCount">0</span></button>
+  </header>
+  <aside class="social-rail" aria-label="Social media links">
+    <span>Follow JZ</span><a href="https://discord.com/" target="_blank" rel="noreferrer" aria-label="Johnson Zoglo on Discord"><img src="assets/social/discord.svg" alt="" /><i>Discord</i></a><a href="https://www.facebook.com/" target="_blank" rel="noreferrer" aria-label="Johnson Zoglo on Facebook"><img src="assets/social/facebook.svg" alt="" /><i>Facebook</i></a><a href="https://www.tiktok.com/" target="_blank" rel="noreferrer" aria-label="Johnson Zoglo on TikTok"><img src="assets/social/tiktok.svg" alt="" /><i>TikTok</i></a><a href="https://www.instagram.com/" target="_blank" rel="noreferrer" aria-label="Johnson Zoglo on Instagram"><img src="assets/social/instagram.svg" alt="" /><i>Instagram</i></a>
+  </aside>
+  <main>
+    <section class="shop-hero market-hero">
+      <div class="shop-hero-copy reveal visible"><p class="overline">Tech / Games / Cars / Everyday finds</p><h1>FIND YOUR<br /><span>NEXT THING.</span></h1><p>A flexible marketplace for useful technology, entertainment, vehicles and more — selected and sold with personal support.</p><a href="#catalog" class="btn btn-bright">Explore the market ↓</a></div>
+      <div class="hero-product market-stack" aria-hidden="true"><div class="market-phone"><i></i></div><div class="market-laptop"><b>JZ</b></div><div class="market-key">NEW<br />DROP</div><em>MARKET / 001</em></div>
+    </section>
+    <div class="shop-ticker"><div><span>PHONES</span><i>●</i><span>LAPTOPS</span><i>●</i><span>GAMES</span><i>●</i><span>CARS</span><i>●</i><span>GADGETS</span><i>●</i><span>PHONES</span><i>●</i><span>LAPTOPS</span><i>●</i><span>GAMES</span><i>●</i><span>CARS</span><i>●</i><span>GADGETS</span><i>●</i></div></div>
+
+    <section id="catalog" class="catalog shell">
+      <div class="catalog-head"><div><p class="overline">Available now</p><h2>THE MARKET</h2></div><p><span id="resultCount">10</span> products</p></div>
+      <div class="filters" role="group" aria-label="Filter products">
+        <button class="filter active" data-filter="all">Everything</button><button class="filter" data-filter="phones">Phones</button><button class="filter" data-filter="laptops">Laptops</button><button class="filter" data-filter="games">Games</button><button class="filter" data-filter="cars">Cars</button><button class="filter" data-filter="gadgets">Gadgets</button>
+      </div>
+      <div class="product-grid" id="productGrid">
+        <article class="product" data-category="phones" data-id="iphone-15-pro" data-name="iPhone 15 Pro" data-price="999"><div class="product-art phone-art phone-apple"><div class="market-device"><i></i><b>PRO</b></div><span>256GB / UNLOCKED</span><em>POPULAR</em></div><div class="product-info"><div><p>Phone / New</p><h3>iPhone 15 Pro</h3></div><strong>$999</strong></div><button class="add-cart">Add to cart <span>＋</span></button></article>
+        <article class="product" data-category="phones" data-id="galaxy-s24" data-name="Galaxy S24 Ultra" data-price="1099"><div class="product-art phone-art phone-galaxy"><div class="market-device square"><i></i><b>AI</b></div><span>256GB / UNLOCKED</span></div><div class="product-info"><div><p>Phone / New</p><h3>Galaxy S24 Ultra</h3></div><strong>$1,099</strong></div><button class="add-cart">Add to cart <span>＋</span></button></article>
+        <article class="product" data-category="laptops" data-id="macbook-air" data-name="MacBook Air M3" data-price="1199"><div class="product-art market-laptop-art"><div class="product-laptop"><b>CREATE.</b></div><span>16GB / 512GB</span></div><div class="product-info"><div><p>Laptop / New</p><h3>MacBook Air M3</h3></div><strong>$1,199</strong></div><button class="add-cart">Add to cart <span>＋</span></button></article>
+        <article class="product" data-category="laptops" data-id="thinkpad-x1" data-name="ThinkPad X1 Carbon" data-price="1299"><div class="product-art market-laptop-art dark-laptop"><div class="product-laptop"><b>WORK / PLAY</b></div><span>16GB / 512GB</span></div><div class="product-info"><div><p>Laptop / New</p><h3>ThinkPad X1 Carbon</h3></div><strong>$1,299</strong></div><button class="add-cart">Add to cart <span>＋</span></button></article>
+        <article class="product" data-category="games" data-id="fc-26" data-name="FC 26" data-price="69"><div class="product-art game-art game-fc"><div class="game-box"><small>JZ SELECT</small><b>FC<br /><i>26</i></b><span>THE WORLD'S GAME</span></div><em>NEW</em></div><div class="product-info"><div><p>Game / PS5 · Xbox</p><h3>FC 26</h3></div><strong>$69</strong></div><button class="add-cart">Add to cart <span>＋</span></button></article>
+        <article class="product" data-category="games" data-id="forza" data-name="Forza Horizon 5" data-price="59"><div class="product-art game-art game-forza"><div class="game-box"><small>XBOX / PC</small><b>FORZA<br /><i>HORIZON 5</i></b><span>ULTIMATE ADVENTURE</span></div></div><div class="product-info"><div><p>Game / Xbox · PC</p><h3>Forza Horizon 5</h3></div><strong>$59</strong></div><button class="add-cart">Add to cart <span>＋</span></button></article>
+        <article class="product" data-category="cars" data-id="toyota-camry" data-name="Toyota Camry 2022" data-price="24500"><div class="product-art market-car-art car-sky"><div class="product-car"><i></i><b></b><b></b></div><span>AUTOMATIC / 38,000 KM</span><em>VERIFIED</em></div><div class="product-info"><div><p>Car / Pre-owned</p><h3>Toyota Camry 2022</h3></div><strong>$24,500</strong></div><button class="add-cart">Add to inquiry <span>＋</span></button></article>
+        <article class="product" data-category="cars" data-id="benz-c300" data-name="Mercedes-Benz C300" data-price="38500"><div class="product-art market-car-art car-night"><div class="product-car luxury"><i></i><b></b><b></b></div><span>AUTOMATIC / 26,000 KM</span><em>VERIFIED</em></div><div class="product-info"><div><p>Car / Pre-owned</p><h3>Mercedes-Benz C300</h3></div><strong>$38,500</strong></div><button class="add-cart">Add to inquiry <span>＋</span></button></article>
+        <article class="product" data-category="gadgets" data-id="creator-camera" data-name="Creator Camera Kit" data-price="899"><div class="product-art camera-art"><div class="camera-shape"><i></i><b>4K</b></div><span>CREATE ANYWHERE</span></div><div class="product-info"><div><p>Creator gadget</p><h3>Creator Camera Kit</h3></div><strong>$899</strong></div><button class="add-cart">Add to cart <span>＋</span></button></article>
+        <article class="product" data-category="gadgets" data-id="stream-mic" data-name="USB Streaming Microphone" data-price="129"><div class="product-art mic-art"><div class="mic-shape"><i></i></div><span>SOUND LIKE A PRO</span></div><div class="product-info"><div><p>Creator gadget</p><h3>Streaming Microphone</h3></div><strong>$129</strong></div><button class="add-cart">Add to cart <span>＋</span></button></article>
+      </div>
+    </section>
+
+    <section id="support" class="shop-support"><div class="shell"><p class="overline">Why shop JZ Market?</p><div class="support-grid"><article><b>01</b><h3>Useful selection</h3><p>A growing mix of technology, entertainment, vehicles and everyday finds.</p></article><article><b>02</b><h3>Personal support</h3><p>Talk directly with Johnson before and after choosing your product.</p></article><article><b>03</b><h3>Quality checked</h3><p>Every physical item is inspected before collection or delivery.</p></article></div><footer><p>© <span id="year">2026</span> JZ Market</p><a href="index.html">Portfolio ↗</a><a href="#top">Back to top ↑</a></footer></div></section>
+  </main>
+  <aside class="cart-drawer" id="cartDrawer" aria-hidden="true"><div class="cart-top"><div><small>JZ MARKET</small><h2>Your cart</h2></div><button id="cartClose" aria-label="Close cart">×</button></div><div class="cart-items" id="cartItems"></div><div class="cart-empty" id="cartEmpty"><span>0</span><p>Your cart is ready for something good.</p></div><div class="cart-footer"><div><span>Estimated total</span><strong id="cartTotal">$0</strong></div><a id="checkoutLink" href="mailto:hello@johnsonzoglo.com">Send order request ↗</a><small>Your order is confirmed personally. No payment is taken on this website.</small></div></aside><div class="cart-overlay" id="cartOverlay"></div>
+  <script src="script.js"></script><script src="shop.js"></script>
+</body>
+</html>

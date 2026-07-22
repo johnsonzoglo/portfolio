@@ -1,0 +1,2 @@
+.social-rail img{width:17px;height:17px;display:block;filter:brightness(0) invert(1);transition:filter .25s}
+.social-rail a:hover img{filter:brightness(0)}
