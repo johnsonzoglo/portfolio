@@ -4,10 +4,10 @@ A creator portfolio, local Stream Vault, and general marketplace for games, phon
 
 ## Run locally
 
-Node.js is required. From this folder, run:
+Node.js is required. From this folder, seed the owner password and start the server:
 
 ```powershell
-$env:ADMIN_PASSWORD = 'choose-a-private-password'
+npm run seed:admin
 npm start
 ```
 
@@ -26,16 +26,17 @@ You can also use the launcher:
 powershell -ExecutionPolicy Bypass -File .\server.ps1 -Port 8002 -AdminPassword 'choose-a-private-password'
 ```
 
-If no password is configured, the local development password is `admin123`. Never use that default on a public server.
+The password prompt hides the value while you type. There is no default admin password.
 
 ## Deploy with Dokploy
 
 1. Create a Docker Compose service from this GitHub repository.
-2. Set `ADMIN_PASSWORD` in Dokploy's Environment tab before deploying.
-3. Deploy using `docker-compose.yml`.
-4. In the Domains tab, add a domain for the `portfolio` service on port `8002`.
+2. Deploy using `docker-compose.yml`.
+3. Open the `portfolio` container terminal and run `npm run seed:admin`.
+4. Enter a password of at least 12 characters at the hidden prompt.
+5. In the Domains tab, add a domain for the `portfolio` service on port `8002`.
 
-The `portfolio_data_clean` and `portfolio_uploads_clean` named volumes preserve store data and uploaded product photos across redeployments. `ADMIN_PASSWORD` creates the owner account and resets its password whenever the container starts, making the Dokploy environment value authoritative.
+The `portfolio_data_clean` and `portfolio_uploads_clean` named volumes preserve store data and uploaded product photos across redeployments. Run `npm run seed:admin` again whenever the owner password needs to be reset.
 
 ## Commerce features
 

@@ -2,5 +2,4 @@ data/users.json
 assets/uploads/
 .env
 .env.*
-!.env.example
 *.log

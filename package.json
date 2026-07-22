@@ -5,6 +5,7 @@
   "description": "Johnson Zoglo portfolio, stream vault, and local commerce platform",
   "scripts": {
     "start": "node server.js",
-    "check": "node --check server.js && node --check shop.js && node --check checkout.js && node --check admin.js"
+    "seed:admin": "node scripts/seed-admin.js",
+    "check": "node --check server.js && node --check business.js && node --check scripts/seed-admin.js && node --check shop.js && node --check checkout.js && node --check admin.js"
   }
 }
