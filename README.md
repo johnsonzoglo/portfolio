@@ -32,7 +32,7 @@ If no password is configured, the local development password is `admin123`. Neve
 
 1. Create a Docker Compose service from this GitHub repository.
 2. Set `ADMIN_PASSWORD` in Dokploy's Environment tab before deploying.
-3. Deploy using `compose.yaml`.
+3. Deploy using `docker-compose.yml`.
 4. In the Domains tab, add a domain for the `portfolio` service on port `8002`.
 
 The `portfolio_data` and `portfolio_uploads` named volumes preserve store data and uploaded product photos across redeployments. `ADMIN_PASSWORD` creates the initial owner account only when the data volume has no `users.json` file.
