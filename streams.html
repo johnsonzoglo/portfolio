@@ -17,7 +17,7 @@
   <header class="site-header streams-header">
     <a class="brand" href="index.html"><span>JZ</span><i>STREAM VAULT</i></a>
     <nav class="nav"><a href="index.html">Portfolio</a><a href="#replays">Replays</a><a href="shop.html">Shop</a></nav>
-    <button class="upload-trigger" type="button" data-open-upload><span>＋</span> Upload replay</button>
+    <a class="upload-trigger" href="#replays">Browse replays</a>
   </header>
   <aside class="social-rail" aria-label="Social media links">
     <span>Follow JZ</span>
@@ -34,7 +34,7 @@
         <p class="overline"><span class="live-dot"></span> Replay archive / Always online</p>
         <h1>THE STREAM<br /><span>NEVER ENDS.</span></h1>
         <p>Missed it live? Catch the gameplay, reactions and best moments right here.</p>
-        <div><a class="btn btn-bright" href="#replays">Watch replays ↓</a><button class="text-upload" type="button" data-open-upload>Upload a new stream ↗</button></div>
+        <div><a class="btn btn-bright" href="#replays">Watch replays ↓</a></div>
       </div>
       <div class="stream-screen" aria-hidden="true"><div class="screen-top"><span>REC ●</span><b>JZ_LIVE_001</b></div><div class="screen-play">▶</div><div class="screen-chat"><i></i><i></i><i></i><i></i></div><small>00:42:16:08</small></div>
     </section>
@@ -43,27 +43,13 @@
       <div class="library-head"><div><p class="overline">Saved broadcasts</p><h2>REPLAY VAULT</h2></div><div class="library-count"><span id="streamCount">0</span><small>streams saved</small></div></div>
       <div class="replay-grid" id="replayGrid"></div>
       <div class="empty-vault" id="emptyVault">
-        <div class="empty-icon">▶</div><h3>Your vault is empty</h3><p>Upload a past stream and it will appear here, ready to watch.</p><button class="btn btn-bright" type="button" data-open-upload>Upload first replay ＋</button>
+        <div class="empty-icon">▶</div><h3>The vault is quiet</h3><p>New stream replays are coming soon.</p>
       </div>
     </section>
 
-    <section class="stream-note"><div class="shell"><p class="overline">A note about your uploads</p><h2>YOUR STREAMS.<br /><span>YOUR BROWSER.</span></h2><p>While this website is on localhost, uploaded videos stay privately inside this browser. They are not sent online or shared with anyone.</p><footer><p>© <span id="year">2026</span> Johnson Zoglo</p><div><a href="index.html">Portfolio ↗</a><a href="shop.html">Shop ↗</a></div><a href="#top">Back to top ↑</a></footer></div></section>
+    <section class="stream-note"><div class="shell"><p class="overline">From live to replay</p><h2>THE BEST RUNS.<br /><span>READY AGAIN.</span></h2><p>Gameplay, reactions, and standout moments, selected from the archive and published here.</p><footer><p>© <span id="year">2026</span> Johnson Zoglo</p><div><a href="index.html">Portfolio ↗</a><a href="shop.html">Shop ↗</a></div><a href="#top">Back to top ↑</a></footer></div></section>
   </main>
 
-  <div class="upload-modal" id="uploadModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="uploadTitle">
-    <div class="upload-panel">
-      <div class="upload-top"><div><small>ADD TO THE VAULT</small><h2 id="uploadTitle">Upload replay</h2></div><button id="uploadClose" type="button" aria-label="Close upload form">×</button></div>
-      <form id="uploadForm">
-        <label>Stream title<input id="streamTitle" name="title" type="text" placeholder="My best ranked match" maxlength="80" required /></label>
-        <div class="form-row"><label>Game / category<input id="streamGame" name="game" type="text" placeholder="e.g. FC 26" maxlength="50" required /></label><label>Stream date<input id="streamDate" name="date" type="date" required /></label></div>
-        <label class="file-drop" id="fileDrop"><input id="streamFile" name="video" type="file" accept="video/mp4,video/webm,video/ogg,.mov" required /><span class="file-plus">＋</span><b>Choose your replay video</b><small id="fileName">MP4, WebM, OGG or MOV</small></label>
-        <div class="upload-progress" id="uploadProgress"><i></i><span>Saving video to your browser…</span></div>
-        <p class="form-message" id="formMessage" role="status"></p>
-        <button class="submit-upload" type="submit">Save to stream vault <span>↗</span></button>
-      </form>
-    </div>
-  </div>
-  <div class="modal-overlay" id="modalOverlay"></div>
   <script src="script.js"></script><script src="streams.js"></script>
 </body>
 </html>

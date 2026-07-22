@@ -8,6 +8,7 @@ const DATA = path.join(ROOT, 'data');
 const PRODUCTS_FILE = path.join(DATA, 'products.json');
 const ORDERS_FILE = path.join(DATA, 'orders.json');
 const USERS_FILE = path.join(DATA, 'users.json');
+const STREAMS_FILE = path.join(DATA, 'streams.json');
 const UPLOADS = path.join(ROOT, 'assets', 'uploads');
 const PORT = Number(process.env.PORT || 8002);
 const HOST = process.env.HOST || '0.0.0.0';
@@ -23,8 +24,9 @@ const hashPassword=(password,salt=crypto.randomBytes(16).toString('hex'))=>`${sa
 const verifyPassword=(password,stored)=>{try{const[salt,hash]=stored.split(':'),actual=crypto.scryptSync(password,salt,64),expected=Buffer.from(hash,'hex');return actual.length===expected.length&&crypto.timingSafeEqual(actual,expected)}catch{return false}};
 const createOwner=password=>({id:crypto.randomUUID(),username:'owner',name:'Johnson Zoglo',role:'owner',passwordHash:hashPassword(password),active:true,createdAt:new Date().toISOString()});
 if(!fs.existsSync(USERS_FILE))fs.writeFileSync(USERS_FILE,JSON.stringify(ADMIN_PASSWORD?[createOwner(ADMIN_PASSWORD)]:[],null,2));
+if(!fs.existsSync(STREAMS_FILE))fs.writeFileSync(STREAMS_FILE,'[]');
 
-const mime = { '.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json; charset=utf-8','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.svg':'image/svg+xml','.webp':'image/webp','.mp4':'video/mp4','.webm':'video/webm','.ico':'image/x-icon' };
+const mime = { '.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json; charset=utf-8','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.svg':'image/svg+xml','.webp':'image/webp','.mp4':'video/mp4','.webm':'video/webm','.ogg':'video/ogg','.ogv':'video/ogg','.mov':'video/quicktime','.ico':'image/x-icon' };
 const readJson = (file, fallback=[]) => { try { return JSON.parse(fs.readFileSync(file, 'utf8')); } catch { return fallback; } };
 const writeJson = (file, value) => {
   writeQueue = writeQueue.then(async () => {
@@ -52,6 +54,9 @@ async function api(req,res,url) {
   if (req.method==='GET' && url.pathname==='/api/store-settings') {
     const settings=business.read('settings',business.defaults); return json(res,200,{currency:settings.currency,taxRate:settings.taxRate,deliveryZones:settings.deliveryZones,contactEmail:settings.contactEmail,contactPhone:settings.contactPhone});
   }
+  if (req.method==='GET' && url.pathname==='/api/streams') {
+    return json(res,200,readJson(STREAMS_FILE).filter(stream=>stream.published!==false).sort((a,b)=>(Number(b.featured)-Number(a.featured))||String(b.date).localeCompare(String(a.date))));
+  }
   if (req.method==='POST' && url.pathname==='/api/orders') {
     const data=await body(req,200000); const customer=data.customer||{}; const requested=Array.isArray(data.items)?data.items:[];
     if(!clean(customer.name)||!clean(customer.email)||!clean(customer.phone)||!clean(customer.address)||!requested.length) return json(res,400,{error:'Complete your contact, delivery, and cart information.'});
@@ -64,6 +69,20 @@ async function api(req,res,url) {
   if (!url.pathname.startsWith('/api/admin/')) return json(res,404,{error:'API route not found'});
   const session=authorized(req);if (!session) return json(res,401,{error:'Please sign in again.'});
   if (req.method==='GET' && url.pathname==='/api/admin/products') return json(res,200,readJson(PRODUCTS_FILE));
+  if (req.method==='GET' && url.pathname==='/api/admin/streams') return json(res,200,readJson(STREAMS_FILE).sort((a,b)=>String(b.createdAt).localeCompare(String(a.createdAt))));
+  if(req.method==='POST' && url.pathname==='/api/admin/streams') {
+    const videoTypes={'video/mp4':'.mp4','video/webm':'.webm','video/ogg':'.ogv','video/quicktime':'.mov'},type=String(req.headers['content-type']||'').split(';')[0],extension=videoTypes[type];
+    if(!extension)return json(res,415,{error:'Choose an MP4, WebM, OGG, or MOV video.'});
+    const title=clean(url.searchParams.get('title'),80),game=clean(url.searchParams.get('game'),50),date=clean(url.searchParams.get('date'),20);
+    if(!title||!game||!/^\d{4}-\d{2}-\d{2}$/.test(date))return json(res,400,{error:'Title, category, and a valid date are required.'});
+    const declared=Number(req.headers['content-length']||0);if(declared>500_000_000)return json(res,413,{error:'Video must be smaller than 500MB.'});
+    const id=crypto.randomUUID(),name=`stream-${id}${extension}`,temporary=path.join(UPLOADS,`${name}.upload`),destination=path.join(UPLOADS,name);
+    let size=0,handle;try{handle=await fs.promises.open(temporary,'wx');for await(const chunk of req){size+=chunk.length;if(size>500_000_000)throw new Error('VIDEO_TOO_LARGE');await handle.write(chunk)}await handle.close();handle=null;await fs.promises.rename(temporary,destination)}catch(error){if(handle)await handle.close().catch(()=>{});await fs.promises.rm(temporary,{force:true});if(error.message==='VIDEO_TOO_LARGE')return json(res,413,{error:'Video must be smaller than 500MB.'});throw error}
+    const streams=readJson(STREAMS_FILE),stream={id,title,game,date,src:`assets/uploads/${name}`,size,published:url.searchParams.get('published')!=='false',featured:url.searchParams.get('featured')==='true',createdAt:new Date().toISOString()};if(stream.featured)streams.forEach(item=>item.featured=false);streams.unshift(stream);await writeJson(STREAMS_FILE,streams);business.audit('stream.created',stream.title,session.user.username);return json(res,201,stream);
+  }
+  const streamMatch=url.pathname.match(/^\/api\/admin\/streams\/([^/]+)$/);
+  if(streamMatch&&req.method==='PATCH') { const data=await body(req,50000),streams=readJson(STREAMS_FILE),stream=streams.find(item=>item.id===decodeURIComponent(streamMatch[1]));if(!stream)return json(res,404,{error:'Stream not found'});if(data.title!==undefined)stream.title=clean(data.title,80);if(data.game!==undefined)stream.game=clean(data.game,50);if(data.date!==undefined&&/^\d{4}-\d{2}-\d{2}$/.test(data.date))stream.date=data.date;if(typeof data.published==='boolean')stream.published=data.published;if(typeof data.featured==='boolean'){if(data.featured)streams.forEach(item=>item.featured=false);stream.featured=data.featured}await writeJson(STREAMS_FILE,streams);business.audit('stream.updated',stream.title,session.user.username);return json(res,200,stream); }
+  if(streamMatch&&req.method==='DELETE') { const streams=readJson(STREAMS_FILE),stream=streams.find(item=>item.id===decodeURIComponent(streamMatch[1]));if(!stream)return json(res,404,{error:'Stream not found'});const file=path.resolve(ROOT,stream.src);if(file.startsWith(UPLOADS+path.sep))await fs.promises.rm(file,{force:true});await writeJson(STREAMS_FILE,streams.filter(item=>item.id!==stream.id));business.audit('stream.deleted',stream.title,session.user.username);return json(res,200,{ok:true}); }
   if (req.method==='POST' && url.pathname==='/api/admin/products') {
     const data=await body(req,200000); if(!clean(data.name)||!clean(data.category)||!(Number(data.price)>=0))return json(res,400,{error:'Name, category, and valid price are required.'});
     const products=readJson(PRODUCTS_FILE); const product={id:`${clean(data.name,40).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}-${crypto.randomBytes(2).toString('hex')}`,...normalizeProduct(data)}; products.unshift(product); await writeJson(PRODUCTS_FILE,products); business.audit('product.created',product.name); return json(res,201,product);
@@ -93,7 +112,7 @@ async function api(req,res,url) {
 
 function normalizeProduct(data){return{name:clean(data.name,100),category:clean(data.category,30).toLowerCase(),price:money(data.price),stock:Math.max(0,Math.floor(Number(data.stock)||0)),condition:['new','used','refurbished'].includes(data.condition)?data.condition:'new',description:clean(data.description,500),image:clean(data.image,500),art:clean(data.art,40),active:data.active!==false};}
 
-function serveStatic(req,res,url){let relative=decodeURIComponent(url.pathname);if(relative==='/')relative='/index.html';const file=path.resolve(ROOT,`.${relative}`);if(!file.startsWith(ROOT+path.sep)||!fs.existsSync(file)||!fs.statSync(file).isFile()){res.writeHead(404,{'Content-Type':'text/plain'});return res.end('404 - File not found');}const stat=fs.statSync(file);res.writeHead(200,{'Content-Type':mime[path.extname(file).toLowerCase()]||'application/octet-stream','Content-Length':stat.size,'Cache-Control':'no-cache'});fs.createReadStream(file).pipe(res);}
+function serveStatic(req,res,url){let relative=decodeURIComponent(url.pathname);if(relative==='/')relative='/index.html';const file=path.resolve(ROOT,`.${relative}`);if(!file.startsWith(ROOT+path.sep)||!fs.existsSync(file)||!fs.statSync(file).isFile()){res.writeHead(404,{'Content-Type':'text/plain'});return res.end('404 - File not found');}const stat=fs.statSync(file),type=mime[path.extname(file).toLowerCase()]||'application/octet-stream',range=req.headers.range;if(range){const match=range.match(/^bytes=(\d*)-(\d*)$/);if(!match||(!match[1]&&!match[2])){res.writeHead(416,{'Content-Range':`bytes */${stat.size}`});return res.end()}const suffix=!match[1]&&match[2]?Number(match[2]):0,start=suffix?Math.max(0,stat.size-suffix):Number(match[1]),end=suffix?stat.size-1:(match[2]?Math.min(Number(match[2]),stat.size-1):stat.size-1);if(!Number.isFinite(start)||!Number.isFinite(end)||start>end||start>=stat.size){res.writeHead(416,{'Content-Range':`bytes */${stat.size}`});return res.end()}res.writeHead(206,{'Content-Type':type,'Content-Length':end-start+1,'Content-Range':`bytes ${start}-${end}/${stat.size}`,'Accept-Ranges':'bytes','Cache-Control':'no-cache'});if(req.method==='HEAD')return res.end();return fs.createReadStream(file,{start,end}).pipe(res)}res.writeHead(200,{'Content-Type':type,'Content-Length':stat.size,'Accept-Ranges':'bytes','Cache-Control':'no-cache'});if(req.method==='HEAD')return res.end();fs.createReadStream(file).pipe(res);}
 
 const server=http.createServer(async(req,res)=>{const url=new URL(req.url,`http://${req.headers.host||'localhost'}`);try{if(url.pathname.startsWith('/api/'))await api(req,res,url);else serveStatic(req,res,url);}catch(error){console.error(error);if(!res.headersSent)json(res,error.message==='Request too large'?413:500,{error:error.message||'Server error'});}});
 server.listen(PORT,HOST,()=>console.log(`JZ Commerce running at http://${HOST}:${PORT}`));

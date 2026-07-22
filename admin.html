@@ -32,6 +32,7 @@
       <nav class="sidebar-nav" aria-label="Admin navigation">
         <button class="nav-item active" data-view="overview"><i data-lucide="layout-dashboard"></i><span>Overview</span></button>
         <button class="nav-item" data-view="products"><i data-lucide="package"></i><span>Products</span></button>
+        <button class="nav-item" data-view="streams"><i data-lucide="clapperboard"></i><span>Streams</span></button>
         <button class="nav-item" data-view="orders"><i data-lucide="shopping-bag"></i><span>Orders</span><b id="newOrders">0</b></button>
       </nav>
       <div class="sidebar-section">
@@ -54,6 +55,7 @@
         <div class="topbar-actions">
           <button class="icon-button" id="refreshData" type="button" title="Refresh data" aria-label="Refresh data"><i data-lucide="refresh-cw"></i></button>
           <button class="primary-button compact" id="newProduct" type="button"><i data-lucide="plus"></i><span>Add product</span></button>
+          <button class="primary-button compact" id="newStream" type="button" hidden><i data-lucide="upload"></i><span>Upload stream</span></button>
         </div>
       </header>
 
@@ -85,6 +87,17 @@
           <span class="result-count" id="productResultCount">0 products</span>
         </div>
         <div class="data-surface"><div class="product-table" id="productsTable"></div></div>
+      </section>
+
+      <section class="app-view" id="streamsView">
+        <div class="control-row">
+          <label class="search-control"><i data-lucide="search"></i><input id="streamSearch" type="search" placeholder="Search streams"></label>
+          <select id="streamFilter" aria-label="Filter streams">
+            <option value="all">All streams</option><option value="published">Published</option><option value="draft">Drafts</option><option value="featured">Featured</option>
+          </select>
+          <span class="result-count" id="streamResultCount">0 streams</span>
+        </div>
+        <div class="data-surface"><div class="stream-table" id="streamsTable"></div></div>
       </section>
 
       <section class="app-view" id="ordersView">
@@ -120,6 +133,24 @@
     </form>
   </div>
   <button class="drawer-overlay" id="editorOverlay" type="button" aria-label="Close product editor"></button>
+
+  <div class="drawer" id="streamEditor" aria-hidden="true">
+    <form id="streamForm">
+      <header class="drawer-header"><div><p class="eyebrow">Stream Vault</p><h2 id="streamEditorTitle">Upload stream</h2></div><button class="icon-button" type="button" id="streamEditorClose" title="Close" aria-label="Close"><i data-lucide="x"></i></button></header>
+      <input type="hidden" id="streamId">
+      <div class="form-grid">
+        <label class="wide">Stream title<input id="streamTitle" required maxlength="80"></label>
+        <label>Game or category<input id="streamGame" required maxlength="50"></label>
+        <label>Stream date<input id="streamDate" type="date" required></label>
+      </div>
+      <label class="upload-field" id="streamUploadField"><input id="streamFile" type="file" accept="video/mp4,video/webm,video/ogg,video/quicktime,.mov"><i data-lucide="file-video"></i><span id="streamFileName">Choose replay video</span><small>MP4, WebM, OGG or MOV, up to 500MB</small></label>
+      <label class="visibility-control"><span><strong>Published</strong><small>Show this replay in the public Stream Vault</small></span><input id="streamPublished" type="checkbox" checked></label>
+      <label class="visibility-control"><span><strong>Featured stream</strong><small>Move this replay to the front of the vault</small></span><input id="streamFeatured" type="checkbox"></label>
+      <div class="upload-meter" id="streamUploadMeter" hidden><i></i><span>Uploading video...</span></div>
+      <p class="form-message" id="streamEditorMessage" role="alert"></p>
+      <footer class="drawer-actions"><button class="secondary-button" type="button" id="streamEditorCancel">Cancel</button><button class="primary-button" type="submit"><i data-lucide="save"></i><span id="streamSaveLabel">Upload stream</span></button></footer>
+    </form>
+  </div>
   <button class="sidebar-overlay" id="sidebarOverlay" type="button" aria-label="Close navigation"></button>
 
   <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>

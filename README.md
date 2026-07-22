@@ -52,4 +52,4 @@ Online card payments, transactional email, delivery pricing, tax, customer accou
 
 ## Stream storage
 
-The Stream Vault stores uploaded replay videos locally in the current browser with IndexedDB. A public version needs authenticated cloud video storage.
+The Stream Vault is managed from the admin dashboard. Video metadata is stored in `data/streams.json`, and uploaded replay files are stored in the persistent `assets/uploads/` volume.
