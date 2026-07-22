@@ -28,6 +28,15 @@ powershell -ExecutionPolicy Bypass -File .\server.ps1 -Port 8002 -AdminPassword 
 
 If no password is configured, the local development password is `admin123`. Never use that default on a public server.
 
+## Deploy with Dokploy
+
+1. Create a Docker Compose service from this GitHub repository.
+2. Set `ADMIN_PASSWORD` in Dokploy's Environment tab before deploying.
+3. Deploy using `compose.yaml`.
+4. In the Domains tab, add a domain for the `portfolio` service on port `8002`.
+
+The `portfolio_data` and `portfolio_uploads` named volumes preserve store data and uploaded product photos across redeployments. `ADMIN_PASSWORD` creates the initial owner account only when the data volume has no `users.json` file.
+
 ## Commerce features
 
 - Products are stored in `data/products.json`.

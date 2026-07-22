@@ -10,6 +10,7 @@ const ORDERS_FILE = path.join(DATA, 'orders.json');
 const USERS_FILE = path.join(DATA, 'users.json');
 const UPLOADS = path.join(ROOT, 'assets', 'uploads');
 const PORT = Number(process.env.PORT || 8002);
+const HOST = process.env.HOST || '0.0.0.0';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
 const sessions = new Map();
 const loginAttempts = new Map();
@@ -94,4 +95,4 @@ function normalizeProduct(data){return{name:clean(data.name,100),category:clean(
 function serveStatic(req,res,url){let relative=decodeURIComponent(url.pathname);if(relative==='/')relative='/index.html';const file=path.resolve(ROOT,`.${relative}`);if(!file.startsWith(ROOT+path.sep)||!fs.existsSync(file)||!fs.statSync(file).isFile()){res.writeHead(404,{'Content-Type':'text/plain'});return res.end('404 - File not found');}const stat=fs.statSync(file);res.writeHead(200,{'Content-Type':mime[path.extname(file).toLowerCase()]||'application/octet-stream','Content-Length':stat.size,'Cache-Control':'no-cache'});fs.createReadStream(file).pipe(res);}
 
 const server=http.createServer(async(req,res)=>{const url=new URL(req.url,`http://${req.headers.host||'localhost'}`);try{if(url.pathname.startsWith('/api/'))await api(req,res,url);else serveStatic(req,res,url);}catch(error){console.error(error);if(!res.headersSent)json(res,error.message==='Request too large'?413:500,{error:error.message||'Server error'});}});
-server.listen(PORT,'127.0.0.1',()=>console.log(`JZ Commerce running at http://localhost:${PORT}`));
+server.listen(PORT,HOST,()=>console.log(`JZ Commerce running at http://${HOST}:${PORT}`));
