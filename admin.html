@@ -1,1 +1,128 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#090a0f"><title>Owner Dashboard — JZ Market</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="admin.css"></head><body class="admin-page"><section class="admin-login" id="loginView"><form id="loginForm"><a class="brand" href="index.html"><span>JZ</span><i>OWNER</i></a><p class="overline">Private dashboard</p><h1>WELCOME<br>BACK.</h1><label>Admin password<input id="password" type="password" required autofocus></label><p id="loginMessage"></p><button type="submit">Open dashboard ↗</button><small>Local starter password: <code>admin123</code>. Change it before publishing.</small></form></section><div class="dashboard" id="dashboard"><aside class="admin-nav"><a class="brand" href="index.html"><span>JZ</span><i>OWNER</i></a><nav><button class="tab active" data-tab="products">Products</button><button class="tab" data-tab="orders">Orders <span id="newOrders">0</span></button></nav><div><a href="shop.html" target="_blank">View market ↗</a><button id="logout">Sign out</button></div></aside><main class="admin-main"><header><div><p class="overline">JZ Market management</p><h1 id="viewTitle">PRODUCTS</h1></div><button class="new-product" id="newProduct">＋ Add product</button></header><section id="productsView"><div class="admin-stats"><div><span id="productTotal">0</span><small>Products</small></div><div><span id="stockTotal">0</span><small>Items in stock</small></div><div><span id="lowStock">0</span><small>Low stock</small></div></div><div class="data-table" id="productsTable"></div></section><section id="ordersView" hidden><div class="admin-stats"><div><span id="orderTotal">0</span><small>Orders</small></div><div><span id="pendingTotal">0</span><small>Open orders</small></div><div><span id="salesTotal">$0</span><small>Order value</small></div></div><div class="order-list" id="ordersList"></div></section></main></div><div class="editor" id="editor" aria-hidden="true"><form id="productForm"><div class="editor-top"><div><small>INVENTORY</small><h2 id="editorTitle">Add product</h2></div><button type="button" id="editorClose">×</button></div><input type="hidden" id="productId"><div class="editor-grid"><label>Product name<input id="productName" required maxlength="100"></label><label>Category<select id="productCategory"><option>phones</option><option>laptops</option><option>games</option><option>cars</option><option>gadgets</option><option>fashion</option><option>home</option><option>other</option></select></label><label>Price (USD)<input id="productPrice" type="number" min="0" step="0.01" required></label><label>Stock quantity<input id="productStock" type="number" min="0" step="1" required></label><label>Condition<select id="productCondition"><option value="new">New</option><option value="used">Used</option><option value="refurbished">Refurbished</option></select></label><label class="toggle">Visible in shop<input id="productActive" type="checkbox" checked></label></div><label>Description<textarea id="productDescription" rows="3" maxlength="500"></textarea></label><label class="photo-field">Product photo<input id="productPhoto" type="file" accept="image/png,image/jpeg,image/webp"><span id="photoName">Choose PNG, JPEG, or WebP under 5MB</span></label><input type="hidden" id="productImage"><p id="editorMessage"></p><button class="save-product" type="submit">Save product <span>↗</span></button></form></div><div class="editor-overlay" id="editorOverlay"></div><script src="admin.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#101210">
+  <title>JZ Market Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin-page">
+  <section class="admin-login" id="loginView">
+    <div class="login-brand" aria-label="JZ Market"><span>JZ</span><strong>Market Admin</strong></div>
+    <form id="loginForm" class="login-panel">
+      <div class="login-icon"><i data-lucide="lock-keyhole"></i></div>
+      <p class="eyebrow">Secure workspace</p>
+      <h1>Welcome back</h1>
+      <p class="login-copy">Sign in to manage the JZ Market storefront.</p>
+      <label>Username<input id="username" autocomplete="username" value="owner" required></label>
+      <label>Password<input id="password" type="password" autocomplete="current-password" required autofocus></label>
+      <p class="form-message" id="loginMessage" role="alert"></p>
+      <button class="primary-button" type="submit"><span>Sign in</span><i data-lucide="arrow-right"></i></button>
+      <a class="back-link" href="index.html"><i data-lucide="arrow-left"></i> Back to portfolio</a>
+    </form>
+  </section>
+
+  <div class="admin-shell" id="dashboard">
+    <aside class="sidebar" id="sidebar">
+      <a class="sidebar-brand" href="index.html"><span>JZ</span><strong>Market</strong></a>
+      <nav class="sidebar-nav" aria-label="Admin navigation">
+        <button class="nav-item active" data-view="overview"><i data-lucide="layout-dashboard"></i><span>Overview</span></button>
+        <button class="nav-item" data-view="products"><i data-lucide="package"></i><span>Products</span></button>
+        <button class="nav-item" data-view="orders"><i data-lucide="shopping-bag"></i><span>Orders</span><b id="newOrders">0</b></button>
+      </nav>
+      <div class="sidebar-section">
+        <span>Manage</span>
+        <a href="operations.html"><i data-lucide="chart-no-axes-combined"></i> Operations</a>
+        <a href="team.html"><i data-lucide="users"></i> Team access</a>
+        <a href="shop.html" target="_blank" rel="noopener"><i data-lucide="external-link"></i> View market</a>
+      </div>
+      <div class="account-block">
+        <div class="account-avatar" id="accountAvatar">JZ</div>
+        <div><strong id="accountName">Owner</strong><span>Administrator</span></div>
+        <button class="icon-button" id="logout" type="button" title="Sign out" aria-label="Sign out"><i data-lucide="log-out"></i></button>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <header class="topbar">
+        <button class="icon-button mobile-menu" id="mobileMenu" type="button" title="Open navigation" aria-label="Open navigation"><i data-lucide="menu"></i></button>
+        <div><p class="eyebrow" id="viewEyebrow">Business snapshot</p><h1 id="viewTitle">Overview</h1></div>
+        <div class="topbar-actions">
+          <button class="icon-button" id="refreshData" type="button" title="Refresh data" aria-label="Refresh data"><i data-lucide="refresh-cw"></i></button>
+          <button class="primary-button compact" id="newProduct" type="button"><i data-lucide="plus"></i><span>Add product</span></button>
+        </div>
+      </header>
+
+      <section class="app-view active" id="overviewView">
+        <div class="metric-strip">
+          <article><span>Revenue</span><strong id="overviewRevenue">$0</strong><small>Non-cancelled orders</small></article>
+          <article><span>Open orders</span><strong id="overviewOpen">0</strong><small>Awaiting completion</small></article>
+          <article><span>Products</span><strong id="overviewProducts">0</strong><small id="overviewStock">0 units in stock</small></article>
+          <article><span>Low stock</span><strong id="overviewLow">0</strong><small>Below 3 units</small></article>
+        </div>
+        <div class="overview-grid">
+          <section class="workspace-section">
+            <div class="section-heading"><div><p class="eyebrow">Latest activity</p><h2>Recent orders</h2></div><button class="text-button" data-go-view="orders">View all <i data-lucide="arrow-right"></i></button></div>
+            <div id="recentOrders" class="compact-list"></div>
+          </section>
+          <section class="workspace-section attention-section">
+            <div class="section-heading"><div><p class="eyebrow">Inventory</p><h2>Needs attention</h2></div><button class="text-button" data-go-view="products">Inventory <i data-lucide="arrow-right"></i></button></div>
+            <div id="stockAlerts" class="compact-list"></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="app-view" id="productsView">
+        <div class="control-row">
+          <label class="search-control"><i data-lucide="search"></i><input id="productSearch" type="search" placeholder="Search products"></label>
+          <select id="productFilter" aria-label="Filter products">
+            <option value="all">All products</option><option value="visible">Visible</option><option value="hidden">Hidden</option><option value="low">Low stock</option>
+          </select>
+          <span class="result-count" id="productResultCount">0 products</span>
+        </div>
+        <div class="data-surface"><div class="product-table" id="productsTable"></div></div>
+      </section>
+
+      <section class="app-view" id="ordersView">
+        <div class="control-row">
+          <label class="search-control"><i data-lucide="search"></i><input id="orderSearch" type="search" placeholder="Search orders or customers"></label>
+          <select id="orderFilter" aria-label="Filter orders">
+            <option value="all">All statuses</option><option value="new">New</option><option value="confirmed">Confirmed</option><option value="processing">Processing</option><option value="ready">Ready</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option>
+          </select>
+          <span class="result-count" id="orderResultCount">0 orders</span>
+        </div>
+        <div class="order-list" id="ordersList"></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="drawer" id="editor" aria-hidden="true">
+    <form id="productForm">
+      <header class="drawer-header"><div><p class="eyebrow">Inventory</p><h2 id="editorTitle">Add product</h2></div><button class="icon-button" type="button" id="editorClose" title="Close" aria-label="Close"><i data-lucide="x"></i></button></header>
+      <input type="hidden" id="productId">
+      <div class="form-grid">
+        <label class="wide">Product name<input id="productName" required maxlength="100"></label>
+        <label>Category<select id="productCategory"><option>phones</option><option>laptops</option><option>games</option><option>cars</option><option>gadgets</option><option>fashion</option><option>home</option><option>other</option></select></label>
+        <label>Condition<select id="productCondition"><option value="new">New</option><option value="used">Used</option><option value="refurbished">Refurbished</option></select></label>
+        <label>Price (USD)<input id="productPrice" type="number" min="0" step="0.01" required></label>
+        <label>Stock quantity<input id="productStock" type="number" min="0" step="1" required></label>
+        <label class="wide">Description<textarea id="productDescription" rows="4" maxlength="500"></textarea></label>
+      </div>
+      <label class="upload-field"><input id="productPhoto" type="file" accept="image/png,image/jpeg,image/webp"><i data-lucide="image-plus"></i><span id="photoName">Choose product image</span><small>PNG, JPEG or WebP, up to 5MB</small></label>
+      <input type="hidden" id="productImage">
+      <label class="visibility-control"><span><strong>Visible in market</strong><small>Customers can see and order this product</small></span><input id="productActive" type="checkbox" checked></label>
+      <p class="form-message" id="editorMessage" role="alert"></p>
+      <footer class="drawer-actions"><button class="secondary-button" type="button" id="editorCancel">Cancel</button><button class="primary-button" type="submit"><i data-lucide="save"></i><span>Save product</span></button></footer>
+    </form>
+  </div>
+  <button class="drawer-overlay" id="editorOverlay" type="button" aria-label="Close product editor"></button>
+  <button class="sidebar-overlay" id="sidebarOverlay" type="button" aria-label="Close navigation"></button>
+
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

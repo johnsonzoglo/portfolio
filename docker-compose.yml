@@ -12,8 +12,8 @@ services:
     expose:
       - "8002"
     volumes:
-      - portfolio_data:/app/data
-      - portfolio_uploads:/app/assets/uploads
+      - portfolio_data_clean:/app/data
+      - portfolio_uploads_clean:/app/assets/uploads
     healthcheck:
       test:
         - CMD
@@ -26,5 +26,5 @@ services:
       start_period: 10s
 
 volumes:
-  portfolio_data:
-  portfolio_uploads:
+  portfolio_data_clean:
+  portfolio_uploads_clean:

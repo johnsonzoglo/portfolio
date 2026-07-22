@@ -1,12 +1,115 @@
-const loginView=document.querySelector('#loginView'),dashboard=document.querySelector('#dashboard'),loginForm=document.querySelector('#loginForm'),productsView=document.querySelector('#productsView'),ordersView=document.querySelector('#ordersView'),editor=document.querySelector('#editor'),editorOverlay=document.querySelector('#editorOverlay');let token=sessionStorage.getItem('jz-admin-token')||'',products=[],orders=[];
-const money=v=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(v),esc=v=>{const e=document.createElement('span');e.textContent=v;return e.innerHTML};async function api(url,options={}){const response=await fetch(url,{...options,headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`,...options.headers}});const result=await response.json();if(response.status===401){signOut();throw new Error(result.error)}if(!response.ok)throw new Error(result.error||'Request failed');return result}
-function showDashboard(){loginView.style.display='none';dashboard.classList.add('visible');loadAll()}function signOut(){token='';sessionStorage.removeItem('jz-admin-token');dashboard.classList.remove('visible');loginView.style.display='grid'}
-loginForm.addEventListener('submit',async e=>{e.preventDefault();const message=document.querySelector('#loginMessage');message.textContent='';try{const result=await fetch('/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:document.querySelector('#password').value})}).then(async r=>{const d=await r.json();if(!r.ok)throw new Error(d.error);return d});token=result.token;sessionStorage.setItem('jz-admin-token',token);showDashboard()}catch(error){message.textContent=error.message}});document.querySelector('#logout').addEventListener('click',signOut);
-async function loadAll(){try{[products,orders]=await Promise.all([api('/api/admin/products'),api('/api/admin/orders')]);renderProducts();renderOrders()}catch{}}
-function renderProducts(){document.querySelector('#productTotal').textContent=products.length;document.querySelector('#stockTotal').textContent=products.reduce((s,p)=>s+p.stock,0);document.querySelector('#lowStock').textContent=products.filter(p=>p.stock<3).length;document.querySelector('#productsTable').innerHTML=`<div class="table-row header"><span>Product</span><span>Category</span><span>Price</span><span>Stock</span><span>Actions</span></div>`+products.map(p=>`<div class="table-row"><div class="product-cell">${p.image?`<img class="product-thumb" src="${esc(p.image)}">`:`<span class="product-thumb">${esc(p.name[0])}</span>`}<div><h3>${esc(p.name)}</h3><small>${p.active?'Visible':'Hidden'} · ${p.condition}</small></div></div><span>${esc(p.category)}</span><span>${money(p.price)}</span><span>${p.stock}</span><div class="table-actions"><button data-edit="${p.id}">Edit</button><button data-delete="${p.id}">Delete</button></div></div>`).join('')}
-function renderOrders(){document.querySelector('#orderTotal').textContent=orders.length;document.querySelector('#pendingTotal').textContent=orders.filter(o=>!['completed','cancelled'].includes(o.status)).length;document.querySelector('#newOrders').textContent=orders.filter(o=>o.status==='new').length;document.querySelector('#salesTotal').textContent=money(orders.filter(o=>o.status!=='cancelled').reduce((s,o)=>s+o.total,0));document.querySelector('#ordersList').innerHTML=orders.length?orders.map(o=>`<article class="order-card"><div class="order-summary"><div><h3>${esc(o.number)}</h3><p>${new Date(o.createdAt).toLocaleString()}</p></div><div><h3>${esc(o.customer.name)}</h3><p>${esc(o.customer.phone)}</p></div><strong>${money(o.total)}</strong><select data-status="${o.id}">${['new','confirmed','processing','ready','completed','cancelled'].map(s=>`<option ${s===o.status?'selected':''}>${s}</option>`).join('')}</select><button data-expand="${o.id}">Details</button></div><div class="order-details"><b>Delivery:</b> ${esc(o.customer.address)}<br><b>Email:</b> ${esc(o.customer.email)} · <b>Payment:</b> ${o.paymentMethod} / ${o.paymentStatus}<br><b>Items:</b> ${o.items.map(i=>`${i.quantity}× ${esc(i.name)}`).join(', ')}${o.customer.note?`<br><b>Note:</b> ${esc(o.customer.note)}`:''}</div></article>`).join(''):'<p>No orders yet.</p>'}
-document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===b));const isProducts=b.dataset.tab==='products';productsView.hidden=!isProducts;ordersView.hidden=isProducts;document.querySelector('#viewTitle').textContent=isProducts?'PRODUCTS':'ORDERS';document.querySelector('#newProduct').style.display=isProducts?'block':'none'}));
-function openEditor(product){document.querySelector('#editorTitle').textContent=product?'Edit product':'Add product';document.querySelector('#productId').value=product?.id||'';document.querySelector('#productName').value=product?.name||'';document.querySelector('#productCategory').value=product?.category||'phones';document.querySelector('#productPrice').value=product?.price||'';document.querySelector('#productStock').value=product?.stock??0;document.querySelector('#productCondition').value=product?.condition||'new';document.querySelector('#productDescription').value=product?.description||'';document.querySelector('#productImage').value=product?.image||'';document.querySelector('#productActive').checked=product?.active!==false;document.querySelector('#photoName').textContent=product?.image?'Current photo will be kept unless replaced':'Choose PNG, JPEG, or WebP under 5MB';editor.classList.add('open');editorOverlay.classList.add('open');editor.setAttribute('aria-hidden','false')}
-function closeEditor(){editor.classList.remove('open');editorOverlay.classList.remove('open');editor.setAttribute('aria-hidden','true')}document.querySelector('#newProduct').addEventListener('click',()=>openEditor());document.querySelector('#editorClose').addEventListener('click',closeEditor);editorOverlay.addEventListener('click',closeEditor);
-document.querySelector('#productsTable').addEventListener('click',async e=>{if(e.target.dataset.edit)openEditor(products.find(p=>p.id===e.target.dataset.edit));if(e.target.dataset.delete&&confirm('Delete this product permanently?')){await api(`/api/admin/products/${e.target.dataset.delete}`,{method:'DELETE'});products=await api('/api/admin/products');renderProducts()}});document.querySelector('#ordersList').addEventListener('click',e=>{if(e.target.dataset.expand)e.target.closest('.order-card').classList.toggle('open')});document.querySelector('#ordersList').addEventListener('change',async e=>{if(e.target.dataset.status){await api(`/api/admin/orders/${e.target.dataset.status}`,{method:'PATCH',body:JSON.stringify({status:e.target.value})});orders=await api('/api/admin/orders');renderOrders()}});
-document.querySelector('#productPhoto').addEventListener('change',e=>{document.querySelector('#photoName').textContent=e.target.files[0]?.name||'Choose a photo'});document.querySelector('#productForm').addEventListener('submit',async e=>{e.preventDefault();const message=document.querySelector('#editorMessage');message.textContent='';try{let image=document.querySelector('#productImage').value,file=document.querySelector('#productPhoto').files[0];if(file){const data=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(file)});image=(await api('/api/admin/upload',{method:'POST',body:JSON.stringify({data})})).url}const id=document.querySelector('#productId').value,payload={name:document.querySelector('#productName').value,category:document.querySelector('#productCategory').value,price:Number(document.querySelector('#productPrice').value),stock:Number(document.querySelector('#productStock').value),condition:document.querySelector('#productCondition').value,description:document.querySelector('#productDescription').value,image,active:document.querySelector('#productActive').checked};await api(id?`/api/admin/products/${id}`:'/api/admin/products',{method:id?'PUT':'POST',body:JSON.stringify(payload)});products=await api('/api/admin/products');renderProducts();closeEditor();e.target.reset()}catch(error){message.textContent=error.message}});if(token)showDashboard();
+const $=selector=>document.querySelector(selector);
+const $$=selector=>[...document.querySelectorAll(selector)];
+const loginView=$('#loginView'),dashboard=$('#dashboard'),loginForm=$('#loginForm'),editor=$('#editor'),editorOverlay=$('#editorOverlay'),sidebar=$('#sidebar'),sidebarOverlay=$('#sidebarOverlay');
+let token=sessionStorage.getItem('jz-admin-token')||'',products=[],orders=[],activeView='overview';
+
+const money=value=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(Number(value)||0);
+const esc=value=>{const node=document.createElement('span');node.textContent=String(value??'');return node.innerHTML};
+const icons=()=>window.lucide?.createIcons();
+const plural=(count,word)=>`${count} ${word}${count===1?'':'s'}`;
+const date=value=>new Date(value).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});
+
+async function api(url,options={}){
+  const response=await fetch(url,{...options,headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`,...options.headers}});
+  const result=await response.json().catch(()=>({}));
+  if(response.status===401){signOut();throw new Error(result.error||'Your session expired.')}
+  if(!response.ok)throw new Error(result.error||'Request failed');
+  return result;
+}
+
+function emptyState(icon,title,copy){return `<div class="empty-state"><div><i data-lucide="${icon}"></i><strong>${title}</strong><p>${copy}</p></div></div>`}
+function initials(name){return String(name||'JZ').split(/\s+/).slice(0,2).map(part=>part[0]).join('').toUpperCase()}
+
+function showDashboard(user){
+  loginView.style.display='none';dashboard.classList.add('visible');
+  if(user){$('#accountName').textContent=user.name||user.username;$('#accountAvatar').textContent=initials(user.name||user.username)}
+  loadAll();
+}
+function signOut(){
+  token='';sessionStorage.removeItem('jz-admin-token');dashboard.classList.remove('visible');loginView.style.display='grid';$('#password').value='';
+}
+
+loginForm.addEventListener('submit',async event=>{
+  event.preventDefault();const message=$('#loginMessage'),button=loginForm.querySelector('button[type=submit]');message.textContent='';button.disabled=true;
+  try{
+    const result=await fetch('/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:$('#username').value,password:$('#password').value})}).then(async response=>{const data=await response.json();if(!response.ok)throw new Error(data.error);return data});
+    token=result.token;sessionStorage.setItem('jz-admin-token',token);showDashboard(result.user);
+  }catch(error){message.textContent=error.message}finally{button.disabled=false}
+});
+$('#logout').addEventListener('click',signOut);
+
+async function loadAll(){
+  $('#refreshData').classList.add('loading');
+  try{[products,orders]=await Promise.all([api('/api/admin/products'),api('/api/admin/orders')]);renderAll()}
+  catch(error){console.error(error)}finally{$('#refreshData').classList.remove('loading')}
+}
+function renderAll(){renderOverview();renderProducts();renderOrders();$('#newOrders').textContent=orders.filter(order=>order.status==='new').length;icons()}
+
+function renderOverview(){
+  const validOrders=orders.filter(order=>order.status!=='cancelled'),lowStock=products.filter(product=>product.stock<3);
+  $('#overviewRevenue').textContent=money(validOrders.reduce((sum,order)=>sum+order.total,0));
+  $('#overviewOpen').textContent=orders.filter(order=>!['completed','cancelled'].includes(order.status)).length;
+  $('#overviewProducts').textContent=products.length;
+  $('#overviewStock').textContent=`${products.reduce((sum,product)=>sum+product.stock,0)} units in stock`;
+  $('#overviewLow').textContent=lowStock.length;
+  $('#recentOrders').innerHTML=orders.length?orders.slice(0,5).map(order=>`<div class="compact-row"><div><strong>${esc(order.number)}</strong><span>${esc(order.customer.name)} · ${date(order.createdAt)}</span></div><div><span class="status-pill ${esc(order.status)}">${esc(order.status)}</span></div><b>${money(order.total)}</b></div>`).join(''):emptyState('receipt-text','No orders yet','New customer orders will appear here.');
+  $('#stockAlerts').innerHTML=lowStock.length?lowStock.slice(0,5).map(product=>`<div class="compact-row"><div><strong>${esc(product.name)}</strong><span>${esc(product.category)}</span></div><div><span>${product.stock===0?'Out of stock':`${product.stock} remaining`}</span></div><button class="icon-button" data-quick-edit="${esc(product.id)}" title="Edit product" aria-label="Edit ${esc(product.name)}"><i data-lucide="pencil"></i></button></div>`).join(''):emptyState('circle-check','Inventory looks good','No products are currently below the stock threshold.');
+}
+
+function filteredProducts(){
+  const query=$('#productSearch').value.trim().toLowerCase(),filter=$('#productFilter').value;
+  return products.filter(product=>(!query||[product.name,product.category,product.condition].some(value=>String(value).toLowerCase().includes(query)))&&(filter==='all'||(filter==='visible'&&product.active!==false)||(filter==='hidden'&&product.active===false)||(filter==='low'&&product.stock<3)));
+}
+function renderProducts(){
+  const visible=filteredProducts();$('#productResultCount').textContent=plural(visible.length,'product');
+  $('#productsTable').innerHTML=visible.length?`<div class="table-row header"><span>Product</span><span>Category</span><span>Price</span><span>Stock</span><span>Visibility</span><span></span></div>${visible.map(product=>`<div class="table-row"><div class="product-cell">${product.image?`<img class="product-thumb" src="${esc(product.image)}" alt="">`:`<span class="product-thumb">${esc(product.name[0]||'?')}</span>`}<div><h3>${esc(product.name)}</h3><small>${esc(product.condition)}</small></div></div><span>${esc(product.category)}</span><span>${money(product.price)}</span><span class="stock-value ${product.stock<3?'low':''}">${product.stock}</span><span class="visibility-pill ${product.active===false?'hidden':''}">${product.active===false?'Hidden':'Visible'}</span><div class="table-actions"><button class="icon-button" data-edit="${esc(product.id)}" title="Edit product" aria-label="Edit ${esc(product.name)}"><i data-lucide="pencil"></i></button><button class="icon-button danger" data-delete="${esc(product.id)}" title="Delete product" aria-label="Delete ${esc(product.name)}"><i data-lucide="trash-2"></i></button></div></div>`).join('')}`:emptyState('package-open','No products found',products.length?'Try a different search or filter.':'Your inventory is ready for its first product.');
+  icons();
+}
+
+function filteredOrders(){
+  const query=$('#orderSearch').value.trim().toLowerCase(),filter=$('#orderFilter').value;
+  return orders.filter(order=>(!query||[order.number,order.customer.name,order.customer.email,order.customer.phone].some(value=>String(value).toLowerCase().includes(query)))&&(filter==='all'||order.status===filter));
+}
+function renderOrders(){
+  const visible=filteredOrders();$('#orderResultCount').textContent=plural(visible.length,'order');
+  $('#ordersList').innerHTML=visible.length?visible.map(order=>`<article class="order-card"><div class="order-summary"><div><strong>${esc(order.number)}</strong><span>${date(order.createdAt)}</span></div><div><strong>${esc(order.customer.name)}</strong><span>${esc(order.customer.email)}</span></div><strong>${money(order.total)}</strong><select data-status="${esc(order.id)}" aria-label="Status for ${esc(order.number)}">${['new','confirmed','processing','ready','completed','cancelled'].map(status=>`<option value="${status}" ${status===order.status?'selected':''}>${status[0].toUpperCase()+status.slice(1)}</option>`).join('')}</select><button class="icon-button" data-expand="${esc(order.id)}" title="View order" aria-label="View ${esc(order.number)}"><i data-lucide="chevron-down"></i></button></div><div class="order-details"><div><h4>Delivery</h4><p>${esc(order.customer.address)}<br>${esc(order.customer.phone)}</p></div><div><h4>Items</h4><p>${order.items.map(item=>`${item.quantity} × ${esc(item.name)}`).join('<br>')}</p></div><div><h4>Payment</h4><p>${esc(order.paymentMethod)} · ${esc(order.paymentStatus)}${order.customer.note?`<br>${esc(order.customer.note)}`:''}</p></div></div></article>`).join(''):emptyState('shopping-bag','No orders found',orders.length?'Try a different search or status.':'Customer orders will appear here.');
+  icons();
+}
+
+const viewMeta={overview:['Overview','Business snapshot'],products:['Products','Inventory management'],orders:['Orders','Order management']};
+function setView(view){
+  activeView=view;$$('.nav-item').forEach(item=>item.classList.toggle('active',item.dataset.view===view));$$('.app-view').forEach(panel=>panel.classList.toggle('active',panel.id===`${view}View`));
+  $('#viewTitle').textContent=viewMeta[view][0];$('#viewEyebrow').textContent=viewMeta[view][1];$('#newProduct').style.display=view==='orders'?'none':'inline-flex';closeSidebar();
+}
+$$('.nav-item').forEach(item=>item.addEventListener('click',()=>setView(item.dataset.view)));
+document.addEventListener('click',event=>{const button=event.target.closest('[data-go-view]');if(button)setView(button.dataset.goView);const quickEdit=event.target.closest('[data-quick-edit]');if(quickEdit)openEditor(products.find(product=>product.id===quickEdit.dataset.quickEdit))});
+
+function openEditor(product){
+  $('#editorTitle').textContent=product?'Edit product':'Add product';$('#productId').value=product?.id||'';$('#productName').value=product?.name||'';$('#productCategory').value=product?.category||'phones';$('#productPrice').value=product?.price??'';$('#productStock').value=product?.stock??0;$('#productCondition').value=product?.condition||'new';$('#productDescription').value=product?.description||'';$('#productImage').value=product?.image||'';$('#productActive').checked=product?.active!==false;$('#productPhoto').value='';$('#photoName').textContent=product?.image?'Keep current image or choose a replacement':'Choose product image';$('#editorMessage').textContent='';editor.classList.add('open');editorOverlay.classList.add('open');editor.setAttribute('aria-hidden','false');setTimeout(()=>$('#productName').focus(),200);
+}
+function closeEditor(){editor.classList.remove('open');editorOverlay.classList.remove('open');editor.setAttribute('aria-hidden','true')}
+$('#newProduct').addEventListener('click',()=>openEditor());$('#editorClose').addEventListener('click',closeEditor);$('#editorCancel').addEventListener('click',closeEditor);editorOverlay.addEventListener('click',closeEditor);
+function openSidebar(){sidebar.classList.add('open');sidebarOverlay.classList.add('open')}function closeSidebar(){sidebar.classList.remove('open');sidebarOverlay.classList.remove('open')}
+$('#mobileMenu').addEventListener('click',openSidebar);sidebarOverlay.addEventListener('click',closeSidebar);
+$('#refreshData').addEventListener('click',loadAll);$('#productSearch').addEventListener('input',renderProducts);$('#productFilter').addEventListener('change',renderProducts);$('#orderSearch').addEventListener('input',renderOrders);$('#orderFilter').addEventListener('change',renderOrders);
+
+$('#productsTable').addEventListener('click',async event=>{
+  const edit=event.target.closest('[data-edit]'),remove=event.target.closest('[data-delete]');
+  if(edit)openEditor(products.find(product=>product.id===edit.dataset.edit));
+  if(remove&&confirm('Delete this product permanently?')){await api(`/api/admin/products/${remove.dataset.delete}`,{method:'DELETE'});products=await api('/api/admin/products');renderAll()}
+});
+$('#ordersList').addEventListener('click',event=>{const button=event.target.closest('[data-expand]');if(button)button.closest('.order-card').classList.toggle('open')});
+$('#ordersList').addEventListener('change',async event=>{if(event.target.dataset.status){await api(`/api/admin/orders/${event.target.dataset.status}`,{method:'PATCH',body:JSON.stringify({status:event.target.value})});orders=await api('/api/admin/orders');renderAll()}});
+$('#productPhoto').addEventListener('change',event=>{$('#photoName').textContent=event.target.files[0]?.name||'Choose product image'});
+$('#productForm').addEventListener('submit',async event=>{
+  event.preventDefault();const message=$('#editorMessage'),button=event.submitter;message.textContent='';button.disabled=true;
+  try{
+    let image=$('#productImage').value,file=$('#productPhoto').files[0];
+    if(file){const data=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(file)});image=(await api('/api/admin/upload',{method:'POST',body:JSON.stringify({data})})).url}
+    const id=$('#productId').value,payload={name:$('#productName').value,category:$('#productCategory').value,price:Number($('#productPrice').value),stock:Number($('#productStock').value),condition:$('#productCondition').value,description:$('#productDescription').value,image,active:$('#productActive').checked};
+    await api(id?`/api/admin/products/${id}`:'/api/admin/products',{method:id?'PUT':'POST',body:JSON.stringify(payload)});products=await api('/api/admin/products');renderAll();closeEditor();event.target.reset();
+  }catch(error){message.textContent=error.message}finally{button.disabled=false}
+});
+document.addEventListener('keydown',event=>{if(event.key==='Escape'){closeEditor();closeSidebar()}});
+
+icons();if(token)showDashboard();
