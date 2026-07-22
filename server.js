@@ -12,6 +12,7 @@ const UPLOADS = path.join(ROOT, 'assets', 'uploads');
 const PORT = Number(process.env.PORT || 8002);
 const HOST = process.env.HOST || '0.0.0.0';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
+const ADMIN_PASSWORD_CONFIGURED = Boolean(process.env.ADMIN_PASSWORD);
 const sessions = new Map();
 const loginAttempts = new Map();
 let writeQueue = Promise.resolve();
@@ -21,7 +22,15 @@ fs.mkdirSync(UPLOADS, { recursive: true });
 const business = require('./business')(ROOT);
 const hashPassword=(password,salt=crypto.randomBytes(16).toString('hex'))=>`${salt}:${crypto.scryptSync(password,salt,64).toString('hex')}`;
 const verifyPassword=(password,stored)=>{try{const[salt,hash]=stored.split(':'),actual=crypto.scryptSync(password,salt,64),expected=Buffer.from(hash,'hex');return actual.length===expected.length&&crypto.timingSafeEqual(actual,expected)}catch{return false}};
-if(!fs.existsSync(USERS_FILE))fs.writeFileSync(USERS_FILE,JSON.stringify([{id:crypto.randomUUID(),username:'owner',name:'Johnson Zoglo',role:'owner',passwordHash:hashPassword(ADMIN_PASSWORD),active:true,createdAt:new Date().toISOString()}],null,2));
+const createOwner=()=>({id:crypto.randomUUID(),username:'owner',name:'Johnson Zoglo',role:'owner',passwordHash:hashPassword(ADMIN_PASSWORD),active:true,createdAt:new Date().toISOString()});
+if(!fs.existsSync(USERS_FILE))fs.writeFileSync(USERS_FILE,JSON.stringify([createOwner()],null,2));
+else if(ADMIN_PASSWORD_CONFIGURED){
+  let users;try{users=JSON.parse(fs.readFileSync(USERS_FILE,'utf8'));if(!Array.isArray(users))users=[]}catch{users=[]}
+  const owner=users.find(user=>user.username==='owner');
+  if(!owner)users.unshift(createOwner());
+  else if(!verifyPassword(ADMIN_PASSWORD,owner.passwordHash)){owner.passwordHash=hashPassword(ADMIN_PASSWORD);owner.active=true}
+  fs.writeFileSync(USERS_FILE,JSON.stringify(users,null,2));
+}
 
 const mime = { '.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json; charset=utf-8','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.svg':'image/svg+xml','.webp':'image/webp','.mp4':'video/mp4','.webm':'video/webm','.ico':'image/x-icon' };
 const readJson = (file, fallback=[]) => { try { return JSON.parse(fs.readFileSync(file, 'utf8')); } catch { return fallback; } };

@@ -35,7 +35,7 @@ If no password is configured, the local development password is `admin123`. Neve
 3. Deploy using `docker-compose.yml`.
 4. In the Domains tab, add a domain for the `portfolio` service on port `8002`.
 
-The `portfolio_data_clean` and `portfolio_uploads_clean` named volumes preserve store data and uploaded product photos across redeployments. `ADMIN_PASSWORD` creates the initial owner account only when the data volume has no `users.json` file.
+The `portfolio_data_clean` and `portfolio_uploads_clean` named volumes preserve store data and uploaded product photos across redeployments. `ADMIN_PASSWORD` creates the owner account and resets its password whenever the container starts, making the Dokploy environment value authoritative.
 
 ## Commerce features
 
