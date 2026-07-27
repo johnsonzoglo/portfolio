@@ -27,6 +27,7 @@
       <a href="index.html">Portfolio</a>
       <a href="#catalog">Shop</a>
       <a href="#why-jz">Why JZ</a>
+      <a href="account.html">My JZ</a>
     </nav>
     <button class="cart-trigger" id="cartTrigger" type="button" aria-label="Open cart">
       <span class="cart-label">Bag</span><b id="cartCount">0</b>
@@ -65,11 +66,20 @@
       </div>
     </section>
 
+    <section class="market-benefits" aria-label="Marketplace benefits">
+      <div><b>✓</b><span><strong>Quality checked</strong><small>Every physical item reviewed</small></span></div>
+      <div><b>↗</b><span><strong>Personal delivery</strong><small>Clear coordination in Dubai</small></span></div>
+      <div><b>◎</b><span><strong>Human support</strong><small>Talk to a real person anytime</small></span></div>
+      <div><b>↺</b><span><strong>Clear condition</strong><small>No surprises at handover</small></span></div>
+    </section>
+
     <section id="catalog" class="catalog shell">
       <header class="catalog-head">
         <div><p class="overline">The current edit</p><h2>SHOP <span>ALL.</span></h2></div>
         <p><b id="resultCount">0</b> considered finds</p>
       </header>
+
+      <div class="category-rail" id="categoryRail" aria-label="Shop by category"></div>
 
       <div class="market-tools">
         <label class="market-search">
@@ -95,6 +105,14 @@
         <button class="filter" data-filter="games">Games</button>
         <button class="filter" data-filter="cars">Cars</button>
         <button class="filter" data-filter="gadgets">Creator gear</button>
+      </div>
+
+      <div class="catalog-status">
+        <p id="catalogSummary">Showing the full collection</p>
+        <div>
+          <button id="clearProductFilters" type="button">Clear filters</button>
+          <button class="saved-products-filter" id="savedProductsFilter" type="button"><span>♡</span> Saved <b id="savedProductCount">0</b></button>
+        </div>
       </div>
 
       <div class="product-grid" id="productGrid" aria-live="polite">
@@ -137,6 +155,15 @@
     </div>
   </aside>
   <button class="cart-overlay" id="cartOverlay" type="button" aria-label="Close shopping bag"></button>
+
+  <div class="product-modal" id="productModal" aria-hidden="true">
+    <button class="product-modal-backdrop" type="button" data-close-product aria-label="Close product details"></button>
+    <section class="product-modal-panel" role="dialog" aria-modal="true" aria-labelledby="productModalTitle">
+      <button class="product-modal-close" type="button" data-close-product aria-label="Close product details">×</button>
+      <div id="productModalContent"></div>
+    </section>
+  </div>
+  <div class="market-toast" id="marketToast" role="status" aria-live="polite"></div>
 
   <script src="script.js"></script>
   <script src="shop.js"></script>

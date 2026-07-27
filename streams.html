@@ -22,6 +22,7 @@
       <a href="#library">Learn</a>
       <a href="#paths">Paths</a>
       <a href="shop.html">Market</a>
+      <a href="account.html">My JZ</a>
     </nav>
     <a class="academy-cta" href="#library">Start learning <span>↘</span></a>
   </header>
@@ -54,6 +55,20 @@
         <div><strong id="heroCourseCount">0</strong><span>Courses</span></div>
         <div><strong id="heroVideoCount">0</strong><span>Video lessons</span></div>
         <div><strong>100%</strong><span>Practical</span></div>
+      </div>
+    </section>
+
+    <section class="academy-spotlight shell" id="featuredLesson">
+      <div class="spotlight-visual" id="spotlightVisual">
+        <div><small>FEATURED LEARNING</small><strong>BUILD SOMETHING<br>YOU CAN USE.</strong></div>
+        <button type="button" id="spotlightPlay" aria-label="Open featured lesson">▶</button>
+      </div>
+      <div class="spotlight-copy">
+        <p class="overline">Start here</p>
+        <span id="spotlightMeta">Practical course · All levels</span>
+        <h2 id="spotlightTitle">Your next useful skill starts here.</h2>
+        <p id="spotlightDescription">Choose a focused lesson, follow the steps, and finish with real work—not just more notes.</p>
+        <div><button class="btn btn-bright" id="spotlightOpen" type="button">View featured course <b>↗</b></button><a href="#library">Browse everything ↓</a></div>
       </div>
     </section>
 
@@ -99,6 +114,22 @@
           </label>
         </div>
 
+        <div class="academy-discovery">
+          <p id="academySummary">Showing all learning</p>
+          <div>
+            <label>Level
+              <select id="academyLevel">
+                <option value="all">All levels</option>
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+              </select>
+            </label>
+            <button id="savedLearningFilter" type="button"><span>♡</span> My saved <b id="savedLearningCount">0</b></button>
+            <button id="clearAcademyFilters" type="button">Clear filters</button>
+          </div>
+        </div>
+
         <div class="academy-content-grid" id="replayGrid" aria-live="polite"></div>
         <div class="empty-vault" id="emptyVault">
           <div class="empty-icon">▶</div><h3>Lessons are being prepared</h3><p>New courses and focused videos will appear here soon.</p>
@@ -120,6 +151,15 @@
       </div>
     </section>
   </main>
+
+  <div class="lesson-modal" id="lessonModal" aria-hidden="true">
+    <button class="lesson-modal-backdrop" type="button" data-close-lesson aria-label="Close lesson"></button>
+    <section class="lesson-modal-panel" role="dialog" aria-modal="true" aria-labelledby="lessonModalTitle">
+      <button class="lesson-modal-close" type="button" data-close-lesson aria-label="Close lesson">×</button>
+      <div id="lessonModalContent"></div>
+    </section>
+  </div>
+  <div class="academy-toast" id="academyToast" role="status" aria-live="polite"></div>
 
   <script src="script.js"></script>
   <script src="streams.js"></script>

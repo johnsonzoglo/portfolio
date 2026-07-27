@@ -5,6 +5,8 @@
     "game": "Creator foundations",
     "date": "2026-07-27",
     "contentType": "course",
+    "accessType": "free",
+    "price": 0,
     "level": "Beginner",
     "duration": "2 hr 10 min",
     "lessons": 6,
@@ -12,7 +14,7 @@
     "src": "",
     "size": 0,
     "published": true,
-    "featured": true,
+    "featured": false,
     "createdAt": "2026-07-27T08:00:00.000Z"
   },
   {
@@ -21,6 +23,8 @@
     "game": "Web building",
     "date": "2026-07-26",
     "contentType": "course",
+    "accessType": "paid",
+    "price": 49,
     "level": "Beginner",
     "duration": "1 hr 45 min",
     "lessons": 5,
@@ -37,6 +41,8 @@
     "game": "Business and marketing",
     "date": "2026-07-25",
     "contentType": "course",
+    "accessType": "paid",
+    "price": 79,
     "level": "Intermediate",
     "duration": "2 hr 30 min",
     "lessons": 7,
@@ -53,6 +59,8 @@
     "game": "Creator skills",
     "date": "2026-07-24",
     "contentType": "video",
+    "accessType": "free",
+    "price": 0,
     "level": "Beginner",
     "duration": "15 min",
     "lessons": 1,
@@ -69,6 +77,8 @@
     "game": "Business and marketing",
     "date": "2026-07-23",
     "contentType": "video",
+    "accessType": "free",
+    "price": 0,
     "level": "Intermediate",
     "duration": "18 min",
     "lessons": 1,
@@ -76,7 +86,10 @@
     "src": "",
     "size": 0,
     "published": true,
-    "featured": false,
-    "createdAt": "2026-07-23T08:00:00.000Z"
+    "featured": true,
+    "createdAt": "2026-07-23T08:00:00.000Z",
+    "coverImage": "assets/uploads/ChatGPT-Image-Jul-13-2026-02_47_01-PM-1785156710867-edbc05.png",
+    "modules": [],
+    "publishAt": ""
   }
 ]

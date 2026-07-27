@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#10140f">
+  <title>My JZ · Account</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="account.css">
+</head>
+<body class="account-page">
+  <div class="account-shell">
+    <aside class="account-sidebar">
+      <a class="brand" href="index.html"><span>JZ</span><i>MY SPACE</i></a>
+      <nav aria-label="Account navigation">
+        <button class="active" type="button" data-account-view="overview"><span>01</span> Overview</button>
+        <button type="button" data-account-view="academy"><span>02</span> My Academy</button>
+        <button type="button" data-account-view="orders"><span>03</span> My orders</button>
+        <button type="button" data-account-view="saved"><span>04</span> Saved items</button>
+        <button type="button" data-account-view="reviews"><span>05</span> Reviews</button>
+        <button type="button" data-account-view="support"><span>06</span> Support</button>
+        <button type="button" data-account-view="profile"><span>07</span> Profile</button>
+      </nav>
+      <div class="account-side-links"><a href="streams.html">Academy ↗</a><a href="shop.html">Market ↗</a></div>
+      <button class="account-logout" id="accountLogout" type="button">Sign out</button>
+    </aside>
+    <main class="account-main">
+      <header class="account-topbar">
+        <button class="account-mobile-menu" id="accountMobileMenu" type="button">Menu</button>
+        <div><p class="account-overline" id="accountEyebrow">Your JZ world</p><h1 id="accountViewTitle">Overview</h1></div>
+        <button class="notification-button" id="notificationButton" type="button"><span>Notifications</span><b id="notificationCount">0</b></button>
+      </header>
+
+      <section class="account-view active" id="overviewView">
+        <div class="account-welcome"><div><p class="account-overline">Member dashboard</p><h2>Welcome back,<br><span id="accountFirstName">Creator</span>.</h2><p>Your learning, saved finds, orders, and support are all here.</p></div><a href="streams.html">Continue learning <span>↗</span></a></div>
+        <div class="account-metrics">
+          <article><small>Learning</small><strong id="metricCourses">0</strong><span>courses enrolled</span></article>
+          <article><small>Completed</small><strong id="metricCompleted">0</strong><span>courses finished</span></article>
+          <article><small>Orders</small><strong id="metricOrders">0</strong><span>orders placed</span></article>
+          <article><small>Saved</small><strong id="metricSaved">0</strong><span>items kept</span></article>
+        </div>
+        <div class="account-overview-grid"><section class="account-card"><header><div><p class="account-overline">Pick up where you left off</p><h2>Continue learning</h2></div><button data-go-account="academy">View all →</button></header><div id="continueLearning"></div></section><section class="account-card"><header><div><p class="account-overline">Latest</p><h2>Order activity</h2></div><button data-go-account="orders">View all →</button></header><div id="recentAccountOrders"></div></section></div>
+      </section>
+
+      <section class="account-view" id="academyView">
+        <div class="account-section-intro"><div><p class="account-overline">My Academy</p><h2>LEARN. BUILD.<br><span>COMPLETE.</span></h2></div><a href="streams.html">Find another course ↗</a></div>
+        <div class="account-course-grid" id="accountCourses"></div>
+        <section class="certificate-section"><header><p class="account-overline">Achievements</p><h2>Certificates</h2></header><div id="certificateList"></div></section>
+      </section>
+
+      <section class="account-view" id="ordersView">
+        <div class="account-section-intro"><div><p class="account-overline">JZ Market</p><h2>YOUR<br><span>ORDERS.</span></h2></div><a href="shop.html">Continue shopping ↗</a></div>
+        <div class="account-order-list" id="accountOrders"></div>
+      </section>
+
+      <section class="account-view" id="savedView">
+        <div class="account-section-intro"><div><p class="account-overline">Your shortlist</p><h2>SAVED FOR<br><span>LATER.</span></h2></div></div>
+        <h3 class="saved-heading">Products</h3><div class="saved-grid" id="savedProducts"></div>
+        <h3 class="saved-heading">Courses</h3><div class="saved-grid" id="savedCourses"></div>
+      </section>
+
+      <section class="account-view" id="reviewsView">
+        <div class="account-section-intro"><div><p class="account-overline">Share your experience</p><h2>YOUR<br><span>REVIEWS.</span></h2></div></div>
+        <div class="review-layout"><form class="account-form" id="reviewForm"><h3>Write a review</h3><label>Review type<select name="targetType" id="reviewType"><option value="product">Product</option><option value="course">Course</option></select></label><label>Choose item<select name="targetId" id="reviewTarget" required></select></label><label>Rating<select name="rating"><option value="5">5 — Excellent</option><option value="4">4 — Very good</option><option value="3">3 — Good</option><option value="2">2 — Fair</option><option value="1">1 — Needs work</option></select></label><label>Review title<input name="title" maxlength="100"></label><label>Your review<textarea name="comment" rows="5" maxlength="1000" required></textarea></label><button>Submit review</button><p id="reviewMessage"></p></form><section class="account-card"><header><div><p class="account-overline">History</p><h2>Submitted reviews</h2></div></header><div id="accountReviews"></div></section></div>
+      </section>
+
+      <section class="account-view" id="supportView">
+        <div class="account-section-intro"><div><p class="account-overline">Real human help</p><h2>HOW CAN WE<br><span>HELP?</span></h2></div></div>
+        <div class="support-layout"><form class="account-form" id="supportForm"><h3>Start a conversation</h3><label>Subject<input name="subject" maxlength="120" required></label><label>Message<textarea name="message" rows="6" maxlength="2000" required></textarea></label><button>Send message</button><p id="supportMessage"></p></form><section class="account-card"><header><div><p class="account-overline">Your conversations</p><h2>Support history</h2></div></header><div id="supportHistory"></div></section></div>
+      </section>
+
+      <section class="account-view" id="profileView">
+        <div class="account-section-intro"><div><p class="account-overline">Account settings</p><h2>YOUR<br><span>DETAILS.</span></h2></div></div>
+        <form class="profile-form" id="profileForm"><section><h3>Personal information</h3><div class="profile-avatar"><span id="profileAvatar">JZ</span><label>Change photo<input id="profileAvatarFile" type="file" accept="image/png,image/jpeg,image/webp"></label></div><label>Full name<input name="name" required></label><label>Email address<input name="email" type="email" disabled></label><label>Phone / WhatsApp<input name="phone"></label></section><section><h3>Delivery addresses</h3><label>Address label<input name="addressLabel" placeholder="Home, office…"></label><label>Full address<textarea name="address" rows="4"></textarea></label></section><section><h3>Notifications</h3><label class="setting-check"><input name="academy" type="checkbox"> Academy updates</label><label class="setting-check"><input name="orders" type="checkbox"> Order updates</label><label class="setting-check"><input name="marketing" type="checkbox"> Offers and announcements</label></section><section><h3>Change password</h3><label>Current password<input name="currentPassword" type="password"></label><label>New password<input name="newPassword" type="password" minlength="8"></label></section><button class="profile-save">Save account changes</button><p id="profileMessage"></p></form>
+      </section>
+    </main>
+  </div>
+  <aside class="notification-drawer" id="notificationDrawer"><header><div><p class="account-overline">Updates</p><h2>Notifications</h2></div><button id="notificationClose" type="button">×</button></header><div id="notificationList"></div></aside>
+  <button class="account-overlay" id="accountOverlay" type="button" aria-label="Close panel"></button>
+  <div class="account-toast" id="accountToast" role="status" aria-live="polite"></div>
+  <script src="account.js"></script>
+</body>
+</html>

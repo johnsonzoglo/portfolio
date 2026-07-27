@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0c100e">
+  <title>Sign in · JZ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="account.css">
+</head>
+<body class="auth-page">
+  <main class="auth-shell">
+    <section class="auth-story">
+      <a class="brand" href="index.html"><span>JZ</span><i>MEMBERS</i></a>
+      <div><p class="account-overline">One account / Your whole JZ world</p><h1>LEARN.<br>SHOP.<br><span>KEEP MOVING.</span></h1><p>Save courses and products, continue lessons on any device, follow your orders, and get support in one place.</p></div>
+      <footer><a href="streams.html">Academy ↗</a><a href="shop.html">Market ↗</a><a href="index.html">Portfolio ↗</a></footer>
+    </section>
+    <section class="auth-panel">
+      <div class="auth-tabs">
+        <button class="active" type="button" data-auth-tab="login">Sign in</button>
+        <button type="button" data-auth-tab="register">Create account</button>
+      </div>
+      <form class="auth-form active" id="loginForm" data-auth-panel="login">
+        <p class="account-overline">Welcome back</p><h2>Continue where you left off.</h2>
+        <label>Email address<input name="email" type="email" autocomplete="email" required></label>
+        <label>Password<input name="password" type="password" autocomplete="current-password" required></label>
+        <button class="auth-submit" type="submit">Sign in <span>→</span></button>
+        <button class="forgot-link" id="showRecovery" type="button">Forgot your password?</button>
+        <p class="auth-message" id="loginMessage" role="status"></p>
+      </form>
+      <form class="auth-form" id="registerForm" data-auth-panel="register">
+        <p class="account-overline">Join JZ</p><h2>Create your free account.</h2>
+        <label>Full name<input name="name" autocomplete="name" required></label>
+        <label>Email address<input name="email" type="email" autocomplete="email" required></label>
+        <label>Phone / WhatsApp<input name="phone" autocomplete="tel"></label>
+        <label>Password<input name="password" type="password" minlength="8" autocomplete="new-password" required><small>At least 8 characters</small></label>
+        <label class="auth-check"><input name="academy" type="checkbox" checked> Send me useful Academy updates</label>
+        <button class="auth-submit" type="submit">Create account <span>→</span></button>
+        <p class="auth-message" id="registerMessage" role="status"></p>
+      </form>
+      <form class="auth-form recovery-form" id="recoveryForm" data-auth-panel="recovery">
+        <button class="auth-back" type="button" data-auth-tab="login">← Back to sign in</button>
+        <p class="account-overline">Account recovery</p><h2>Reset your password securely.</h2><p>Enter your account email and we will send a secure link that expires after 30 minutes.</p>
+        <label>Email address<input name="email" type="email" required></label>
+        <button class="auth-submit" type="submit">Request reset <span>→</span></button>
+        <p class="auth-message" id="recoveryMessage" role="status"></p>
+      </form>
+      <form class="auth-form recovery-form" id="resetForm" data-auth-panel="reset">
+        <p class="account-overline">Choose a new password</p><h2>Make it secure and memorable.</h2>
+        <label>New password<input name="password" type="password" minlength="8" autocomplete="new-password" required></label>
+        <label>Confirm password<input name="confirmPassword" type="password" minlength="8" autocomplete="new-password" required></label>
+        <button class="auth-submit" type="submit">Update password <span>→</span></button>
+        <p class="auth-message" id="resetMessage" role="status"></p>
+      </form>
+    </section>
+  </main>
+  <script src="auth.js"></script>
+</body>
+</html>

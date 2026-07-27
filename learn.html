@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Learn practical skills with JZ Academy.">
+  <meta name="theme-color" content="#0c100e">
+  <title>Learning · JZ Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="learn.css">
+</head>
+<body class="learn-page">
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="learn-header">
+    <a class="brand" href="streams.html"><span>JZ</span><i>ACADEMY</i></a>
+    <nav aria-label="Learning navigation">
+      <a href="streams.html">← Academy</a>
+      <a href="index.html">Portfolio</a>
+      <a href="shop.html">Market</a>
+      <a href="account.html">My JZ</a>
+    </nav>
+    <button class="learn-save" id="learnSave" type="button">♡ Save course</button>
+  </header>
+
+  <main id="learnMain">
+    <section class="learn-loading" id="learnLoading">
+      <span>JZ / ACADEMY</span>
+      <div></div>
+      <p>Preparing your learning space…</p>
+    </section>
+
+    <div id="learnExperience" hidden>
+      <section class="course-intro">
+        <div class="course-intro-grid" aria-hidden="true"></div>
+        <div class="course-intro-copy">
+          <p class="learn-overline" id="courseEyebrow">JZ Academy / Course</p>
+          <h1 id="courseTitle">Course title</h1>
+          <p id="courseDescription"></p>
+          <div class="course-facts">
+            <span><small>Level</small><strong id="courseLevel">All levels</strong></span>
+            <span><small>Duration</small><strong id="courseDuration">Focused</strong></span>
+            <span><small>Lessons</small><strong id="courseLessonCount">1 lesson</strong></span>
+          </div>
+        </div>
+        <aside class="course-progress-card">
+          <span>Your progress</span>
+          <strong id="courseProgressValue">0%</strong>
+          <div class="progress-track"><i id="courseProgressBar"></i></div>
+          <p id="courseProgressCopy">Start your first lesson.</p>
+          <a href="#learningSpace">Continue learning <b>↓</b></a>
+        </aside>
+      </section>
+
+      <section class="access-gate shell" id="accessGate" hidden>
+        <div><p class="learn-overline">Paid Academy access</p><h2>UNLOCK THE<br>FULL <span>COURSE.</span></h2><p id="accessGateCopy">Get every lesson, video, resource, and future update for this course.</p></div>
+        <aside><span>One-time access</span><strong id="accessPrice">$0</strong><ul><li>All course lessons</li><li>Protected video and downloadable resources</li><li>Synced progress and certificate</li></ul><label>Payment method<select id="coursePaymentMethod"><option value="stripe" id="courseStripePayment">Card — instant access</option><option value="bank">Bank transfer</option><option value="cash">Cash payment</option></select></label><button id="purchaseCourse" type="button">Unlock course <b>↗</b></button><small>Card access unlocks automatically. Manual payments unlock after confirmation. By continuing you accept the <a href="legal.html#terms">Terms</a>.</small><p id="purchaseMessage"></p></aside>
+      </section>
+
+      <section class="learning-space" id="learningSpace">
+        <aside class="curriculum-panel">
+          <header>
+            <div><span>Course content</span><strong id="curriculumCount">0 lessons</strong></div>
+            <button id="curriculumToggle" type="button" aria-expanded="true">Hide</button>
+          </header>
+          <div class="curriculum-list" id="curriculumList"></div>
+        </aside>
+
+        <article class="lesson-stage">
+          <div class="lesson-player" id="lessonPlayer"></div>
+          <div class="lesson-stage-copy">
+            <div class="lesson-stage-meta"><span id="lessonPosition">Lesson 01</span><span id="lessonDuration">Focused lesson</span></div>
+            <h2 id="lessonTitle">Getting started</h2>
+            <p id="lessonDescription">Select a lesson from the course content to begin.</p>
+            <div class="lesson-actions">
+              <button id="previousLesson" type="button">← Previous</button>
+              <button class="complete-lesson" id="completeLesson" type="button">Mark lesson complete</button>
+              <button id="nextLesson" type="button">Next →</button>
+            </div>
+          </div>
+
+          <div class="lesson-support">
+            <section>
+              <p class="learn-overline">Build as you learn</p>
+              <h3>Turn this lesson into action.</h3>
+              <p>Pause when you need to, try each step yourself, and mark the lesson complete when you have applied the idea.</p>
+            </section>
+            <section class="lesson-resource" id="lessonResource">
+              <span>Lesson resource</span>
+              <strong>No download for this lesson</strong>
+              <p>Any worksheets, references, or downloads added by the instructor will appear here.</p>
+            </section>
+          </div>
+          <section class="course-reviews">
+            <header><div><p class="learn-overline">Student feedback</p><h3>Course reviews</h3></div><a href="account.html#reviews">Write a review →</a></header>
+            <div id="courseReviewList"></div>
+          </section>
+        </article>
+      </section>
+
+      <section class="next-course shell">
+        <div><p class="learn-overline">Keep building</p><h2>ONE USEFUL<br>SKILL AT A TIME.</h2></div>
+        <a href="streams.html">Explore more learning <span>↗</span></a>
+      </section>
+    </div>
+
+    <section class="learn-error" id="learnError" hidden>
+      <span>404 / LESSON NOT FOUND</span>
+      <h1>This learning page isn’t available.</h1>
+      <p>The course may have been removed or the link is incomplete.</p>
+      <a href="streams.html">Return to JZ Academy →</a>
+    </section>
+  </main>
+
+  <div class="learn-toast" id="learnToast" role="status" aria-live="polite"></div>
+  <script src="learn.js"></script>
+</body>
+</html>
