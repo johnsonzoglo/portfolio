@@ -22,7 +22,10 @@ function initials(name){return String(name||'JZ').split(/\s+/).slice(0,2).map(pa
 
 function showDashboard(user){
   loginView.style.display='none';dashboard.classList.add('visible');
-  if(user){$('#accountName').textContent=user.name||user.username;$('#accountAvatar').textContent=initials(user.name||user.username)}
+  if(user){const displayName=user.name||user.username;$('#accountName').textContent=displayName;$('#accountAvatar').textContent=initials(displayName);$('#welcomeName').textContent=displayName.split(/\s+/)[0]}
+  const now=new Date(),hour=now.getHours();
+  $('#dayPeriod').textContent=hour<12?'morning':hour<18?'afternoon':'evening';
+  $('#currentDate').textContent=now.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
   loadAll();
 }
 function signOut(){
@@ -68,11 +71,11 @@ function renderProducts(){
 
 function filteredStreams(){
   const query=$('#streamSearch').value.trim().toLowerCase(),filter=$('#streamFilter').value;
-  return streams.filter(stream=>(!query||[stream.title,stream.game].some(value=>String(value).toLowerCase().includes(query)))&&(filter==='all'||(filter==='published'&&stream.published!==false)||(filter==='draft'&&stream.published===false)||(filter==='featured'&&stream.featured)));
+  return streams.filter(stream=>(!query||[stream.title,stream.game,stream.description,stream.level].some(value=>String(value||'').toLowerCase().includes(query)))&&(filter==='all'||filter===stream.contentType||(filter==='published'&&stream.published!==false)||(filter==='draft'&&stream.published===false)||(filter==='featured'&&stream.featured)));
 }
 function renderStreams(){
-  const visible=filteredStreams();$('#streamResultCount').textContent=plural(visible.length,'stream');
-  $('#streamsTable').innerHTML=visible.length?`<div class="stream-row header"><span>Stream</span><span>Date</span><span>File size</span><span>Status</span><span>Placement</span><span></span></div>${visible.map(stream=>`<div class="stream-row"><div class="stream-cell"><video class="stream-preview" src="${esc(stream.src)}" preload="metadata" muted></video><div><h3>${esc(stream.title)}</h3><small>${esc(stream.game)}</small></div></div><span>${date(stream.date)}</span><span>${(Number(stream.size||0)/1048576).toFixed(1)} MB</span><span class="visibility-pill ${stream.published===false?'hidden':''}">${stream.published===false?'Draft':'Published'}</span><span>${stream.featured?'<b class="feature-pill">Featured</b>':'Standard'}</span><div class="table-actions"><button class="icon-button" data-edit-stream="${esc(stream.id)}" title="Edit stream" aria-label="Edit ${esc(stream.title)}"><i data-lucide="pencil"></i></button><button class="icon-button danger" data-delete-stream="${esc(stream.id)}" title="Delete stream" aria-label="Delete ${esc(stream.title)}"><i data-lucide="trash-2"></i></button></div></div>`).join('')}`:emptyState('clapperboard','No streams found',streams.length?'Try a different search or filter.':'Upload your first replay to the Stream Vault.');
+  const visible=filteredStreams();$('#streamResultCount').textContent=plural(visible.length,'resource');
+  $('#streamsTable').innerHTML=visible.length?`<div class="stream-row header"><span>Resource</span><span>Type</span><span>Level</span><span>Status</span><span>Placement</span><span></span></div>${visible.map(stream=>`<div class="stream-row"><div class="stream-cell">${stream.src?`<video class="stream-preview" src="${esc(stream.src)}" preload="metadata" muted></video>`:`<span class="stream-preview stream-fallback"><i data-lucide="${stream.contentType==='course'?'book-open':'play'}"></i></span>`}<div><h3>${esc(stream.title)}</h3><small>${esc(stream.game)}</small></div></div><span>${stream.contentType==='course'?'Course':'Video lesson'}</span><span>${esc(stream.level||'All levels')}</span><span class="visibility-pill ${stream.published===false?'hidden':''}">${stream.published===false?'Draft':'Published'}</span><span>${stream.featured?'<b class="feature-pill">Featured</b>':'Standard'}</span><div class="table-actions"><button class="icon-button" data-edit-stream="${esc(stream.id)}" title="Edit resource" aria-label="Edit ${esc(stream.title)}"><i data-lucide="pencil"></i></button><button class="icon-button danger" data-delete-stream="${esc(stream.id)}" title="Delete resource" aria-label="Delete ${esc(stream.title)}"><i data-lucide="trash-2"></i></button></div></div>`).join('')}`:emptyState('graduation-cap','No academy content found',streams.length?'Try a different search or filter.':'Add your first course or video lesson.');
   icons();
 }
 
@@ -86,7 +89,7 @@ function renderOrders(){
   icons();
 }
 
-const viewMeta={overview:['Overview','Business snapshot'],products:['Products','Inventory management'],streams:['Streams','Video library'],orders:['Orders','Order management']};
+const viewMeta={overview:['Overview','Business snapshot'],products:['Products','Inventory management'],streams:['Academy','Courses and video lessons'],orders:['Orders','Order management']};
 function setView(view){
   activeView=view;$$('.nav-item').forEach(item=>item.classList.toggle('active',item.dataset.view===view));$$('.app-view').forEach(panel=>panel.classList.toggle('active',panel.id===`${view}View`));
   $('#viewTitle').textContent=viewMeta[view][0];$('#viewEyebrow').textContent=viewMeta[view][1];$('#newProduct').hidden=['streams','orders'].includes(view);$('#newStream').hidden=view!=='streams';closeSidebar();
@@ -99,7 +102,7 @@ function openEditor(product){
 }
 function closeEditor(){editor.classList.remove('open');editorOverlay.classList.remove('open');editor.setAttribute('aria-hidden','true')}
 function openStreamEditor(stream){
-  closeEditor();$('#streamEditorTitle').textContent=stream?'Edit stream':'Upload stream';$('#streamId').value=stream?.id||'';$('#streamTitle').value=stream?.title||'';$('#streamGame').value=stream?.game||'';$('#streamDate').value=stream?.date||new Date().toISOString().slice(0,10);$('#streamPublished').checked=stream?.published!==false;$('#streamFeatured').checked=Boolean(stream?.featured);$('#streamFile').value='';$('#streamFile').required=!stream;$('#streamUploadField').hidden=Boolean(stream);$('#streamFileName').textContent='Choose replay video';$('#streamSaveLabel').textContent=stream?'Save changes':'Upload stream';$('#streamEditorMessage').textContent='';streamEditor.classList.add('open');editorOverlay.classList.add('open');streamEditor.setAttribute('aria-hidden','false');setTimeout(()=>$('#streamTitle').focus(),200);
+  closeEditor();$('#streamEditorTitle').textContent=stream?'Edit learning resource':'Add learning resource';$('#streamId').value=stream?.id||'';$('#streamTitle').value=stream?.title||'';$('#streamType').value=stream?.contentType||'course';$('#streamGame').value=stream?.game||'';$('#streamLevel').value=stream?.level||'Beginner';$('#streamDate').value=stream?.date||new Date().toISOString().slice(0,10);$('#streamDuration').value=stream?.duration||'';$('#streamLessons').value=stream?.lessons||1;$('#streamDescription').value=stream?.description||'';$('#streamPublished').checked=stream?.published!==false;$('#streamFeatured').checked=Boolean(stream?.featured);$('#streamFile').value='';$('#streamFile').required=!stream;$('#streamUploadField').hidden=Boolean(stream);$('#streamFileName').textContent='Choose lesson video';$('#streamSaveLabel').textContent=stream?'Save changes':'Publish resource';$('#streamEditorMessage').textContent='';streamEditor.classList.add('open');editorOverlay.classList.add('open');streamEditor.setAttribute('aria-hidden','false');setTimeout(()=>$('#streamTitle').focus(),200);
 }
 function closeStreamEditor(){streamEditor.classList.remove('open');editorOverlay.classList.remove('open');streamEditor.setAttribute('aria-hidden','true')}
 $('#newProduct').addEventListener('click',()=>openEditor());$('#newStream').addEventListener('click',()=>openStreamEditor());$('#editorClose').addEventListener('click',closeEditor);$('#editorCancel').addEventListener('click',closeEditor);$('#streamEditorClose').addEventListener('click',closeStreamEditor);$('#streamEditorCancel').addEventListener('click',closeStreamEditor);editorOverlay.addEventListener('click',()=>{closeEditor();closeStreamEditor()});
@@ -115,7 +118,7 @@ $('#productsTable').addEventListener('click',async event=>{
 $('#streamsTable').addEventListener('click',async event=>{
   const edit=event.target.closest('[data-edit-stream]'),remove=event.target.closest('[data-delete-stream]');
   if(edit)openStreamEditor(streams.find(stream=>stream.id===edit.dataset.editStream));
-  if(remove&&confirm('Delete this replay and its video file permanently?')){await api(`/api/admin/streams/${remove.dataset.deleteStream}`,{method:'DELETE'});streams=await api('/api/admin/streams');renderAll()}
+  if(remove&&confirm('Delete this academy resource and its video file permanently?')){await api(`/api/admin/streams/${remove.dataset.deleteStream}`,{method:'DELETE'});streams=await api('/api/admin/streams');renderAll()}
 });
 $('#ordersList').addEventListener('click',event=>{const button=event.target.closest('[data-expand]');if(button)button.closest('.order-card').classList.toggle('open')});
 $('#ordersList').addEventListener('change',async event=>{if(event.target.dataset.status){await api(`/api/admin/orders/${event.target.dataset.status}`,{method:'PATCH',body:JSON.stringify({status:event.target.value})});orders=await api('/api/admin/orders');renderAll()}});
@@ -129,13 +132,13 @@ $('#productForm').addEventListener('submit',async event=>{
     await api(id?`/api/admin/products/${id}`:'/api/admin/products',{method:id?'PUT':'POST',body:JSON.stringify(payload)});products=await api('/api/admin/products');renderAll();closeEditor();event.target.reset();
   }catch(error){message.textContent=error.message}finally{button.disabled=false}
 });
-$('#streamFile').addEventListener('change',event=>{$('#streamFileName').textContent=event.target.files[0]?.name||'Choose replay video'});
+$('#streamFile').addEventListener('change',event=>{$('#streamFileName').textContent=event.target.files[0]?.name||'Choose lesson video'});
 $('#streamForm').addEventListener('submit',async event=>{
-  event.preventDefault();const id=$('#streamId').value,file=$('#streamFile').files[0],message=$('#streamEditorMessage'),button=event.submitter,payload={title:$('#streamTitle').value,game:$('#streamGame').value,date:$('#streamDate').value,published:$('#streamPublished').checked,featured:$('#streamFeatured').checked};message.textContent='';button.disabled=true;$('#streamUploadMeter').hidden=Boolean(id);
+  event.preventDefault();const id=$('#streamId').value,file=$('#streamFile').files[0],message=$('#streamEditorMessage'),button=event.submitter,payload={title:$('#streamTitle').value,contentType:$('#streamType').value,game:$('#streamGame').value,level:$('#streamLevel').value,date:$('#streamDate').value,duration:$('#streamDuration').value,lessons:Number($('#streamLessons').value)||1,description:$('#streamDescription').value,published:$('#streamPublished').checked,featured:$('#streamFeatured').checked};message.textContent='';button.disabled=true;$('#streamUploadMeter').hidden=Boolean(id);
   try{
     if(id)await api(`/api/admin/streams/${id}`,{method:'PATCH',body:JSON.stringify(payload)});
     else{
-      if(!file)throw new Error('Choose a replay video.');
+      if(!file)throw new Error('Choose a lesson video.');
       const type=file.type||({mp4:'video/mp4',webm:'video/webm',ogg:'video/ogg',ogv:'video/ogg',mov:'video/quicktime'}[file.name.split('.').pop().toLowerCase()]);
       const params=new URLSearchParams({...payload,published:String(payload.published),featured:String(payload.featured)}),response=await fetch(`/api/admin/streams?${params}`,{method:'POST',headers:{Authorization:`Bearer ${token}`,'Content-Type':type||'application/octet-stream'},body:file}),result=await response.json().catch(()=>({}));if(response.status===401){signOut();throw new Error(result.error||'Your session expired.')}if(!response.ok)throw new Error(result.error||'Upload failed.');
     }

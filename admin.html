@@ -29,10 +29,11 @@
   <div class="admin-shell" id="dashboard">
     <aside class="sidebar" id="sidebar">
       <a class="sidebar-brand" href="index.html"><span>JZ</span><strong>Market</strong></a>
+      <p class="sidebar-label">Workspace</p>
       <nav class="sidebar-nav" aria-label="Admin navigation">
         <button class="nav-item active" data-view="overview"><i data-lucide="layout-dashboard"></i><span>Overview</span></button>
         <button class="nav-item" data-view="products"><i data-lucide="package"></i><span>Products</span></button>
-        <button class="nav-item" data-view="streams"><i data-lucide="clapperboard"></i><span>Streams</span></button>
+        <button class="nav-item" data-view="streams"><i data-lucide="graduation-cap"></i><span>Academy</span></button>
         <button class="nav-item" data-view="orders"><i data-lucide="shopping-bag"></i><span>Orders</span><b id="newOrders">0</b></button>
       </nav>
       <div class="sidebar-section">
@@ -53,18 +54,27 @@
         <button class="icon-button mobile-menu" id="mobileMenu" type="button" title="Open navigation" aria-label="Open navigation"><i data-lucide="menu"></i></button>
         <div><p class="eyebrow" id="viewEyebrow">Business snapshot</p><h1 id="viewTitle">Overview</h1></div>
         <div class="topbar-actions">
+          <span class="system-status"><i></i> Store online</span>
           <button class="icon-button" id="refreshData" type="button" title="Refresh data" aria-label="Refresh data"><i data-lucide="refresh-cw"></i></button>
           <button class="primary-button compact" id="newProduct" type="button"><i data-lucide="plus"></i><span>Add product</span></button>
-          <button class="primary-button compact" id="newStream" type="button" hidden><i data-lucide="upload"></i><span>Upload stream</span></button>
+          <button class="primary-button compact" id="newStream" type="button" hidden><i data-lucide="upload"></i><span>Add lesson</span></button>
         </div>
       </header>
 
       <section class="app-view active" id="overviewView">
+        <div class="overview-welcome">
+          <div>
+            <p class="eyebrow">JZ Market command center</p>
+            <h2>Good <span id="dayPeriod">day</span>, <b id="welcomeName">Owner</b>.</h2>
+            <p>Here is what needs your attention across the store today.</p>
+          </div>
+          <div class="welcome-date"><span id="currentDate">Today</span><small>Live business overview</small></div>
+        </div>
         <div class="metric-strip">
-          <article><span>Revenue</span><strong id="overviewRevenue">$0</strong><small>Non-cancelled orders</small></article>
-          <article><span>Open orders</span><strong id="overviewOpen">0</strong><small>Awaiting completion</small></article>
-          <article><span>Products</span><strong id="overviewProducts">0</strong><small id="overviewStock">0 units in stock</small></article>
-          <article><span>Low stock</span><strong id="overviewLow">0</strong><small>Below 3 units</small></article>
+          <article><div class="metric-label"><span>Revenue</span><i data-lucide="banknote"></i></div><strong id="overviewRevenue">$0</strong><small>Non-cancelled orders</small><em></em></article>
+          <article><div class="metric-label"><span>Open orders</span><i data-lucide="shopping-bag"></i></div><strong id="overviewOpen">0</strong><small>Awaiting completion</small><em></em></article>
+          <article><div class="metric-label"><span>Products</span><i data-lucide="package"></i></div><strong id="overviewProducts">0</strong><small id="overviewStock">0 units in stock</small><em></em></article>
+          <article><div class="metric-label"><span>Low stock</span><i data-lucide="triangle-alert"></i></div><strong id="overviewLow">0</strong><small>Below 3 units</small><em></em></article>
         </div>
         <div class="overview-grid">
           <section class="workspace-section">
@@ -91,11 +101,11 @@
 
       <section class="app-view" id="streamsView">
         <div class="control-row">
-          <label class="search-control"><i data-lucide="search"></i><input id="streamSearch" type="search" placeholder="Search streams"></label>
-          <select id="streamFilter" aria-label="Filter streams">
-            <option value="all">All streams</option><option value="published">Published</option><option value="draft">Drafts</option><option value="featured">Featured</option>
+          <label class="search-control"><i data-lucide="search"></i><input id="streamSearch" type="search" placeholder="Search courses and videos"></label>
+          <select id="streamFilter" aria-label="Filter academy content">
+            <option value="all">All content</option><option value="course">Courses</option><option value="video">Video lessons</option><option value="published">Published</option><option value="draft">Drafts</option><option value="featured">Featured</option>
           </select>
-          <span class="result-count" id="streamResultCount">0 streams</span>
+          <span class="result-count" id="streamResultCount">0 resources</span>
         </div>
         <div class="data-surface"><div class="stream-table" id="streamsTable"></div></div>
       </section>
@@ -136,19 +146,24 @@
 
   <div class="drawer" id="streamEditor" aria-hidden="true">
     <form id="streamForm">
-      <header class="drawer-header"><div><p class="eyebrow">Stream Vault</p><h2 id="streamEditorTitle">Upload stream</h2></div><button class="icon-button" type="button" id="streamEditorClose" title="Close" aria-label="Close"><i data-lucide="x"></i></button></header>
+      <header class="drawer-header"><div><p class="eyebrow">JZ Academy</p><h2 id="streamEditorTitle">Add learning resource</h2></div><button class="icon-button" type="button" id="streamEditorClose" title="Close" aria-label="Close"><i data-lucide="x"></i></button></header>
       <input type="hidden" id="streamId">
       <div class="form-grid">
-        <label class="wide">Stream title<input id="streamTitle" required maxlength="80"></label>
-        <label>Game or category<input id="streamGame" required maxlength="50"></label>
-        <label>Stream date<input id="streamDate" type="date" required></label>
+        <label class="wide">Title<input id="streamTitle" required maxlength="80" placeholder="e.g. Creator Launchpad"></label>
+        <label>Content type<select id="streamType"><option value="course">Course</option><option value="video">Video lesson</option></select></label>
+        <label>Topic or learning path<input id="streamGame" required maxlength="50" placeholder="e.g. Creator"></label>
+        <label>Level<select id="streamLevel"><option value="Beginner">Beginner</option><option value="Intermediate">Intermediate</option><option value="Advanced">Advanced</option><option value="All levels">All levels</option></select></label>
+        <label>Publish date<input id="streamDate" type="date" required></label>
+        <label>Duration<input id="streamDuration" maxlength="20" placeholder="e.g. 45 min"></label>
+        <label>Number of lessons<input id="streamLessons" type="number" min="1" max="100" value="1"></label>
+        <label class="wide">Description<textarea id="streamDescription" rows="4" maxlength="500" placeholder="What will students learn?"></textarea></label>
       </div>
-      <label class="upload-field" id="streamUploadField"><input id="streamFile" type="file" accept="video/mp4,video/webm,video/ogg,video/quicktime,.mov"><i data-lucide="file-video"></i><span id="streamFileName">Choose replay video</span><small>MP4, WebM, OGG or MOV, up to 500MB</small></label>
-      <label class="visibility-control"><span><strong>Published</strong><small>Show this replay in the public Stream Vault</small></span><input id="streamPublished" type="checkbox" checked></label>
-      <label class="visibility-control"><span><strong>Featured stream</strong><small>Move this replay to the front of the vault</small></span><input id="streamFeatured" type="checkbox"></label>
+      <label class="upload-field" id="streamUploadField"><input id="streamFile" type="file" accept="video/mp4,video/webm,video/ogg,video/quicktime,.mov"><i data-lucide="file-video"></i><span id="streamFileName">Choose lesson video</span><small>MP4, WebM, OGG or MOV, up to 500MB</small></label>
+      <label class="visibility-control"><span><strong>Published</strong><small>Show this resource in the public academy</small></span><input id="streamPublished" type="checkbox" checked></label>
+      <label class="visibility-control"><span><strong>Featured resource</strong><small>Give this course or video priority in the academy</small></span><input id="streamFeatured" type="checkbox"></label>
       <div class="upload-meter" id="streamUploadMeter" hidden><i></i><span>Uploading video...</span></div>
       <p class="form-message" id="streamEditorMessage" role="alert"></p>
-      <footer class="drawer-actions"><button class="secondary-button" type="button" id="streamEditorCancel">Cancel</button><button class="primary-button" type="submit"><i data-lucide="save"></i><span id="streamSaveLabel">Upload stream</span></button></footer>
+      <footer class="drawer-actions"><button class="secondary-button" type="button" id="streamEditorCancel">Cancel</button><button class="primary-button" type="submit"><i data-lucide="save"></i><span id="streamSaveLabel">Publish resource</span></button></footer>
     </form>
   </div>
   <button class="sidebar-overlay" id="sidebarOverlay" type="button" aria-label="Close navigation"></button>

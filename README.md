@@ -1,6 +1,6 @@
 # Johnson Zoglo — Portfolio & JZ Market
 
-A creator portfolio, local Stream Vault, and general marketplace for games, phones, laptops, cars, gadgets, and other products.
+A creator portfolio, learning academy, and general marketplace for games, phones, laptops, cars, gadgets, and other products.
 
 ## Run locally
 
@@ -15,7 +15,7 @@ Then open:
 
 - Portfolio: <http://localhost:8002>
 - Market: <http://localhost:8002/shop.html>
-- Stream Vault: <http://localhost:8002/streams.html>
+- JZ Academy: <http://localhost:8002/streams.html>
 - Owner dashboard: <http://localhost:8002/admin.html>
 - Business operations: <http://localhost:8002/operations.html>
 - Team access: <http://localhost:8002/team.html>
@@ -50,6 +50,6 @@ The `portfolio_data_clean` and `portfolio_uploads_clean` named volumes preserve 
 
 Online card payments, transactional email, delivery pricing, tax, customer accounts, and production database hosting still require external services and production configuration.
 
-## Stream storage
+## Academy storage
 
-The Stream Vault is managed from the admin dashboard. Video metadata is stored in `data/streams.json`, and uploaded replay files are stored in the persistent `assets/uploads/` volume.
+JZ Academy is managed from the admin dashboard. Course and video metadata is stored in `data/streams.json`, and uploaded lesson videos are stored in the persistent `assets/uploads/` volume.

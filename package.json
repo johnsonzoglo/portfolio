@@ -6,6 +6,6 @@
   "scripts": {
     "start": "node server.js",
     "seed:admin": "node scripts/seed-admin.js",
-    "check": "node --check server.js && node --check business.js && node --check scripts/seed-admin.js && node --check shop.js && node --check checkout.js && node --check admin.js"
+    "check": "node --check server.js && node --check business.js && node --check scripts/seed-admin.js && node --check shop.js && node --check streams.js && node --check checkout.js && node --check admin.js"
   }
 }

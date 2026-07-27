@@ -1,56 +1,127 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Watch and manage stream replays from Johnson Zoglo." />
-  <meta name="theme-color" content="#090a0f" />
-  <title>Stream Vault — Johnson Zoglo</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" /><link rel="stylesheet" href="social-icons.css" />
-  <link rel="stylesheet" href="streams.css" />
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1841852553167828" crossorigin="anonymous"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Learn practical creator, technology, business, and digital skills with JZ Academy.">
+  <meta name="theme-color" content="#0c100e">
+  <title>JZ Academy — Learn by building</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="streams.css">
 </head>
-<body class="streams-page">
+<body class="streams-page" id="top">
   <div class="grain" aria-hidden="true"></div>
-  <header class="site-header streams-header">
-    <a class="brand" href="index.html"><span>JZ</span><i>STREAM VAULT</i></a>
-    <nav class="nav"><a href="index.html">Portfolio</a><a href="#replays">Replays</a><a href="shop.html">Shop</a></nav>
-    <a class="upload-trigger" href="#replays">Browse replays</a>
+
+  <header class="site-header academy-header">
+    <a class="brand" href="index.html" aria-label="JZ Academy home"><span>JZ</span><i>ACADEMY</i></a>
+    <nav class="nav" aria-label="Academy navigation">
+      <a href="index.html">Portfolio</a>
+      <a href="#library">Learn</a>
+      <a href="#paths">Paths</a>
+      <a href="shop.html">Market</a>
+    </nav>
+    <a class="academy-cta" href="#library">Start learning <span>↘</span></a>
   </header>
-  <aside class="social-rail" aria-label="Social media links">
-    <span>Follow JZ</span>
-    <a href="https://discord.com/" target="_blank" rel="noreferrer" aria-label="Johnson Zoglo on Discord"><img src="assets/social/discord.svg" alt="" /><i>Discord</i></a>
-    <a href="https://www.facebook.com/" target="_blank" rel="noreferrer" aria-label="Johnson Zoglo on Facebook"><img src="assets/social/facebook.svg" alt="" /><i>Facebook</i></a>
-    <a href="https://www.tiktok.com/" target="_blank" rel="noreferrer" aria-label="Johnson Zoglo on TikTok"><img src="assets/social/tiktok.svg" alt="" /><i>TikTok</i></a>
-    <a href="https://www.instagram.com/" target="_blank" rel="noreferrer" aria-label="Johnson Zoglo on Instagram"><img src="assets/social/instagram.svg" alt="" /><i>Instagram</i></a>
-  </aside>
 
   <main>
-    <section class="streams-hero">
-      <div class="stream-signal" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-      <div class="streams-hero-copy reveal visible">
-        <p class="overline"><span class="live-dot"></span> Replay archive / Always online</p>
-        <h1>THE STREAM<br /><span>NEVER ENDS.</span></h1>
-        <p>Missed it live? Catch the gameplay, reactions and best moments right here.</p>
-        <div><a class="btn btn-bright" href="#replays">Watch replays ↓</a></div>
+    <section class="academy-hero">
+      <div class="academy-grid" aria-hidden="true"></div>
+      <div class="academy-hero-copy reveal visible">
+        <p class="overline"><i></i> Practical skills / Clear lessons</p>
+        <h1>LEARN IT.<br>BUILD IT.<br><span>USE IT.</span></h1>
+        <p>Practical courses and focused video lessons for creators, builders, and people turning ideas into real work.</p>
+        <div class="academy-actions">
+          <a class="btn btn-bright" href="#library">Explore the academy <span>↓</span></a>
+          <a href="#paths">View learning paths →</a>
+        </div>
       </div>
-      <div class="stream-screen" aria-hidden="true"><div class="screen-top"><span>REC ●</span><b>JZ_LIVE_001</b></div><div class="screen-play">▶</div><div class="screen-chat"><i></i><i></i><i></i><i></i></div><small>00:42:16:08</small></div>
+
+      <div class="academy-board" aria-hidden="true">
+        <div class="board-top"><span>JZ / ACADEMY</span><b>LEARNING MODE: ON</b></div>
+        <div class="board-main">
+          <small>COURSE 01</small>
+          <strong>CREATOR<br>LAUNCHPAD</strong>
+          <div class="lesson-lines"><i></i><i></i><i></i><i></i></div>
+          <span class="board-play">▶</span>
+        </div>
+        <div class="board-foot"><span>6 LESSONS</span><span>BEGINNER</span><span>BUILD AS YOU LEARN</span></div>
+      </div>
+
+      <div class="academy-stats">
+        <div><strong id="heroCourseCount">0</strong><span>Courses</span></div>
+        <div><strong id="heroVideoCount">0</strong><span>Video lessons</span></div>
+        <div><strong>100%</strong><span>Practical</span></div>
+      </div>
     </section>
 
-    <section id="replays" class="replay-library shell">
-      <div class="library-head"><div><p class="overline">Saved broadcasts</p><h2>REPLAY VAULT</h2></div><div class="library-count"><span id="streamCount">0</span><small>streams saved</small></div></div>
-      <div class="replay-grid" id="replayGrid"></div>
-      <div class="empty-vault" id="emptyVault">
-        <div class="empty-icon">▶</div><h3>The vault is quiet</h3><p>New stream replays are coming soon.</p>
+    <section class="learning-paths shell" id="paths">
+      <header class="paths-head">
+        <div><p class="overline">Choose your direction</p><h2>LEARNING <span>PATHS.</span></h2></div>
+        <p>Start with a goal. Follow a clear route. Finish with something you can use.</p>
+      </header>
+      <div class="path-grid">
+        <article>
+          <div class="path-number">01</div><span>For new creators</span>
+          <h3>Creator Foundations</h3><p>Build confidence with content, cameras, audio, editing, and a repeatable publishing system.</p>
+          <a href="#library" data-path="creator">Explore path <b>→</b></a>
+        </article>
+        <article>
+          <div class="path-number">02</div><span>For digital builders</span>
+          <h3>Build on the Web</h3><p>Turn an idea into a useful website, understand the tools, and ship your first working experience.</p>
+          <a href="#library" data-path="web">Explore path <b>→</b></a>
+        </article>
+        <article>
+          <div class="path-number">03</div><span>For growing brands</span>
+          <h3>Content to Commerce</h3><p>Connect your content, audience, offer, and customer journey into one clear business system.</p>
+          <a href="#library" data-path="business">Explore path <b>→</b></a>
+        </article>
       </div>
     </section>
 
-    <section class="stream-note"><div class="shell"><p class="overline">From live to replay</p><h2>THE BEST RUNS.<br /><span>READY AGAIN.</span></h2><p>Gameplay, reactions, and standout moments, selected from the archive and published here.</p><footer><p>© <span id="year">2026</span> Johnson Zoglo</p><div><a href="index.html">Portfolio ↗</a><a href="shop.html">Shop ↗</a></div><a href="#top">Back to top ↑</a></footer></div></section>
+    <section class="academy-library" id="library">
+      <div class="shell">
+        <header class="library-head">
+          <div><p class="overline">Learn at your pace</p><h2>COURSES &<br><span>VIDEOS.</span></h2></div>
+          <div class="library-count"><strong id="streamCount">0</strong><span>learning resources</span></div>
+        </header>
+
+        <div class="academy-tools">
+          <div class="academy-filters" role="group" aria-label="Filter academy content">
+            <button class="active" data-filter="all">All learning</button>
+            <button data-filter="course">Courses</button>
+            <button data-filter="video">Video lessons</button>
+          </div>
+          <label class="academy-search">
+            <span>Search</span><input id="academySearch" type="search" placeholder="Search a skill or topic"><b>⌕</b>
+          </label>
+        </div>
+
+        <div class="academy-content-grid" id="replayGrid" aria-live="polite"></div>
+        <div class="empty-vault" id="emptyVault">
+          <div class="empty-icon">▶</div><h3>Lessons are being prepared</h3><p>New courses and focused videos will appear here soon.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="academy-promise">
+      <div class="shell">
+        <p class="overline">The JZ Academy method</p>
+        <div class="promise-grid">
+          <h2>LESS THEORY.<br>MORE <span>DOING.</span></h2>
+          <div>
+            <p>Every lesson is designed to move you from watching to making. Clear explanations, useful examples, and a practical next step.</p>
+            <ul><li><b>01</b> Learn the idea</li><li><b>02</b> See it in action</li><li><b>03</b> Build it yourself</li></ul>
+          </div>
+        </div>
+        <footer><p>© <span id="year">2026</span> JZ Academy</p><div><a href="index.html">Portfolio ↗</a><a href="shop.html">Market ↗</a></div><a href="#top">Back to top ↑</a></footer>
+      </div>
+    </section>
   </main>
 
-  <script src="script.js"></script><script src="streams.js"></script>
+  <script src="script.js"></script>
+  <script src="streams.js"></script>
 </body>
 </html>
