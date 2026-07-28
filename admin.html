@@ -219,17 +219,18 @@
 
       <section class="app-view" id="streamsView">
         <section class="academy-admin-hero">
-          <div><p class="eyebrow">Learning management</p><h2>Build courses lesson by lesson.</h2><p>Create the course, arrange modules, upload each lesson video and resource, set access, then publish when it is ready.</p></div>
+          <div><p class="eyebrow">Learning management</p><h2>Build courses students finish.</h2><p>Create structured learning paths, manage every lesson and control how students access your knowledge.</p><button class="academy-hero-action" type="button" data-create-course><i data-lucide="plus"></i><span>Create a course</span></button></div>
           <div class="academy-admin-stats"><article><strong id="academyCourseCount">0</strong><span>Courses</span></article><article><strong id="academyLessonCount">0</strong><span>Lessons</span></article><article><strong id="academyPaidCount">0</strong><span>Paid</span></article></div>
         </section>
-        <div class="control-row">
+        <div class="academy-workflow" aria-label="Course publishing workflow"><span><b>01</b> Create course</span><i data-lucide="arrow-right"></i><span><b>02</b> Build curriculum</span><i data-lucide="arrow-right"></i><span><b>03</b> Set access</span><i data-lucide="arrow-right"></i><span><b>04</b> Publish</span></div>
+        <div class="control-row academy-controls">
           <label class="search-control"><i data-lucide="search"></i><input id="streamSearch" type="search" placeholder="Search courses and videos"></label>
           <select id="streamFilter" aria-label="Filter academy content">
             <option value="all">All content</option><option value="course">Courses</option><option value="video">Video lessons</option><option value="published">Published</option><option value="draft">Drafts</option><option value="featured">Featured</option>
           </select>
           <span class="result-count" id="streamResultCount">0 resources</span>
         </div>
-        <div class="data-surface"><div class="stream-table" id="streamsTable"></div></div>
+        <div class="academy-library" id="streamsTable"></div>
       </section>
 
       <section class="app-view" id="ordersView">
@@ -314,9 +315,20 @@
         <aside class="academy-editor-sidebar">
           <section class="academy-editor-section">
             <div class="academy-editor-section-head"><span>03</span><div><strong>Cover & media</strong><small>Course artwork and optional main video</small></div></div>
+            <div class="academy-cover-preview" id="streamCoverPreview"><img id="streamCoverPreviewImage" alt=""><div id="streamCoverPreviewEmpty"><i data-lucide="image"></i><span>Your course cover</span><small>16:9 works best</small></div></div>
             <label class="upload-field academy-cover-upload"><input id="streamCoverPhoto" type="file" accept="image/png,image/jpeg,image/webp"><i data-lucide="image-plus"></i><span id="streamCoverName">Choose course cover image</span><small>PNG, JPEG or WebP, up to 5MB</small></label>
             <input type="hidden" id="streamCoverImage">
             <label class="upload-field" id="streamUploadField"><input id="streamFile" type="file" accept="video/mp4,video/webm,video/ogg,video/quicktime,.mov"><i data-lucide="file-video"></i><span id="streamFileName">Choose main video</span><small>For a single video lesson, up to 500MB</small></label>
+          </section>
+          <section class="academy-editor-section academy-readiness">
+            <div class="academy-editor-section-head"><span><i data-lucide="sparkles"></i></span><div><strong>Ready to publish?</strong><small id="academyReadinessSummary">Complete the course essentials</small></div></div>
+            <div class="readiness-meter"><i id="academyReadinessMeter"></i></div>
+            <div class="readiness-list">
+              <span data-readiness="details"><i data-lucide="circle"></i> Course details</span>
+              <span data-readiness="cover"><i data-lucide="circle"></i> Cover image</span>
+              <span data-readiness="curriculum"><i data-lucide="circle"></i> Curriculum</span>
+              <span data-readiness="access"><i data-lucide="circle"></i> Access configured</span>
+            </div>
           </section>
           <section class="academy-editor-section">
             <div class="academy-editor-section-head"><span>04</span><div><strong>Access & publishing</strong><small>Control price and visibility</small></div></div>
