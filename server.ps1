@@ -1,5 +1,5 @@
 param(
-  [int]$Port = 8002,
+  [int]$Port = 8000,
   [string]$AdminPassword = ''
 )
 

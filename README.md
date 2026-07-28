@@ -13,17 +13,17 @@ npm start
 
 Then open:
 
-- Portfolio: <http://localhost:8002>
-- Market: <http://localhost:8002/shop.html>
-- JZ Academy: <http://localhost:8002/streams.html>
-- Owner dashboard: <http://localhost:8002/admin.html>
-- Business operations: <http://localhost:8002/operations.html>
-- Team access: <http://localhost:8002/team.html>
+- Portfolio: <http://localhost:8000>
+- Market: <http://localhost:8000/shop.html>
+- JZ Academy: <http://localhost:8000/streams.html>
+- Owner dashboard: <http://localhost:8000/admin.html>
+- Business operations: <http://localhost:8000/operations.html>
+- Team access: <http://localhost:8000/team.html>
 
 You can also use the launcher:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\server.ps1 -Port 8002 -AdminPassword 'choose-a-private-password'
+powershell -ExecutionPolicy Bypass -File .\server.ps1 -Port 8000 -AdminPassword 'choose-a-private-password'
 ```
 
 The password prompt hides the value while you type. There is no default admin password.
@@ -36,7 +36,7 @@ The password prompt hides the value while you type. There is no default admin pa
 4. Deploy using `docker-compose.yml`.
 5. Open the `portfolio` container terminal and run `npm run seed:admin`.
 6. Enter a unique password of at least 12 characters at the hidden prompt.
-7. In the Domains tab, add an HTTPS domain for the `portfolio` service on port `8002`.
+7. In the Domains tab, add an HTTPS domain for the `portfolio` service on port `8000`.
 8. In Stripe, send `checkout.session.completed` webhooks to `https://your-domain/api/payments/stripe/webhook`.
 
 The data, uploads, and backup named volumes preserve business records and media across redeployments. Automated full snapshots use `BACKUP_INTERVAL_HOURS` and remove snapshots older than `BACKUP_RETENTION_DAYS`. Run `npm run seed:admin` whenever the owner password needs to be reset.

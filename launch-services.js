@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 
-const appUrl = request => (process.env.APP_URL || `${request.headers['x-forwarded-proto'] || 'http'}://${request.headers.host || 'localhost:8002'}`).replace(/\/$/, '');
+const appUrl = request => (process.env.APP_URL || `${request.headers['x-forwarded-proto'] || 'http'}://${request.headers.host || 'localhost:8000'}`).replace(/\/$/, '');
 const stripeEnabled = () => Boolean(process.env.STRIPE_SECRET_KEY && process.env.STRIPE_WEBHOOK_SECRET);
 const emailEnabled = () => Boolean(process.env.RESEND_API_KEY && process.env.EMAIL_FROM);
 

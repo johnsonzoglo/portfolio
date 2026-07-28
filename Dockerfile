@@ -2,7 +2,7 @@ FROM node:22-alpine
 
 ENV NODE_ENV=production \
     HOST=0.0.0.0 \
-    PORT=8002
+    PORT=8000
 
 WORKDIR /app
 
@@ -16,6 +16,6 @@ RUN rm -f /app/data/users.json \
 
 USER node
 
-EXPOSE 8002
+EXPOSE 8000
 
 CMD ["node", "server.js"]
