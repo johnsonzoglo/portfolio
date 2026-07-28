@@ -59,7 +59,7 @@
           <span class="system-status"><i></i> Store online</span>
           <button class="icon-button" id="refreshData" type="button" title="Refresh data" aria-label="Refresh data"><i data-lucide="refresh-cw"></i></button>
           <button class="primary-button compact" id="newProduct" type="button"><i data-lucide="plus"></i><span>Add product</span></button>
-          <button class="primary-button compact" id="newStream" type="button" hidden><i data-lucide="upload"></i><span>Add lesson</span></button>
+          <button class="primary-button compact" id="newStream" type="button" hidden><i data-lucide="plus"></i><span>New course</span></button>
         </div>
       </header>
 
@@ -218,6 +218,10 @@
       </section>
 
       <section class="app-view" id="streamsView">
+        <section class="academy-admin-hero">
+          <div><p class="eyebrow">Learning management</p><h2>Build courses lesson by lesson.</h2><p>Create the course, arrange modules, upload each lesson video and resource, set access, then publish when it is ready.</p></div>
+          <div class="academy-admin-stats"><article><strong id="academyCourseCount">0</strong><span>Courses</span></article><article><strong id="academyLessonCount">0</strong><span>Lessons</span></article><article><strong id="academyPaidCount">0</strong><span>Paid</span></article></div>
+        </section>
         <div class="control-row">
           <label class="search-control"><i data-lucide="search"></i><input id="streamSearch" type="search" placeholder="Search courses and videos"></label>
           <select id="streamFilter" aria-label="Filter academy content">
@@ -284,30 +288,52 @@
 
   <div class="drawer" id="streamEditor" aria-hidden="true">
     <form id="streamForm">
-      <header class="drawer-header"><div><p class="eyebrow">JZ Academy</p><h2 id="streamEditorTitle">Add learning resource</h2></div><button class="icon-button" type="button" id="streamEditorClose" title="Close" aria-label="Close"><i data-lucide="x"></i></button></header>
+      <header class="drawer-header academy-editor-header"><div><p class="eyebrow">JZ Academy / Course builder</p><h2 id="streamEditorTitle">Add learning resource</h2><p id="streamEditorSummary">Set up the course and build its curriculum.</p></div><div class="academy-editor-header-actions"><a class="secondary-button" id="streamPreviewLink" href="streams.html" target="_blank" rel="noopener"><i data-lucide="external-link"></i> Preview</a><button class="icon-button" type="button" id="streamEditorClose" title="Close" aria-label="Close"><i data-lucide="x"></i></button></div></header>
       <input type="hidden" id="streamId">
-      <div class="form-grid">
-        <label class="wide">Title<input id="streamTitle" required maxlength="80" placeholder="e.g. Creator Launchpad"></label>
-        <label>Content type<select id="streamType"><option value="course">Course</option><option value="video">Video lesson</option></select></label>
-        <label>Access<select id="streamAccess"><option value="free">Free access</option><option value="paid">Paid access</option></select></label>
-        <label>Price (USD)<input id="streamPrice" type="number" min="0" step="0.01" value="0"></label>
-        <label>Topic or learning path<input id="streamGame" required maxlength="50" placeholder="e.g. Creator"></label>
-        <label>Level<select id="streamLevel"><option value="Beginner">Beginner</option><option value="Intermediate">Intermediate</option><option value="Advanced">Advanced</option><option value="All levels">All levels</option></select></label>
-        <label>Publish date<input id="streamDate" type="date" required></label>
-        <label>Schedule publish<input id="streamPublishAt" type="datetime-local"></label>
-        <label>Duration<input id="streamDuration" maxlength="20" placeholder="e.g. 45 min"></label>
-        <label>Number of lessons<input id="streamLessons" type="number" min="1" max="100" value="1"></label>
-        <label class="wide">Description<textarea id="streamDescription" rows="4" maxlength="500" placeholder="What will students learn?"></textarea></label>
+      <input type="hidden" id="streamSource">
+      <div class="academy-editor-layout">
+        <div class="academy-editor-main">
+          <section class="academy-editor-section">
+            <div class="academy-editor-section-head"><span>01</span><div><strong>Course details</strong><small>What students see before they enroll</small></div></div>
+            <div class="form-grid">
+              <label class="wide">Course title<input id="streamTitle" required maxlength="80" placeholder="e.g. Creator Launchpad"></label>
+              <label>Content type<select id="streamType"><option value="course">Full course</option><option value="video">Single video lesson</option></select></label>
+              <label>Topic or learning path<input id="streamGame" required maxlength="50" placeholder="e.g. Creator skills"></label>
+              <label>Level<select id="streamLevel"><option value="Beginner">Beginner</option><option value="Intermediate">Intermediate</option><option value="Advanced">Advanced</option><option value="All levels">All levels</option></select></label>
+              <label>Duration<input id="streamDuration" maxlength="20" placeholder="e.g. 2 hr 30 min"></label>
+              <label>Lessons<input id="streamLessons" type="number" min="1" max="100" value="1" readonly><small class="field-helper">Calculated from the curriculum</small></label>
+              <label class="wide">Course description<textarea id="streamDescription" rows="5" maxlength="500" placeholder="Explain what students will learn and build."></textarea></label>
+            </div>
+          </section>
+          <section class="course-builder academy-editor-section" id="courseBuilder">
+            <div class="course-builder-head"><div class="academy-editor-section-head"><span>02</span><div><strong>Curriculum</strong><small>Arrange modules, lessons, videos, and downloads</small></div></div><button class="secondary-button" id="addModule" type="button"><i data-lucide="plus"></i> Add module</button></div>
+            <div class="curriculum-empty" id="curriculumEmpty"><i data-lucide="layers-3"></i><strong>No modules yet</strong><p>Add a module, then add lessons and upload their content.</p></div>
+            <div id="moduleList"></div>
+          </section>
+        </div>
+        <aside class="academy-editor-sidebar">
+          <section class="academy-editor-section">
+            <div class="academy-editor-section-head"><span>03</span><div><strong>Cover & media</strong><small>Course artwork and optional main video</small></div></div>
+            <label class="upload-field academy-cover-upload"><input id="streamCoverPhoto" type="file" accept="image/png,image/jpeg,image/webp"><i data-lucide="image-plus"></i><span id="streamCoverName">Choose course cover image</span><small>PNG, JPEG or WebP, up to 5MB</small></label>
+            <input type="hidden" id="streamCoverImage">
+            <label class="upload-field" id="streamUploadField"><input id="streamFile" type="file" accept="video/mp4,video/webm,video/ogg,video/quicktime,.mov"><i data-lucide="file-video"></i><span id="streamFileName">Choose main video</span><small>For a single video lesson, up to 500MB</small></label>
+          </section>
+          <section class="academy-editor-section">
+            <div class="academy-editor-section-head"><span>04</span><div><strong>Access & publishing</strong><small>Control price and visibility</small></div></div>
+            <div class="form-grid one-column">
+              <label>Access<select id="streamAccess"><option value="free">Free access</option><option value="paid">Paid access</option></select></label>
+              <label>Price (USD)<input id="streamPrice" type="number" min="0" step="0.01" value="0"></label>
+              <label>Publish date<input id="streamDate" type="date" required></label>
+              <label>Schedule publish<input id="streamPublishAt" type="datetime-local"></label>
+            </div>
+            <label class="visibility-control"><span><strong>Published</strong><small>Show in the public Academy</small></span><input id="streamPublished" type="checkbox" checked></label>
+            <label class="visibility-control"><span><strong>Featured resource</strong><small>Prioritize this course</small></span><input id="streamFeatured" type="checkbox"></label>
+          </section>
+        </aside>
       </div>
-      <label class="upload-field" id="streamUploadField"><input id="streamFile" type="file" accept="video/mp4,video/webm,video/ogg,video/quicktime,.mov"><i data-lucide="file-video"></i><span id="streamFileName">Choose lesson video</span><small>MP4, WebM, OGG or MOV, up to 500MB</small></label>
-      <label class="upload-field"><input id="streamCoverPhoto" type="file" accept="image/png,image/jpeg,image/webp"><i data-lucide="image-plus"></i><span id="streamCoverName">Choose course cover image</span><small>Optional PNG, JPEG or WebP, up to 5MB</small></label>
-      <input type="hidden" id="streamCoverImage">
-      <section class="course-builder" id="courseBuilder"><div class="course-builder-head"><div><strong>Course outline</strong><small>Build modules and lessons in order</small></div><button class="secondary-button" id="addModule" type="button"><i data-lucide="plus"></i> Add module</button></div><div id="moduleList"></div></section>
-      <label class="visibility-control"><span><strong>Published</strong><small>Show this resource in the public academy</small></span><input id="streamPublished" type="checkbox" checked></label>
-      <label class="visibility-control"><span><strong>Featured resource</strong><small>Give this course or video priority in the academy</small></span><input id="streamFeatured" type="checkbox"></label>
       <div class="upload-meter" id="streamUploadMeter" hidden><i></i><span>Uploading video...</span></div>
       <p class="form-message" id="streamEditorMessage" role="alert"></p>
-      <footer class="drawer-actions"><button class="secondary-button" type="button" id="streamEditorCancel">Cancel</button><button class="primary-button" type="submit"><i data-lucide="save"></i><span id="streamSaveLabel">Publish resource</span></button></footer>
+      <footer class="drawer-actions academy-editor-actions"><div><strong id="curriculumStatus">0 modules · 0 lessons</strong><small>Changes are saved only when you press Save.</small></div><button class="secondary-button" type="button" id="streamEditorCancel">Cancel</button><button class="primary-button" type="submit"><i data-lucide="save"></i><span id="streamSaveLabel">Save course</span></button></footer>
     </form>
   </div>
   <button class="sidebar-overlay" id="sidebarOverlay" type="button" aria-label="Close navigation"></button>

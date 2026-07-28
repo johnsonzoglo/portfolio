@@ -32,3 +32,23 @@ test('paid media is served only through signed access URLs', () => {
   assert.match(source, /\/api\/media\/secure/);
   assert.match(source, /mediaSignature/);
 });
+
+test('Academy admin supports editable modules, lessons, and direct uploads', () => {
+  const root = path.resolve(__dirname, '..');
+  const page = fs.readFileSync(path.join(root, 'admin.html'), 'utf8');
+  const client = fs.readFileSync(path.join(root, 'admin.js'), 'utf8');
+  const server = fs.readFileSync(path.join(root, 'server.js'), 'utf8');
+  for (const id of ['moduleList', 'addModule', 'streamLessons', 'curriculumStatus', 'streamPreviewLink']) {
+    assert.match(page, new RegExp(`id="${id}"`));
+  }
+  assert.match(client, /lesson-video-file/);
+  assert.match(client, /lesson-resource-file/);
+  assert.match(client, /data-lesson-move/);
+  assert.match(server, /\/api\/admin\/academy-upload/);
+});
+
+test('security policy permits the same-origin homepage editor preview', () => {
+  const source = fs.readFileSync(path.resolve(__dirname, '..', 'server.js'), 'utf8');
+  assert.match(source, /X-Frame-Options','SAMEORIGIN/);
+  assert.match(source, /frame-src 'self' https:\/\/checkout\.stripe\.com/);
+});
