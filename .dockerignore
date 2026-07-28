@@ -9,3 +9,13 @@ compose*.yaml
 compose*.yml
 README.md
 assets/uploads
+backups
+tests
+data/users.json
+data/customers.json
+data/orders.json
+data/audit.json
+data/analytics.json
+data/notifications.json
+data/support.json
+data/reviews.json

@@ -31,15 +31,16 @@ The password prompt hides the value while you type. There is no default admin pa
 ## Deploy with Dokploy
 
 1. Create a Docker Compose service from this GitHub repository.
-2. Copy `.env.example` to a private `.env` configuration and set the public URL and long random signing secrets.
-3. Add Stripe and Resend credentials when card payments and transactional email are required.
-4. Deploy using `docker-compose.yml`.
-5. Open the `portfolio` container terminal and run `npm run seed:admin`.
-6. Enter a unique password of at least 12 characters at the hidden prompt.
-7. In the Domains tab, add an HTTPS domain for the `portfolio` service on port `8000`.
-8. In Stripe, send `checkout.session.completed` webhooks to `https://your-domain/api/payments/stripe/webhook`.
+2. Copy `.env.example` to a private `.env` configuration.
+3. Set the public HTTPS `APP_URL`, a unique `ADMIN_PASSWORD`, and two different random signing secrets of at least 32 characters.
+4. Add Stripe and Resend credentials when card payments and transactional email are required. Each integration must be configured as a complete key pair.
+5. Deploy using `docker-compose.yml`.
+6. In the Domains tab, add the HTTPS domain for the `portfolio` service on port `8000`.
+7. In Stripe, send `checkout.session.completed` webhooks to `https://your-domain/api/payments/stripe/webhook`.
 
 The data, uploads, and backup named volumes preserve business records and media across redeployments. Automated full snapshots use `BACKUP_INTERVAL_HOURS` and remove snapshots older than `BACKUP_RETENTION_DAYS`. Run `npm run seed:admin` whenever the owner password needs to be reset.
+
+The server refuses to start in production when the public URL is not HTTPS, required secrets are weak or missing, the first owner password is missing, or only half of an external integration is configured. The container runs without Linux capabilities, with a read-only application filesystem and writable volumes only for data, uploads, backups, and temporary files.
 
 ## Commerce features
 
@@ -73,8 +74,12 @@ JZ Academy is managed from the admin dashboard. Courses support modules, ordered
 - **Recovery:** Password-reset links are one-time, hashed in storage, and expire after 30 minutes.
 - **Media:** Paid local uploads use signed, one-hour delivery URLs. For large production video libraries, place the origin behind a CDN and keep JZ access checks in front of delivery.
 - **Security:** HTTPS should be terminated by the deployment platform. The server adds content, framing, referrer, and browser-permission security headers.
+- **Public files:** Only approved frontend pages, styles, scripts, and assets are served. Source code, environment files, backups, customer records, password hashes, and Git metadata are not web-accessible or copied into production image layers.
 - **Legal:** Terms, privacy, refund, Academy access, and cookie policies are available at `/legal.html`.
-- **Health:** Deployment monitoring can call `/api/health`.
+- **Health:** Deployment monitoring uses `/api/health` for liveness and `/api/ready` for writable-storage and owner-account readiness.
+- **Runtime:** Graceful shutdown waits for queued data writes before the container exits. Proxy-aware login throttling is enabled with `TRUST_PROXY=true`.
+
+This deployment is designed for one application instance using persistent volumes. Before horizontally scaling to multiple replicas, migrate the JSON business store and in-memory sessions to shared database and session services.
 
 ## Verification
 

@@ -17,22 +17,37 @@ const CUSTOMERS_FILE = path.join(DATA, 'customers.json');
 const REVIEWS_FILE = path.join(DATA, 'reviews.json');
 const SUPPORT_FILE = path.join(DATA, 'support.json');
 const NOTIFICATIONS_FILE = path.join(DATA, 'notifications.json');
-const UPLOADS = path.join(ROOT, 'assets', 'uploads');
+const ASSETS = path.join(ROOT, 'assets');
+const UPLOADS = path.join(ASSETS, 'uploads');
 const BACKUPS = path.join(ROOT, 'backups');
 const PORT = Number(process.env.PORT || 8000);
 const HOST = process.env.HOST || '0.0.0.0';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 const launch = require('./launch-services');
 const MEDIA_SECRET = process.env.MEDIA_SIGNING_SECRET || process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex');
 const sessions = new Map();
 const customerSessions = new Map();
 const loginAttempts = new Map();
 let writeQueue = Promise.resolve();
+let shuttingDown = false;
 
 fs.mkdirSync(DATA, { recursive: true });
 fs.mkdirSync(UPLOADS, { recursive: true });
 fs.mkdirSync(BACKUPS, { recursive: true });
 const business = require('./business')(ROOT);
+function validateProductionConfig(){
+  if(!IS_PRODUCTION)return;
+  const errors=[],appUrl=String(process.env.APP_URL||''),sessionSecret=String(process.env.SESSION_SECRET||''),mediaSecret=String(process.env.MEDIA_SIGNING_SECRET||''),placeholder=value=>/replace-with|your-domain/i.test(value);
+  if(sessionSecret.length<32||placeholder(sessionSecret))errors.push('SESSION_SECRET must contain at least 32 random characters.');
+  if(mediaSecret.length<32||placeholder(mediaSecret))errors.push('MEDIA_SIGNING_SECRET must contain at least 32 different random characters.');
+  if(!/^https:\/\//i.test(appUrl)||placeholder(appUrl))errors.push('APP_URL must be a public HTTPS URL.');
+  if(!fs.existsSync(USERS_FILE)&&(ADMIN_PASSWORD.length<12||placeholder(ADMIN_PASSWORD)))errors.push('ADMIN_PASSWORD must contain at least 12 unique characters on the first deployment.');
+  if(Boolean(process.env.STRIPE_SECRET_KEY)!==Boolean(process.env.STRIPE_WEBHOOK_SECRET))errors.push('Stripe secret and webhook keys must be configured together.');
+  if(Boolean(process.env.RESEND_API_KEY)!==Boolean(process.env.EMAIL_FROM))errors.push('RESEND_API_KEY and EMAIL_FROM must be configured together.');
+  if(errors.length)throw new Error(`Production configuration is invalid:\n- ${errors.join('\n- ')}`);
+}
+validateProductionConfig();
 const hashPassword=(password,salt=crypto.randomBytes(16).toString('hex'))=>`${salt}:${crypto.scryptSync(password,salt,64).toString('hex')}`;
 const verifyPassword=(password,stored)=>{try{const[salt,hash]=stored.split(':'),actual=crypto.scryptSync(password,salt,64),expected=Buffer.from(hash,'hex');return actual.length===expected.length&&crypto.timingSafeEqual(actual,expected)}catch{return false}};
 const createOwner=password=>({id:crypto.randomUUID(),username:'owner',name:'Johnson Zoglo',role:'owner',passwordHash:hashPassword(password),active:true,createdAt:new Date().toISOString()});
@@ -47,6 +62,7 @@ if(!fs.existsSync(SUPPORT_FILE))fs.writeFileSync(SUPPORT_FILE,'[]');
 if(!fs.existsSync(NOTIFICATIONS_FILE))fs.writeFileSync(NOTIFICATIONS_FILE,'[]');
 
 const mime = { '.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json; charset=utf-8','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.svg':'image/svg+xml','.webp':'image/webp','.mp4':'video/mp4','.webm':'video/webm','.ogg':'video/ogg','.ogv':'video/ogg','.mov':'video/quicktime','.ico':'image/x-icon' };
+const PUBLIC_FILES = new Set(['index.html','shop.html','streams.html','learn.html','auth.html','account.html','checkout.html','admin.html','operations.html','team.html','invoice.html','legal.html','styles.css','social-icons.css','home.css','shop.css','streams.css','learn.css','account.css','checkout.css','admin.css','operations.css','commerce.css','market.css','legal.css','script.js','shop.js','streams.js','learn.js','auth.js','account.js','checkout.js','admin.js','operations.js','team.js','invoice.js']);
 const readJson = (file, fallback=[]) => { try { return JSON.parse(fs.readFileSync(file, 'utf8')); } catch { return fallback; } };
 const writeJson = (file, value) => {
   writeQueue = writeQueue.then(async () => {
@@ -61,6 +77,7 @@ const body = (req, limit=8_000_000) => new Promise((resolve,reject) => { let siz
 const rawBody = (req, limit=1_000_000) => new Promise((resolve,reject) => { let size=0,chunks=[]; req.on('data',chunk=>{size+=chunk.length;if(size>limit){reject(new Error('Request too large'));req.destroy();}else chunks.push(chunk)});req.on('end',()=>resolve(Buffer.concat(chunks).toString()));req.on('error',reject); });
 const clean = (value, max=200) => String(value || '').trim().slice(0,max);
 const money = value => Math.round(Number(value) * 100) / 100;
+const clientIp=req=>process.env.TRUST_PROXY==='true'?clean(String(req.headers['x-forwarded-for']||'').split(',')[0],100)||req.socket.remoteAddress||'unknown':req.socket.remoteAddress||'unknown';
 const authorized = req => { const token=(req.headers.authorization||'').replace('Bearer ',''); const session=sessions.get(token); return session && session.expiry>Date.now()?session:null; };
 const customerAuthorized = req => { const token=(req.headers.authorization||'').replace('Bearer ',''); const session=customerSessions.get(token); return session && session.expiry>Date.now()?session:null; };
 const safeCustomer = customer => { const {passwordHash,recoveryToken,...safe}=customer; return safe; };
@@ -83,10 +100,11 @@ async function createSnapshot(actor='system'){const name=`snapshot-${new Date().
 
 async function api(req,res,url) {
   if(req.method==='GET'&&url.pathname==='/api/health')return json(res,200,{ok:true,service:'jz-platform',payments:launch.stripeEnabled(),email:launch.emailEnabled(),time:new Date().toISOString()});
+  if(req.method==='GET'&&url.pathname==='/api/ready'){let storage=true;try{for(const directory of [DATA,UPLOADS,BACKUPS])fs.accessSync(directory,fs.constants.R_OK|fs.constants.W_OK)}catch{storage=false}const ownerReady=readJson(USERS_FILE).some(user=>user.role==='owner'&&user.active!==false),ready=!shuttingDown&&storage&&ownerReady;return json(res,ready?200:503,{ready,storage,owner:ownerReady,shuttingDown})}
   if(req.method==='POST'&&url.pathname==='/api/payments/stripe/webhook'){const raw=await rawBody(req),event=launch.verifyStripeEvent(raw,req.headers['stripe-signature']);if(!event)return json(res,400,{error:'Invalid webhook signature'});if(event.type==='checkout.session.completed'&&event.data?.object?.payment_status==='paid'){const order=readJson(ORDERS_FILE).find(item=>item.id===event.data.object.metadata?.orderId);if(order)await grantPaidOrder(order,'stripe')}return json(res,200,{received:true})}
   if(req.method==='GET'&&url.pathname==='/api/media/secure'){const courseId=clean(url.searchParams.get('course'),100),mediaPath=clean(url.searchParams.get('path'),500),customerId=clean(url.searchParams.get('customer'),100),expires=Number(url.searchParams.get('expires')),signature=clean(url.searchParams.get('signature'),128),expected=mediaSignature(courseId,mediaPath,expires,customerId);if(!expires||expires<Math.floor(Date.now()/1000)||signature.length!==expected.length||!crypto.timingSafeEqual(Buffer.from(signature),Buffer.from(expected)))return json(res,403,{error:'This media link has expired.'});const customer=readJson(CUSTOMERS_FILE).find(item=>item.id===customerId&&(item.enrollments||[]).some(entry=>entry.courseId===courseId));const stream=readJson(STREAMS_FILE).find(item=>item.id===courseId);const allowed=stream&&[stream.src,...(stream.modules||[]).flatMap(module=>(module.lessons||[]).flatMap(lesson=>[lesson.video,lesson.resource]))].includes(mediaPath);if(!customer||!allowed)return json(res,403,{error:'Course access is required.'});if(/^https:\/\//i.test(mediaPath)){const origin=await fetch(mediaPath,{headers:req.headers.range?{Range:req.headers.range}:{}});if(!origin.ok&&origin.status!==206)return json(res,502,{error:'The protected media origin is unavailable.'});for(const header of ['content-type','content-length','content-range','accept-ranges','content-disposition']){const value=origin.headers.get(header);if(value)res.setHeader(header,value)}res.statusCode=origin.status;res.setHeader('Cache-Control','private, no-store');return origin.body?Readable.fromWeb(origin.body).pipe(res):res.end()}const target=path.resolve(ROOT,mediaPath);if(!target.startsWith(UPLOADS+path.sep))return json(res,403,{error:'Only protected uploaded media or HTTPS media origins can be served.'});return serveFile(req,res,target)}
   if (req.method==='POST' && url.pathname==='/api/admin/login') {
-    const ip=req.socket.remoteAddress||'local',attempt=loginAttempts.get(ip)||{count:0,until:0};if(attempt.count>=5&&attempt.until>Date.now())return json(res,429,{error:'Too many attempts. Try again in 15 minutes.'});
+    const ip=clientIp(req),attempt=loginAttempts.get(ip)||{count:0,until:0};if(attempt.count>=5&&attempt.until>Date.now())return json(res,429,{error:'Too many attempts. Try again in 15 minutes.'});
     const data=await body(req,10000),username=clean(data.username||'owner',50).toLowerCase(),user=readJson(USERS_FILE).find(item=>item.username===username&&item.active!==false);if(!user||!verifyPassword(clean(data.password,200),user.passwordHash)){loginAttempts.set(ip,{count:attempt.count+1,until:Date.now()+15*60*1000});return json(res,401,{error:'Incorrect username or password'});}loginAttempts.delete(ip);
     const token=crypto.randomBytes(24).toString('hex');sessions.set(token,{expiry:Date.now()+8*60*60*1000,user:{id:user.id,username:user.username,name:user.name,role:user.role}});business.audit('auth.login',user.username,user.username);return json(res,200,{token,expiresIn:28800,user:{name:user.name,username:user.username,role:user.role}});
   }
@@ -98,7 +116,7 @@ async function api(req,res,url) {
     customers.push(customer);await writeJson(CUSTOMERS_FILE,customers);const token=crypto.randomBytes(24).toString('hex');customerSessions.set(token,{expiry:Date.now()+30*24*60*60*1000,customerId:customer.id});business.audit('customer.registered',customer.email,'customer');launch.sendEmail({to:customer.email,subject:'Welcome to JZ',html:launch.emailShell(`Welcome, ${customer.name.split(/\s+/)[0]}`,`Your JZ account is ready. You can save products, join Academy courses, track orders, and reach support from one place.`,launch.actionLink(`${launch.appUrl(req)}/account.html`,'Open My JZ'))}).catch(console.error);return json(res,201,{token,customer:safeCustomer(customer)});
   }
   if(req.method==='POST'&&url.pathname==='/api/account/login'){
-    const data=await body(req,20000),email=clean(data.email,150).toLowerCase(),ip=`customer:${req.socket.remoteAddress||'local'}`,attempt=loginAttempts.get(ip)||{count:0,until:0};
+    const data=await body(req,20000),email=clean(data.email,150).toLowerCase(),ip=`customer:${clientIp(req)}`,attempt=loginAttempts.get(ip)||{count:0,until:0};
     if(attempt.count>=7&&attempt.until>Date.now())return json(res,429,{error:'Too many attempts. Try again in 15 minutes.'});
     const customers=readJson(CUSTOMERS_FILE),customer=customers.find(item=>item.email===email);
     if(!customer||customer.active===false||!verifyPassword(String(data.password||''),customer.passwordHash)){loginAttempts.set(ip,{count:attempt.count+1,until:Date.now()+15*60*1000});return json(res,401,{error:'Incorrect email or password.'})}
@@ -235,8 +253,15 @@ async function api(req,res,url) {
 
 function normalizeProduct(data){const images=(Array.isArray(data.images)?data.images:[]).map(image=>clean(typeof image==='string'?image:image?.url,500)).filter(Boolean).slice(0,12),primary=clean(data.image,500)||images[0]||'';return{name:clean(data.name,100),category:clean(data.category,30).toLowerCase(),collection:clean(data.collection,60),price:money(data.price),salePrice:Number(data.salePrice)>0?money(data.salePrice):0,stock:Math.max(0,Math.floor(Number(data.stock)||0)),condition:['new','used','refurbished'].includes(data.condition)?data.condition:'new',description:clean(data.description,500),image:primary,images:[...new Set(primary?[primary,...images]:images)],variants:(Array.isArray(data.variants)?data.variants:String(data.variants||'').split(',')).map(item=>clean(item,60)).filter(Boolean).slice(0,30),featured:data.featured===true,art:clean(data.art,40),active:data.active!==false};}
 
-function serveStatic(req,res,url){let relative=decodeURIComponent(url.pathname);if(relative==='/')relative='/index.html';if(isProtectedUpload(relative)){res.writeHead(403,{'Content-Type':'text/plain','Cache-Control':'no-store'});return res.end('Paid course access is required.')}const file=path.resolve(ROOT,`.${relative}`);if(!file.startsWith(ROOT+path.sep))return json(res,403,{error:'Invalid path'});return serveFile(req,res,file,'public, max-age=300')}
+function serveStatic(req,res,url){let relative;try{relative=decodeURIComponent(url.pathname)}catch{return json(res,400,{error:'Invalid path'})}if(relative==='/')relative='/index.html';const normalized=relative.replace(/^\/+/,'');if(normalized.includes('/.')||normalized.endsWith('.upload')||(!PUBLIC_FILES.has(normalized)&&!normalized.startsWith('assets/'))){res.writeHead(404,{'Content-Type':'text/plain; charset=utf-8','Cache-Control':'no-store'});return res.end('404 - File not found')}if(isProtectedUpload(relative)){res.writeHead(403,{'Content-Type':'text/plain','Cache-Control':'no-store'});return res.end('Paid course access is required.')}const file=path.resolve(ROOT,normalized),isAsset=normalized.startsWith('assets/');if(!file.startsWith(ROOT+path.sep)||(isAsset&&!file.startsWith(ASSETS+path.sep)))return json(res,403,{error:'Invalid path'});const cache=normalized.endsWith('.html')?'no-cache':normalized.startsWith('assets/uploads/')?'public, max-age=86400':'public, max-age=3600';return serveFile(req,res,file,cache)}
 
-const server=http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('X-Frame-Options','SAMEORIGIN');res.setHeader('Referrer-Policy','strict-origin-when-cross-origin');res.setHeader('Permissions-Policy','camera=(), microphone=(), geolocation=()');res.setHeader('Content-Security-Policy',"default-src 'self'; img-src 'self' data: https:; media-src 'self' blob: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self'; connect-src 'self' https://api.stripe.com; frame-src 'self' https://checkout.stripe.com");const url=new URL(req.url,`http://${req.headers.host||'localhost'}`);try{if(url.pathname.startsWith('/api/'))await api(req,res,url);else serveStatic(req,res,url);}catch(error){console.error(error);if(!res.headersSent)json(res,error.message==='Request too large'?413:500,{error:error.message||'Server error'});}});
-server.listen(PORT,HOST,()=>console.log(`JZ Commerce running at http://${HOST}:${PORT}`));
+const server=http.createServer({maxHeaderSize:16_384},async(req,res)=>{const requestId=crypto.randomUUID();res.setHeader('X-Request-Id',requestId);res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('X-Frame-Options','SAMEORIGIN');res.setHeader('Referrer-Policy','strict-origin-when-cross-origin');res.setHeader('Permissions-Policy','camera=(), microphone=(), geolocation=(), payment=(self)');res.setHeader('Cross-Origin-Opener-Policy','same-origin');res.setHeader('Cross-Origin-Resource-Policy','same-origin');if(IS_PRODUCTION)res.setHeader('Strict-Transport-Security','max-age=31536000; includeSubDomains');const csp="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; img-src 'self' data: https:; media-src 'self' blob: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' https://unpkg.com; connect-src 'self' https://api.stripe.com; frame-src 'self' https://checkout.stripe.com; form-action 'self' https://checkout.stripe.com";res.setHeader('Content-Security-Policy',IS_PRODUCTION?`${csp}; upgrade-insecure-requests`:csp);const url=new URL(req.url,`http://${req.headers.host||'localhost'}`);try{if(shuttingDown)return json(res,503,{error:'Service is restarting.'});if(url.pathname.startsWith('/api/'))await api(req,res,url);else serveStatic(req,res,url)}catch(error){console.error(JSON.stringify({level:'error',requestId,method:req.method,path:url.pathname,message:error.message}));if(!res.headersSent){const status=error.message==='Request too large'?413:500;json(res,status,{error:IS_PRODUCTION&&status===500?'Server error':error.message||'Server error',requestId})}}});
+server.requestTimeout=600_000;
+server.headersTimeout=15_000;
+server.keepAliveTimeout=5_000;
+server.maxRequestsPerSocket=1_000;
+server.listen(PORT,HOST,()=>console.log(JSON.stringify({level:'info',message:'JZ Commerce started',host:HOST,port:PORT,environment:process.env.NODE_ENV||'development'})));
+function shutdown(signal){if(shuttingDown)return;shuttingDown=true;console.log(JSON.stringify({level:'info',message:'Graceful shutdown started',signal}));server.close(async()=>{try{await writeQueue}catch(error){console.error(JSON.stringify({level:'error',message:'Pending data write failed during shutdown',error:error.message}))}process.exit(0)});setTimeout(()=>{server.closeAllConnections?.();process.exit(1)},15_000).unref()}
+process.on('SIGTERM',()=>shutdown('SIGTERM'));
+process.on('SIGINT',()=>shutdown('SIGINT'));
 const backupHours=Math.max(0,Number(process.env.BACKUP_INTERVAL_HOURS)||0),retentionDays=Math.max(1,Number(process.env.BACKUP_RETENTION_DAYS)||30);if(backupHours)setInterval(async()=>{try{await createSnapshot('system');const cutoff=Date.now()-retentionDays*86400000;for(const entry of await fs.promises.readdir(BACKUPS,{withFileTypes:true}))if(entry.isDirectory()){const target=path.join(BACKUPS,entry.name),stat=await fs.promises.stat(target);if(stat.birthtimeMs<cutoff)await fs.promises.rm(target,{recursive:true,force:true})}}catch(error){console.error('Automated backup failed:',error.message)}},backupHours*3600000).unref();

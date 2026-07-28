@@ -52,3 +52,13 @@ test('security policy permits the same-origin homepage editor preview', () => {
   assert.match(source, /X-Frame-Options','SAMEORIGIN/);
   assert.match(source, /frame-src 'self' https:\/\/checkout\.stripe\.com/);
 });
+
+test('production server restricts public files and validates required secrets', () => {
+  const source = fs.readFileSync(path.resolve(__dirname, '..', 'server.js'), 'utf8');
+  assert.match(source, /const PUBLIC_FILES = new Set/);
+  assert.match(source, /!PUBLIC_FILES\.has\(normalized\)&&!normalized\.startsWith\('assets\/'\)/);
+  assert.match(source, /validateProductionConfig/);
+  assert.match(source, /APP_URL must be a public HTTPS URL/);
+  assert.match(source, /Strict-Transport-Security/);
+  assert.match(source, /Graceful shutdown started/);
+});

@@ -3,14 +3,24 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    init: true
     restart: unless-stopped
+    stop_grace_period: 20s
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    pids_limit: 200
     environment:
       NODE_ENV: production
       HOST: 0.0.0.0
       PORT: 8000
-      APP_URL: ${APP_URL:-http://localhost:8000}
+      APP_URL: ${APP_URL:?Set the public HTTPS APP_URL in .env}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Set a unique ADMIN_PASSWORD in .env}
       SESSION_SECRET: ${SESSION_SECRET:?Set SESSION_SECRET in .env}
       MEDIA_SIGNING_SECRET: ${MEDIA_SIGNING_SECRET:?Set MEDIA_SIGNING_SECRET in .env}
+      TRUST_PROXY: ${TRUST_PROXY:-true}
       STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
       STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
       RESEND_API_KEY: ${RESEND_API_KEY:-}
@@ -23,12 +33,14 @@ services:
       - portfolio_data_clean:/app/data
       - portfolio_uploads_clean:/app/assets/uploads
       - portfolio_backups_clean:/app/backups
+    tmpfs:
+      - /tmp:size=64m,mode=1777
     healthcheck:
       test:
         - CMD
         - node
         - -e
-        - fetch('http://127.0.0.1:8000/').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))
+        - fetch('http://127.0.0.1:8000/api/ready').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))
       interval: 30s
       timeout: 5s
       retries: 3
