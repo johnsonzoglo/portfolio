@@ -1,14 +1,51 @@
 const $=selector=>document.querySelector(selector);
 const $$=selector=>[...document.querySelectorAll(selector)];
 const loginView=$('#loginView'),dashboard=$('#dashboard'),loginForm=$('#loginForm'),editor=$('#editor'),streamEditor=$('#streamEditor'),editorOverlay=$('#editorOverlay'),sidebar=$('#sidebar'),sidebarOverlay=$('#sidebarOverlay');
-let token=sessionStorage.getItem('jz-admin-token')||'',products=[],orders=[],streams=[],siteContent={homepage:{},draft:{}},mediaItems=[],analytics={},selectedProducts=new Set(),activeView='overview';
+let token=sessionStorage.getItem('jz-admin-token')||'',products=[],orders=[],streams=[],complaints=[],siteContent={homepage:{},draft:{}},mediaItems=[],analytics={},selectedProducts=new Set(),activeView='overview',activeComplaintId='';
+let hasLoadedDashboard=false,toastTimer=0;
 
 const money=value=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(Number(value)||0);
 const esc=value=>{const node=document.createElement('span');node.textContent=String(value??'');return node.innerHTML};
 const icons=()=>window.lucide?.createIcons();
 const plural=(count,word)=>`${count} ${word}${count===1?'':'s'}`;
 const date=value=>new Date(value).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});
+const dateTime=value=>value?new Date(value).toLocaleString(undefined,{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}):'';
 const fileData=file=>new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(file)});
+function notify(message,type='success'){
+  const toast=$('#adminToast');if(!toast||!message)return;
+  clearTimeout(toastTimer);toast.textContent=message;toast.className=`admin-toast show ${type==='error'?'error':''}`.trim();
+  toastTimer=setTimeout(()=>toast.classList.remove('show'),3600);
+}
+function setPageLoading(loading){
+  document.body.classList.toggle('is-loading',loading);
+  dashboard.setAttribute('aria-busy',String(loading));
+  $('#refreshData').disabled=loading;
+}
+function setButtonBusy(button,busy,label='Working…'){
+  if(!button)return;
+  const text=button.querySelector('span');
+  if(busy){
+    button.dataset.originalLabel=text?.textContent||button.textContent;
+    button.disabled=true;button.classList.add('is-busy');
+    if(text)text.textContent=label;
+  }else{
+    button.disabled=false;button.classList.remove('is-busy');
+    if(text&&button.dataset.originalLabel)text.textContent=button.dataset.originalLabel;
+    delete button.dataset.originalLabel;
+  }
+}
+const skeletonStack=(count=4,type='row')=>`<div class="loading-stack" aria-label="Loading content">${Array.from({length:count},()=>`<div class="skeleton skeleton-${type}"></div>`).join('')}</div>`;
+function renderLoadingState(){
+  $('#recentOrders').innerHTML=skeletonStack(4);
+  $('#stockAlerts').innerHTML=skeletonStack(4);
+  $('#productsTable').innerHTML=skeletonStack(5);
+  $('#streamsTable').innerHTML=`${skeletonStack(2,'card')}`;
+  $('#ordersList').innerHTML=skeletonStack(5);
+  $('#supportConversationList').innerHTML=skeletonStack(5);
+  $('#supportThread').innerHTML=skeletonStack(4);
+  $('#analyticsTopPages').innerHTML=skeletonStack(4);
+  $('#analyticsRecent').innerHTML=skeletonStack(4);
+}
 
 async function api(url,options={}){
   const response=await fetch(url,{...options,headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`,...options.headers}});
@@ -27,27 +64,45 @@ function showDashboard(user){
   const now=new Date(),hour=now.getHours();
   $('#dayPeriod').textContent=hour<12?'morning':hour<18?'afternoon':'evening';
   $('#currentDate').textContent=now.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+  if(!hasLoadedDashboard)renderLoadingState();
   loadAll();
 }
 function signOut(){
-  token='';sessionStorage.removeItem('jz-admin-token');dashboard.classList.remove('visible');loginView.style.display='grid';$('#password').value='';
+  token='';sessionStorage.removeItem('jz-admin-token');dashboard.classList.remove('visible');loginView.style.display='grid';$('#password').value='';hasLoadedDashboard=false;setPageLoading(false);setTimeout(()=>$('#password').focus(),0);
 }
 
 loginForm.addEventListener('submit',async event=>{
   event.preventDefault();const message=$('#loginMessage'),button=loginForm.querySelector('button[type=submit]');message.textContent='';button.disabled=true;
+  setButtonBusy(button,true,'Signing in…');
   try{
     const result=await fetch('/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:$('#username').value,password:$('#password').value})}).then(async response=>{const data=await response.json();if(!response.ok)throw new Error(data.error);return data});
     token=result.token;sessionStorage.setItem('jz-admin-token',token);showDashboard(result.user);
-  }catch(error){message.textContent=error.message}finally{button.disabled=false}
+  }catch(error){message.textContent=error.message;notify(error.message,'error')}finally{setButtonBusy(button,false)}
 });
 $('#logout').addEventListener('click',signOut);
 
-async function loadAll(){
-  $('#refreshData').classList.add('loading');
-  try{[products,orders,streams,siteContent,mediaItems,analytics]=await Promise.all([api('/api/admin/products'),api('/api/admin/orders'),api('/api/admin/streams'),api('/api/admin/site-content'),api('/api/admin/media'),api('/api/admin/analytics')]);renderAll()}
-  catch(error){console.error(error)}finally{$('#refreshData').classList.remove('loading')}
+async function loadAll(announce=false){
+  $('#refreshData').classList.add('loading');setPageLoading(true);
+  try{
+    const result=await Promise.all([api('/api/admin/products'),api('/api/admin/orders'),api('/api/admin/streams'),api('/api/admin/site-content'),api('/api/admin/media'),api('/api/admin/analytics'),api('/api/admin/complaints')]);
+    [products,orders,streams,siteContent,mediaItems,analytics]=result;const complaintResult=result[6];complaints=complaintResult.conversations||complaintResult;renderAll();hasLoadedDashboard=true;
+    if(announce)notify('Dashboard data is up to date.');
+  }catch(error){
+    console.error(error);notify(error.message||'Dashboard data could not be loaded.','error');
+    if(!hasLoadedDashboard){
+      const failure=emptyState('wifi-off','Could not load this workspace','Check the connection, then use Refresh to try again.');
+      ['#recentOrders','#stockAlerts','#productsTable','#streamsTable','#ordersList','#supportConversationList','#supportThread','#analyticsTopPages','#analyticsRecent'].forEach(selector=>$(selector).innerHTML=failure);
+      icons();
+    }
+  }finally{$('#refreshData').classList.remove('loading');setPageLoading(false)}
 }
-function renderAll(){renderOverview();renderMedia();renderLibrary();renderProducts();renderStreams();renderOrders();renderAnalytics();$('#newOrders').textContent=orders.filter(order=>order.status==='new').length;icons()}
+function renderAll(){
+  renderOverview();renderMedia();renderLibrary();renderProducts();renderStreams();renderOrders();renderSupport();renderAnalytics();
+  const newOrderCount=orders.filter(order=>order.status==='new').length,openComplaintCount=complaints.filter(item=>['open','in-progress'].includes(item.status)).length;
+  $('#newOrders').textContent=newOrderCount;$('#newOrders').classList.toggle('is-empty',newOrderCount===0);
+  $('#openComplaints').textContent=openComplaintCount;$('#openComplaints').classList.toggle('is-empty',openComplaintCount===0);
+  icons();
+}
 
 function setMediaPreview(slot,url){
   $(`#${slot}ImageUrl`).value=url||'';
@@ -125,7 +180,15 @@ function filteredProducts(){
 }
 function renderProducts(){
   const visible=filteredProducts();$('#productResultCount').textContent=plural(visible.length,'product');
-  $('#productsTable').innerHTML=visible.length?`<div class="table-row header product-table-head"><input class="table-select" id="selectAllProducts" type="checkbox" aria-label="Select all products"><span>Product</span><span>Category</span><span>Price</span><span>Stock</span><span>Visibility</span><span></span></div>${visible.map(product=>`<div class="table-row product-table-row"><input class="table-select" data-select-product="${esc(product.id)}" type="checkbox" ${selectedProducts.has(product.id)?'checked':''} aria-label="Select ${esc(product.name)}"><div class="product-cell">${product.image?`<img class="product-thumb" src="${esc(product.image)}" alt="">`:`<span class="product-thumb">${esc(product.name[0]||'?')}</span>`}<div><h3>${esc(product.name)} ${product.featured?'<b class="feature-pill">Featured</b>':''}</h3><small>${esc(product.collection||product.condition)}</small></div></div><span>${esc(product.category)}</span><span><b class="regular-price ${product.salePrice?'on-sale':''}">${money(product.price)}</b>${product.salePrice?`<b class="sale-price">${money(product.salePrice)}</b>`:''}</span><span class="stock-value ${product.stock<3?'low':''}">${product.stock}</span><span class="visibility-pill ${product.active===false?'hidden':''}">${product.active===false?'Hidden':'Visible'}</span><div class="table-actions"><button class="icon-button" data-edit="${esc(product.id)}" title="Edit product" aria-label="Edit ${esc(product.name)}"><i data-lucide="pencil"></i></button><button class="icon-button danger" data-delete="${esc(product.id)}" title="Delete product" aria-label="Delete ${esc(product.name)}"><i data-lucide="trash-2"></i></button></div></div>`).join('')}`:emptyState('package-open','No products found',products.length?'Try a different search or filter.':'Your inventory is ready for its first product.');
+  $('#productsTable').innerHTML=visible.length?`<div class="table-row header product-table-head"><input class="table-select" id="selectAllProducts" type="checkbox" aria-label="Select all products"><span>Product</span><span>Category</span><span>Price</span><span>Stock</span><span>Visibility</span><span></span></div>${visible.map(product=>`<div class="table-row product-table-row">
+    <input class="table-select" data-select-product="${esc(product.id)}" type="checkbox" ${selectedProducts.has(product.id)?'checked':''} aria-label="Select ${esc(product.name)}">
+    <div class="product-cell">${product.image?`<img class="product-thumb" src="${esc(product.image)}" alt="">`:`<span class="product-thumb">${esc(product.name[0]||'?')}</span>`}<div><h3>${esc(product.name)} ${product.featured?'<b class="feature-pill">Featured</b>':''}</h3><small>${esc(product.collection||product.condition)}</small></div></div>
+    <span data-label="Category">${esc(product.category)}</span>
+    <span data-label="Price"><b class="regular-price ${product.salePrice?'on-sale':''}">${money(product.price)}</b>${product.salePrice?`<b class="sale-price">${money(product.salePrice)}</b>`:''}</span>
+    <span class="stock-value ${product.stock<3?'low':''}" data-label="Stock">${product.stock}</span>
+    <span class="visibility-pill ${product.active===false?'hidden':''}" data-label="Visibility">${product.active===false?'Hidden':'Visible'}</span>
+    <div class="table-actions"><button class="icon-button" data-edit="${esc(product.id)}" title="Edit product" aria-label="Edit ${esc(product.name)}"><i data-lucide="pencil"></i></button><button class="icon-button danger" data-delete="${esc(product.id)}" title="Delete product" aria-label="Delete ${esc(product.name)}"><i data-lucide="trash-2"></i></button></div>
+  </div>`).join('')}`:emptyState('package-open','No products found',products.length?'Try a different search or filter.':'Your inventory is ready for its first product.');
   $('#selectedProductCount').textContent=`${selectedProducts.size} selected`;
   icons();
 }
@@ -167,18 +230,55 @@ function renderOrders(){
   icons();
 }
 
-const viewMeta={overview:['Overview','Business snapshot'],media:['Content & media','Public website editor'],products:['Products','Inventory management'],streams:['Academy','Courses and video lessons'],orders:['Orders','Order management'],analytics:['Analytics','Visitor and conversion activity']};
+function complaintMessages(conversation){return Array.isArray(conversation?.messages)?conversation.messages:[]}
+function complaintLastMessage(conversation){const messages=complaintMessages(conversation);return messages[messages.length-1]||conversation.lastMessage||{}}
+function adminComplaintMessage(message){return ['admin','owner','staff'].includes(String(message.sender||message.role||message.author||message.authorType||'').toLowerCase())}
+function filteredComplaints(){
+  const query=$('#supportSearch').value.trim().toLowerCase(),filter=$('#supportFilter').value;
+  return complaints.filter(item=>(filter==='all'||item.status===filter)&&(!query||[item.visitorName,item.visitorEmail,item.subject,item.reference,item.id,complaintLastMessage(item).message].some(value=>String(value||'').toLowerCase().includes(query))));
+}
+function renderSupport(){
+  const visible=filteredComplaints();
+  $('#supportResultCount').textContent=plural(visible.length,'conversation');
+  $('#supportOpenCount').textContent=complaints.filter(item=>item.status==='open').length;
+  $('#supportProgressCount').textContent=complaints.filter(item=>item.status==='in-progress').length;
+  $('#supportResolvedCount').textContent=complaints.filter(item=>['resolved','closed'].includes(item.status)).length;
+  if(activeComplaintId&&!visible.some(item=>item.id===activeComplaintId))activeComplaintId='';
+  if(!activeComplaintId&&visible.length)activeComplaintId=visible[0].id;
+  $('#supportConversationList').innerHTML=visible.length?visible.map(item=>{const last=complaintLastMessage(item),messageCount=item.messageCount??complaintMessages(item).length;return `<button class="support-conversation-item ${item.id===activeComplaintId?'active':''}" type="button" data-complaint-id="${esc(item.id)}"><div class="support-item-top"><strong>${esc(item.visitorName||'Visitor')}</strong><time>${dateTime(item.lastMessageAt||item.updatedAt||item.createdAt)}</time></div><span>${esc(item.subject||'General complaint')}</span><p>${esc(last.message||last.text||'No message preview')}</p><div class="support-item-meta"><span class="support-status ${esc(item.status||'open')}">${esc(String(item.status||'open').replace('-',' '))}</span><b>${plural(messageCount,'message')}</b></div></button>`}).join(''):'<div class="support-list-empty">No conversations match this filter.</div>';
+  const active=complaints.find(item=>item.id===activeComplaintId);
+  if(!active){$('#supportThread').innerHTML=`<div class="support-thread-empty"><div><i data-lucide="messages-square"></i><strong>No conversation selected</strong><span>Visitor complaints and questions will appear here.</span></div></div>`;icons();return}
+  const email=active.visitorEmail?` · ${active.visitorEmail}`:'',messages=complaintMessages(active);
+  const messageMarkup=messages.length?messages.map(message=>`<article class="support-admin-message ${adminComplaintMessage(message)?'admin':'visitor'}"><span>${adminComplaintMessage(message)?'Admin':esc(active.visitorName||'Visitor')}</span><p>${esc(message.message||message.text||'')}</p><time>${dateTime(message.createdAt||message.at)}</time></article>`).join(''):`<div class="support-message-empty"><i data-lucide="message-circle"></i><span>This conversation has no messages yet.</span></div>`;
+  $('#supportThread').innerHTML=`<header class="support-thread-header"><div class="support-person-avatar">${esc(initials(active.visitorName||'Visitor'))}</div><div class="support-thread-identity"><strong>${esc(active.visitorName||'Visitor')}</strong><span>${esc(active.subject||'General complaint')}${esc(email)} · ${esc(active.page||'Website')}</span></div><select data-complaint-status="${esc(active.id)}" aria-label="Conversation status">${['open','in-progress','resolved','closed'].map(status=>`<option value="${status}" ${status===active.status?'selected':''}>${status.replace('-',' ').replace(/\b\w/g,letter=>letter.toUpperCase())}</option>`).join('')}</select></header><div class="support-thread-messages" id="supportThreadMessages">${messageMarkup}</div><form class="support-admin-reply" data-complaint-reply="${esc(active.id)}"><textarea name="message" rows="3" maxlength="2000" required aria-label="Reply to ${esc(active.visitorName||'visitor')}" placeholder="Write a clear, helpful reply…"></textarea><button type="submit"><i data-lucide="send"></i><span>Send reply</span></button></form><p class="support-thread-note" id="supportReplyMessage" role="alert"></p>`;
+  requestAnimationFrame(()=>{const thread=$('#supportThreadMessages');if(thread)thread.scrollTop=thread.scrollHeight});icons();
+}
+async function openComplaint(id){
+  activeComplaintId=id;renderSupport();$('#supportThread').classList.add('is-loading');
+  try{
+    const result=await api(`/api/admin/complaints/${encodeURIComponent(id)}`),conversation=result.conversation||result,index=complaints.findIndex(item=>item.id===id);
+    if(index>=0)complaints[index]=conversation;else complaints.unshift(conversation);
+    renderSupport();
+  }catch(error){console.error(error);notify(error.message||'The conversation could not be loaded.','error')}
+  finally{$('#supportThread').classList.remove('is-loading')}
+}
+
+const viewMeta={overview:['Overview','Business snapshot'],media:['Content & media','Public website editor'],products:['Products','Inventory management'],streams:['Academy','Courses and video lessons'],orders:['Orders','Order management'],support:['Visitor support','Complaints and conversations'],analytics:['Analytics','Visitor and conversion activity']};
 function setView(view){
-  activeView=view;$$('.nav-item').forEach(item=>item.classList.toggle('active',item.dataset.view===view));$$('.app-view').forEach(panel=>panel.classList.toggle('active',panel.id===`${view}View`));
-  $('#viewTitle').textContent=viewMeta[view][0];$('#viewEyebrow').textContent=viewMeta[view][1];$('#newProduct').hidden=view!=='products';$('#newStream').hidden=view!=='streams';closeSidebar();
+  if(!viewMeta[view])return;
+  activeView=view;
+  $$('.nav-item').forEach(item=>{const selected=item.dataset.view===view;item.classList.toggle('active',selected);if(selected)item.setAttribute('aria-current','page');else item.removeAttribute('aria-current')});
+  $$('.app-view').forEach(panel=>{const selected=panel.id===`${view}View`;panel.classList.toggle('active',selected);panel.setAttribute('aria-hidden',String(!selected))});
+  $('#viewTitle').textContent=viewMeta[view][0];$('#viewEyebrow').textContent=viewMeta[view][1];document.title=`${viewMeta[view][0]} · JZ Market Admin`;
+  $('#newProduct').hidden=view!=='products';$('#newStream').hidden=view!=='streams';closeSidebar();if(view==='support'&&activeComplaintId)openComplaint(activeComplaintId);
 }
 $$('.nav-item').forEach(item=>item.addEventListener('click',()=>setView(item.dataset.view)));
 document.addEventListener('click',event=>{const button=event.target.closest('[data-go-view]');if(button)setView(button.dataset.goView);const quickEdit=event.target.closest('[data-quick-edit]');if(quickEdit)openEditor(products.find(product=>product.id===quickEdit.dataset.quickEdit));if(event.target.closest('[data-create-course]'))openStreamEditor()});
 
 function openEditor(product){
-  closeStreamEditor();$('#editorTitle').textContent=product?'Edit product':'Add product';$('#productId').value=product?.id||'';$('#productName').value=product?.name||'';$('#productCategory').value=product?.category||'phones';$('#productPrice').value=product?.price??'';$('#productSalePrice').value=product?.salePrice||'';$('#productStock').value=product?.stock??0;$('#productCollection').value=product?.collection||'';$('#productVariants').value=(product?.variants||[]).join(', ');$('#productCondition').value=product?.condition||'new';$('#productDescription').value=product?.description||'';$('#productImage').value=product?.image||'';$('#productImages').value=JSON.stringify(product?.images||[]);$('#productActive').checked=product?.active!==false;$('#productFeatured').checked=Boolean(product?.featured);$('#productPhoto').value='';$('#productGallery').value='';$('#photoName').textContent=product?.image?'Keep current image or choose a replacement':'Choose product image';$('#galleryName').textContent=(product?.images||[]).length?`${product.images.length} current gallery images`:'Add gallery images';$('#editorMessage').textContent='';editor.classList.add('open');editorOverlay.classList.add('open');editor.setAttribute('aria-hidden','false');setTimeout(()=>$('#productName').focus(),200);
+  closeStreamEditor();$('#editorTitle').textContent=product?'Edit product':'Add product';$('#productId').value=product?.id||'';$('#productName').value=product?.name||'';$('#productCategory').value=product?.category||'phones';$('#productPrice').value=product?.price??'';$('#productSalePrice').value=product?.salePrice||'';$('#productStock').value=product?.stock??0;$('#productCollection').value=product?.collection||'';$('#productVariants').value=(product?.variants||[]).join(', ');$('#productCondition').value=product?.condition||'new';$('#productDescription').value=product?.description||'';$('#productImage').value=product?.image||'';$('#productImages').value=JSON.stringify(product?.images||[]);$('#productActive').checked=product?.active!==false;$('#productFeatured').checked=Boolean(product?.featured);$('#productPhoto').value='';$('#productGallery').value='';$('#photoName').textContent=product?.image?'Keep current image or choose a replacement':'Choose product image';$('#galleryName').textContent=(product?.images||[]).length?`${product.images.length} current gallery images`:'Add gallery images';$('#editorMessage').textContent='';editor.classList.add('open');editorOverlay.classList.add('open');document.body.classList.add('editor-open');editor.setAttribute('aria-hidden','false');setTimeout(()=>$('#productName').focus(),200);
 }
-function closeEditor(){editor.classList.remove('open');editorOverlay.classList.remove('open');editor.setAttribute('aria-hidden','true')}
+function closeEditor(){editor.classList.remove('open');editorOverlay.classList.remove('open');document.body.classList.remove('editor-open');editor.setAttribute('aria-hidden','true')}
 function renderModules(modules){
   const list=modules||[];
   $('#moduleList').innerHTML=list.map((module,moduleIndex)=>`<section class="course-module" data-module-index="${moduleIndex}" data-module-id="${esc(module.id||'')}"><div class="module-head"><div class="module-head-main"><span class="module-number">${String(moduleIndex+1).padStart(2,'0')}</span><input class="module-title" value="${esc(module.title||`Module ${moduleIndex+1}`)}" placeholder="Module title" aria-label="Module ${moduleIndex+1} title"><span class="module-lesson-count">${plural((module.lessons||[]).length,'lesson')}</span></div><div class="module-actions"><button type="button" data-module-move="-1" title="Move module up" aria-label="Move module up">↑</button><button type="button" data-module-move="1" title="Move module down" aria-label="Move module down">↓</button><button class="danger" type="button" data-remove-module title="Remove module" aria-label="Remove module">×</button></div></div><div class="lesson-list">${(module.lessons||[]).map((lesson,lessonIndex)=>lessonRow(lesson,lessonIndex)).join('')}</div><button class="add-lesson" type="button" data-add-lesson>+ Add lesson to ${esc(module.title||`Module ${moduleIndex+1}`)}</button></section>`).join('');
@@ -199,13 +299,13 @@ function updateStreamCoverPreview(url=''){
   const image=$('#streamCoverPreviewImage'),empty=$('#streamCoverPreviewEmpty');image.src=url||'';image.hidden=!url;empty.hidden=Boolean(url);
 }
 function openStreamEditor(stream){
-  closeEditor();const isCourse=(stream?.contentType||'course')==='course';$('#streamEditorTitle').textContent=stream?`Edit ${stream.title}`:'Create a new course';$('#streamId').value=stream?.id||'';$('#streamSource').value=stream?.src||'';$('#streamTitle').value=stream?.title||'';$('#streamType').value=stream?.contentType||'course';$('#streamAccess').value=stream?.accessType||'free';$('#streamPrice').value=stream?.price||0;$('#streamPrice').disabled=$('#streamAccess').value!=='paid';$('#streamGame').value=stream?.game||'';$('#streamLevel').value=stream?.level||'Beginner';$('#streamDate').value=stream?.date||new Date().toISOString().slice(0,10);$('#streamPublishAt').value=stream?.publishAt?new Date(stream.publishAt).toISOString().slice(0,16):'';$('#streamDuration').value=stream?.duration||'';$('#streamLessons').value=stream?.lessons||1;$('#streamDescription').value=stream?.description||'';$('#streamCoverImage').value=stream?.coverImage||'';$('#streamCoverPhoto').value='';$('#streamCoverName').textContent=stream?.coverImage?'Replace current course cover':'Choose course cover image';updateStreamCoverPreview(stream?.coverImage||'');$('#streamPublished').checked=stream?.published!==false;$('#streamFeatured').checked=Boolean(stream?.featured);$('#streamFile').value='';$('#streamFile').required=false;$('#streamUploadField').hidden=isCourse;$('#streamFileName').textContent=stream?.src?'Replace main video':'Choose main video';$('#streamSaveLabel').textContent=stream?'Save course changes':'Create course';const modules=isCourse?(stream?.modules?.length?stream.modules:[{title:'Getting started',lessons:[]}]):[];renderModules(modules);$('#courseBuilder').hidden=!isCourse;$('#streamPreviewLink').href=stream?`learn.html?id=${encodeURIComponent(stream.id)}`:'streams.html';$('#streamEditorMessage').textContent='';streamEditor.classList.add('open');editorOverlay.classList.add('open');streamEditor.setAttribute('aria-hidden','false');updateCurriculumStatus();setTimeout(()=>$('#streamTitle').focus(),200);
+  closeEditor();const isCourse=(stream?.contentType||'course')==='course';$('#streamEditorTitle').textContent=stream?`Edit ${stream.title}`:'Create a new course';$('#streamId').value=stream?.id||'';$('#streamSource').value=stream?.src||'';$('#streamTitle').value=stream?.title||'';$('#streamType').value=stream?.contentType||'course';$('#streamAccess').value=stream?.accessType||'free';$('#streamPrice').value=stream?.price||0;$('#streamPrice').disabled=$('#streamAccess').value!=='paid';$('#streamGame').value=stream?.game||'';$('#streamLevel').value=stream?.level||'Beginner';$('#streamDate').value=stream?.date||new Date().toISOString().slice(0,10);$('#streamPublishAt').value=stream?.publishAt?new Date(stream.publishAt).toISOString().slice(0,16):'';$('#streamDuration').value=stream?.duration||'';$('#streamLessons').value=stream?.lessons||1;$('#streamDescription').value=stream?.description||'';$('#streamCoverImage').value=stream?.coverImage||'';$('#streamCoverPhoto').value='';$('#streamCoverName').textContent=stream?.coverImage?'Replace current course cover':'Choose course cover image';updateStreamCoverPreview(stream?.coverImage||'');$('#streamPublished').checked=stream?.published!==false;$('#streamFeatured').checked=Boolean(stream?.featured);$('#streamFile').value='';$('#streamFile').required=false;$('#streamUploadField').hidden=isCourse;$('#streamFileName').textContent=stream?.src?'Replace main video':'Choose main video';$('#streamSaveLabel').textContent=stream?'Save course changes':'Create course';const modules=isCourse?(stream?.modules?.length?stream.modules:[{title:'Getting started',lessons:[]}]):[];renderModules(modules);$('#courseBuilder').hidden=!isCourse;$('#streamPreviewLink').href=stream?`learn.html?id=${encodeURIComponent(stream.id)}`:'streams.html';$('#streamEditorMessage').textContent='';streamEditor.classList.add('open');editorOverlay.classList.add('open');document.body.classList.add('editor-open');streamEditor.setAttribute('aria-hidden','false');updateCurriculumStatus();setTimeout(()=>$('#streamTitle').focus(),200);
 }
-function closeStreamEditor(){streamEditor.classList.remove('open');editorOverlay.classList.remove('open');streamEditor.setAttribute('aria-hidden','true')}
+function closeStreamEditor(){streamEditor.classList.remove('open');editorOverlay.classList.remove('open');document.body.classList.remove('editor-open');streamEditor.setAttribute('aria-hidden','true')}
 $('#newProduct').addEventListener('click',()=>openEditor());$('#newStream').addEventListener('click',()=>openStreamEditor());$('#editorClose').addEventListener('click',closeEditor);$('#editorCancel').addEventListener('click',closeEditor);$('#streamEditorClose').addEventListener('click',closeStreamEditor);$('#streamEditorCancel').addEventListener('click',closeStreamEditor);editorOverlay.addEventListener('click',()=>{closeEditor();closeStreamEditor()});
 function openSidebar(){sidebar.classList.add('open');sidebarOverlay.classList.add('open')}function closeSidebar(){sidebar.classList.remove('open');sidebarOverlay.classList.remove('open')}
 $('#mobileMenu').addEventListener('click',openSidebar);sidebarOverlay.addEventListener('click',closeSidebar);
-$('#refreshData').addEventListener('click',loadAll);$('#productSearch').addEventListener('input',renderProducts);$('#productFilter').addEventListener('change',renderProducts);$('#streamSearch').addEventListener('input',renderStreams);$('#streamFilter').addEventListener('change',renderStreams);$('#orderSearch').addEventListener('input',renderOrders);$('#orderFilter').addEventListener('change',renderOrders);
+$('#refreshData').addEventListener('click',()=>loadAll(true));$('#productSearch').addEventListener('input',renderProducts);$('#productFilter').addEventListener('change',renderProducts);$('#streamSearch').addEventListener('input',renderStreams);$('#streamFilter').addEventListener('change',renderStreams);$('#orderSearch').addEventListener('input',renderOrders);$('#orderFilter').addEventListener('change',renderOrders);$('#supportSearch').addEventListener('input',renderSupport);$('#supportFilter').addEventListener('change',renderSupport);
 $$('.content-fields input,.content-fields textarea,.media-alt input').forEach(input=>input.addEventListener('input',()=>updateContentPreview(true)));
 $$('.editor-section-tab').forEach(button=>button.addEventListener('click',()=>selectEditorSection(button.dataset.editorSection)));
 $$('[data-preview-device]').forEach(button=>button.addEventListener('click',()=>{$$('[data-preview-device]').forEach(item=>item.classList.toggle('active',item===button));$('#previewFrameWrap').className=`preview-frame-wrap ${button.dataset.previewDevice}`}));
@@ -217,7 +317,7 @@ window.addEventListener('message',event=>{if(event.origin!==location.origin)retu
 });
 $$('[data-remove-media]').forEach(button=>button.addEventListener('click',()=>{const slot=button.dataset.removeMedia;setMediaPreview(slot,'');$(`#${slot}ImageFile`).value='';updateContentPreview(true)}));
 $('#pageMediaForm').addEventListener('submit',async event=>{
-  event.preventDefault();const button=event.submitter,message=$('#mediaMessage'),mode=button.value||'publish';button.disabled=true;message.textContent=mode==='draft'?'Saving draft…':'Publishing homepage…';
+  event.preventDefault();const button=event.submitter,message=$('#mediaMessage'),mode=button.value||'publish';setButtonBusy(button,true,mode==='draft'?'Saving…':'Publishing…');message.textContent=mode==='draft'?'Saving draft…':'Publishing homepage…';
   try{
     const homepage=collectHomepageFromEditor(false);
     for(const slot of ['studio','academy','market']){
@@ -227,10 +327,10 @@ $('#pageMediaForm').addEventListener('submit',async event=>{
     }
     siteContent=await api('/api/admin/site-content',{method:'PUT',body:JSON.stringify({homepage,mode})});
     ['studio','academy','market'].forEach(slot=>$(`#${slot}ImageFile`).value='');
-    mediaItems=await api('/api/admin/media');renderMedia();renderLibrary();message.textContent=mode==='draft'?'Draft saved. Review the preview, then publish when ready.':'Homepage published successfully.';
-  }catch(error){message.textContent=error.message}finally{button.disabled=false}
+    mediaItems=await api('/api/admin/media');renderMedia();renderLibrary();message.textContent=mode==='draft'?'Draft saved. Review the preview, then publish when ready.':'Homepage published successfully.';notify(mode==='draft'?'Homepage draft saved.':'Homepage published successfully.');
+  }catch(error){message.textContent=error.message;notify(error.message,'error')}finally{setButtonBusy(button,false)}
 });
-$('#libraryUpload').addEventListener('change',async event=>{const files=[...event.target.files],message=$('#mediaMessage');try{message.textContent=`Uploading ${files.length} file${files.length===1?'':'s'}…`;for(const file of files)await uploadImage(file);mediaItems=await api('/api/admin/media');renderLibrary();icons();message.textContent='Media library updated.'}catch(error){message.textContent=error.message}finally{event.target.value=''}});
+$('#libraryUpload').addEventListener('change',async event=>{const files=[...event.target.files],message=$('#mediaMessage');if(!files.length)return;try{message.textContent=`Uploading ${files.length} file${files.length===1?'':'s'}…`;for(const file of files)await uploadImage(file);mediaItems=await api('/api/admin/media');renderLibrary();icons();message.textContent='Media library updated.';notify(`${plural(files.length,'file')} uploaded to the media library.`)}catch(error){message.textContent=error.message;notify(error.message,'error')}finally{event.target.value=''}});
 $('#mediaLibraryGrid').addEventListener('click',async event=>{
   const card=event.target.closest('.library-item');if(!card)return;const name=card.dataset.mediaName,item=mediaItems.find(entry=>entry.name===name);
   if(event.target.closest('[data-use-media]')){const slot=card.querySelector('select').value;if(!slot)return;setMediaPreview(slot,item.url);$(`#${slot}ImageAlt`).value=card.querySelector('.library-alt').value||item.altText;updateContentPreview(true);selectEditorSection('images');$('#mediaMessage').textContent=`Selected for homepage ${slot}. Save a draft or publish to apply.`}
@@ -242,29 +342,46 @@ $('#mediaLibraryGrid').addEventListener('click',async event=>{
 $('#productsTable').addEventListener('click',async event=>{
   const edit=event.target.closest('[data-edit]'),remove=event.target.closest('[data-delete]');
   if(edit)openEditor(products.find(product=>product.id===edit.dataset.edit));
-  if(remove&&confirm('Delete this product permanently?')){await api(`/api/admin/products/${remove.dataset.delete}`,{method:'DELETE'});products=await api('/api/admin/products');renderAll()}
+  if(remove&&confirm('Delete this product permanently?')){try{remove.disabled=true;await api(`/api/admin/products/${remove.dataset.delete}`,{method:'DELETE'});products=await api('/api/admin/products');renderAll();notify('Product deleted.')}catch(error){remove.disabled=false;notify(error.message,'error')}}
 });
 $('#productsTable').addEventListener('change',event=>{if(event.target.id==='selectAllProducts'){filteredProducts().forEach(product=>event.target.checked?selectedProducts.add(product.id):selectedProducts.delete(product.id));renderProducts()}if(event.target.dataset.selectProduct){event.target.checked?selectedProducts.add(event.target.dataset.selectProduct):selectedProducts.delete(event.target.dataset.selectProduct);$('#selectedProductCount').textContent=`${selectedProducts.size} selected`}});
 $('#bulkToolbar').addEventListener('click',async event=>{const action=event.target.dataset.bulkAction;if(!action||!selectedProducts.size)return;const payload={ids:[...selectedProducts]};if(action==='show')payload.active=true;if(action==='hide')payload.active=false;if(action==='feature')payload.featured=true;if(action==='unfeature')payload.featured=false;if(action==='stock'){const amount=Number(prompt('How many units should be added to each selected product?','1'));if(!Number.isFinite(amount))return;payload.stockDelta=amount}products=await api('/api/admin/products/bulk',{method:'POST',body:JSON.stringify(payload)});selectedProducts.clear();renderAll()});
 $('#streamsTable').addEventListener('click',async event=>{
   const edit=event.target.closest('[data-edit-stream]'),remove=event.target.closest('[data-delete-stream]');
   if(edit)openStreamEditor(streams.find(stream=>stream.id===edit.dataset.editStream));
-  if(remove&&confirm('Delete this academy resource and its video file permanently?')){await api(`/api/admin/streams/${remove.dataset.deleteStream}`,{method:'DELETE'});streams=await api('/api/admin/streams');renderAll()}
+  if(remove&&confirm('Delete this academy resource and its video file permanently?')){try{remove.disabled=true;await api(`/api/admin/streams/${remove.dataset.deleteStream}`,{method:'DELETE'});streams=await api('/api/admin/streams');renderAll();notify('Academy resource deleted.')}catch(error){remove.disabled=false;notify(error.message,'error')}}
+});
+$('#supportConversationList').addEventListener('click',event=>{const item=event.target.closest('[data-complaint-id]');if(item)openComplaint(item.dataset.complaintId)});
+$('#supportThread').addEventListener('change',async event=>{
+  const id=event.target.dataset.complaintStatus;if(!id)return;
+  event.target.disabled=true;
+  try{
+    const result=await api(`/api/admin/complaints/${encodeURIComponent(id)}`,{method:'PATCH',body:JSON.stringify({status:event.target.value})}),conversation=result.conversation||result,index=complaints.findIndex(item=>item.id===id);
+    if(index>=0)complaints[index]=conversation;renderAll();notify('Conversation status updated.');
+  }catch(error){const message=$('#supportReplyMessage');if(message)message.textContent=error.message;event.target.disabled=false;notify(error.message,'error')}
+});
+$('#supportThread').addEventListener('submit',async event=>{
+  const form=event.target.closest('[data-complaint-reply]');if(!form)return;event.preventDefault();
+  const id=form.dataset.complaintReply,button=form.querySelector('button'),message=form.elements.message.value.trim();if(!message)return;setButtonBusy(button,true,'Sending…');
+  try{
+    const result=await api(`/api/admin/complaints/${encodeURIComponent(id)}/messages`,{method:'POST',body:JSON.stringify({message})}),conversation=result.conversation||result,index=complaints.findIndex(item=>item.id===id);
+    if(index>=0)complaints[index]=conversation;renderAll();notify('Reply sent to the visitor.');
+  }catch(error){const replyMessage=$('#supportReplyMessage');if(replyMessage)replyMessage.textContent=error.message;notify(error.message,'error')}finally{setButtonBusy(button,false)}
 });
 $('#ordersList').addEventListener('click',async event=>{const button=event.target.closest('[data-expand]');if(button)button.closest('.order-card').classList.toggle('open');const contact=event.target.closest('[data-contact]');if(contact){const order=orders.find(item=>item.id===contact.closest('[data-order-id]').dataset.orderId),channel=contact.dataset.contact,defaultMessage=`Hello ${order.customer.name}, here is an update for order ${order.number}. Its current status is ${order.status}. The order total is ${money(order.total)}. Reply if you have any questions. — JZ Market`,message=prompt('Review your message before sending',defaultMessage),subject=`JZ Market order ${order.number}`;if(!message)return;if(channel==='email')window.open(`mailto:${encodeURIComponent(order.customer.email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`,'_blank');else window.open(`https://wa.me/${String(order.customer.phone).replace(/\D/g,'')}?text=${encodeURIComponent(message)}`,'_blank');await api(`/api/admin/orders/${order.id}/communications`,{method:'POST',body:JSON.stringify({channel,template:'order status update',message})});orders=await api('/api/admin/orders');renderOrders()}});
 $('#ordersList').addEventListener('change',async event=>{if(event.target.dataset.status){await api(`/api/admin/orders/${event.target.dataset.status}`,{method:'PATCH',body:JSON.stringify({status:event.target.value})});orders=await api('/api/admin/orders');renderAll()}});
 $('#productPhoto').addEventListener('change',event=>{$('#photoName').textContent=event.target.files[0]?.name||'Choose product image'});
 $('#productGallery').addEventListener('change',event=>{$('#galleryName').textContent=plural(event.target.files.length,'new image')});
 $('#productForm').addEventListener('submit',async event=>{
-  event.preventDefault();const message=$('#editorMessage'),button=event.submitter;message.textContent='';button.disabled=true;
+  event.preventDefault();const message=$('#editorMessage'),button=event.submitter,isEditing=Boolean($('#productId').value);message.textContent='';setButtonBusy(button,true,'Saving…');
   try{
     let image=$('#productImage').value,file=$('#productPhoto').files[0],images=JSON.parse($('#productImages').value||'[]');
     if(file)image=await uploadImage(file);
     for(const galleryFile of [...$('#productGallery').files])images.push(await uploadImage(galleryFile));
     if(image&&!images.includes(image))images.unshift(image);
     const id=$('#productId').value,payload={name:$('#productName').value,category:$('#productCategory').value,collection:$('#productCollection').value,price:Number($('#productPrice').value),salePrice:Number($('#productSalePrice').value)||0,stock:Number($('#productStock').value),variants:$('#productVariants').value,condition:$('#productCondition').value,description:$('#productDescription').value,image,images:images.slice(0,12),featured:$('#productFeatured').checked,active:$('#productActive').checked};
-    await api(id?`/api/admin/products/${id}`:'/api/admin/products',{method:id?'PUT':'POST',body:JSON.stringify(payload)});products=await api('/api/admin/products');renderAll();closeEditor();event.target.reset();
-  }catch(error){message.textContent=error.message}finally{button.disabled=false}
+    await api(id?`/api/admin/products/${id}`:'/api/admin/products',{method:id?'PUT':'POST',body:JSON.stringify(payload)});products=await api('/api/admin/products');renderAll();closeEditor();event.target.reset();notify(isEditing?'Product changes saved.':'Product added to inventory.');
+  }catch(error){message.textContent=error.message;notify(error.message,'error')}finally{setButtonBusy(button,false)}
 });
 $('#streamFile').addEventListener('change',event=>{$('#streamFileName').textContent=event.target.files[0]?.name||'Choose main video';updateAcademyReadiness()});
 $('#streamCoverPhoto').addEventListener('change',event=>{const file=event.target.files[0];$('#streamCoverName').textContent=file?.name||'Choose course cover image';if(streamCoverObjectUrl)URL.revokeObjectURL(streamCoverObjectUrl);streamCoverObjectUrl=file?URL.createObjectURL(file):'';updateStreamCoverPreview(streamCoverObjectUrl||$('#streamCoverImage').value);updateAcademyReadiness()});
@@ -275,14 +392,26 @@ $('#addModule').addEventListener('click',()=>{const modules=collectModules();mod
 $('#moduleList').addEventListener('click',event=>{const moduleElement=event.target.closest('.course-module');if(!moduleElement)return;let modules=collectModules(),index=Number(moduleElement.dataset.moduleIndex);if(event.target.closest('[data-add-lesson]'))modules[index].lessons.push({title:`Lesson ${modules[index].lessons.length+1}`});if(event.target.closest('[data-remove-module]')){if(!confirm(`Remove ${modules[index].title} and all of its lessons?`))return;modules.splice(index,1)}const lessonElement=event.target.closest('.lesson-row'),lessonIndex=lessonElement?[...moduleElement.querySelectorAll('.lesson-row')].indexOf(lessonElement):-1;if(event.target.closest('[data-remove-lesson]')){if(!confirm(`Remove ${modules[index].lessons[lessonIndex].title}?`))return;modules[index].lessons.splice(lessonIndex,1)}const moduleMove=event.target.closest('[data-module-move]');if(moduleMove){const next=index+Number(moduleMove.dataset.moduleMove);if(next>=0&&next<modules.length)[modules[index],modules[next]]=[modules[next],modules[index]]}const lessonMove=event.target.closest('[data-lesson-move]');if(lessonMove){const next=lessonIndex+Number(lessonMove.dataset.lessonMove);if(next>=0&&next<modules[index].lessons.length)[modules[index].lessons[lessonIndex],modules[index].lessons[next]]=[modules[index].lessons[next],modules[index].lessons[lessonIndex]]}renderModules(modules)});
 $('#moduleList').addEventListener('change',async event=>{const file=event.target.files?.[0];if(!file||(!event.target.classList.contains('lesson-video-file')&&!event.target.classList.contains('lesson-resource-file')))return;const lesson=event.target.closest('.lesson-row'),upload=event.target.closest('.lesson-upload'),state=upload.parentElement.nextElementSibling,target=lesson.querySelector(event.target.classList.contains('lesson-video-file')?'.lesson-video':'.lesson-resource');upload.classList.add('uploading');state.textContent=`Uploading ${file.name}…`;try{target.value=await uploadAcademyFile(file);state.textContent=`Uploaded ${file.name}`;$('#streamEditorMessage').textContent='File uploaded. Save the course to attach it to this lesson.'}catch(error){state.textContent=error.message}finally{upload.classList.remove('uploading');event.target.value=''}});
 $('#streamForm').addEventListener('submit',async event=>{
-  event.preventDefault();const id=$('#streamId').value,file=$('#streamFile').files[0],coverFile=$('#streamCoverPhoto').files[0],message=$('#streamEditorMessage'),button=event.submitter,modules=collectModules(),lessonCount=modules.reduce((sum,module)=>sum+module.lessons.length,0),payload={title:$('#streamTitle').value,contentType:$('#streamType').value,accessType:$('#streamAccess').value,price:Number($('#streamPrice').value)||0,game:$('#streamGame').value,level:$('#streamLevel').value,date:$('#streamDate').value,publishAt:$('#streamPublishAt').value?new Date($('#streamPublishAt').value).toISOString():'',duration:$('#streamDuration').value,lessons:$('#streamType').value==='course'?Math.max(1,lessonCount):1,description:$('#streamDescription').value,coverImage:$('#streamCoverImage').value,src:$('#streamSource').value,modules,published:$('#streamPublished').checked,featured:$('#streamFeatured').checked};message.textContent='';if(payload.accessType==='paid'&&payload.price<=0){message.textContent='Set a price greater than zero for paid access.';return}if(payload.contentType==='course'&&payload.published&&!lessonCount){message.textContent='Add at least one lesson before publishing, or turn Published off to save this as a draft.';return}button.disabled=true;$('#streamUploadMeter').hidden=!file;
+  event.preventDefault();const id=$('#streamId').value,file=$('#streamFile').files[0],coverFile=$('#streamCoverPhoto').files[0],message=$('#streamEditorMessage'),button=event.submitter,modules=collectModules(),lessonCount=modules.reduce((sum,module)=>sum+module.lessons.length,0),payload={title:$('#streamTitle').value,contentType:$('#streamType').value,accessType:$('#streamAccess').value,price:Number($('#streamPrice').value)||0,game:$('#streamGame').value,level:$('#streamLevel').value,date:$('#streamDate').value,publishAt:$('#streamPublishAt').value?new Date($('#streamPublishAt').value).toISOString():'',duration:$('#streamDuration').value,lessons:$('#streamType').value==='course'?Math.max(1,lessonCount):1,description:$('#streamDescription').value,coverImage:$('#streamCoverImage').value,src:$('#streamSource').value,modules,published:$('#streamPublished').checked,featured:$('#streamFeatured').checked};message.textContent='';if(payload.accessType==='paid'&&payload.price<=0){message.textContent='Set a price greater than zero for paid access.';notify(message.textContent,'error');return}if(payload.contentType==='course'&&payload.published&&!lessonCount){message.textContent='Add at least one lesson before publishing, or turn Published off to save this as a draft.';notify(message.textContent,'error');return}setButtonBusy(button,true,file?'Uploading…':'Saving…');$('#streamUploadMeter').hidden=!file;
   try{
     if(coverFile)payload.coverImage=await uploadImage(coverFile);
     if(file)payload.src=await uploadAcademyFile(file);
     await api(id?`/api/admin/streams/${id}`:'/api/admin/academy-resources',{method:id?'PATCH':'POST',body:JSON.stringify(payload)});
-    streams=await api('/api/admin/streams');renderAll();closeStreamEditor();event.target.reset();
-  }catch(error){message.textContent=error.message}finally{button.disabled=false;$('#streamUploadMeter').hidden=true}
+    streams=await api('/api/admin/streams');renderAll();closeStreamEditor();event.target.reset();notify(id?'Course changes saved.':'Course created successfully.');
+  }catch(error){message.textContent=error.message;notify(error.message,'error')}finally{setButtonBusy(button,false);$('#streamUploadMeter').hidden=true}
 });
 document.addEventListener('keydown',event=>{if(event.key==='Escape'){closeEditor();closeStreamEditor();closeSidebar()}});
 
-icons();if(token)showDashboard();
+setInterval(async()=>{
+  if(!token||document.hidden)return;
+  try{
+    const result=await api('/api/admin/complaints');complaints=result.conversations||result;
+    $('#openComplaints').textContent=complaints.filter(item=>['open','in-progress'].includes(item.status)).length;
+    if(activeView==='support'&&activeComplaintId){
+      const detailResult=await api(`/api/admin/complaints/${encodeURIComponent(activeComplaintId)}`),detail=detailResult.conversation||detailResult,index=complaints.findIndex(item=>item.id===activeComplaintId);
+      if(index>=0)complaints[index]=detail;renderSupport();
+    }else if(activeView==='support')renderSupport();
+  }catch{}
+},12000);
+
+setView(activeView);icons();if(token)showDashboard();

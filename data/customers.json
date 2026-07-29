@@ -1,1 +1,37 @@
-[]
+[
+  {
+    "id": "96823ff0-c02b-43b0-83e1-178f1df1acb1",
+    "name": "zoglo johnson",
+    "email": "zoglojohnson@gmail.com",
+    "phone": "0529528091",
+    "passwordHash": "e40e2c0a017b2fe0ddc20b2b82677112:b6df8fa39ebaf0b94edb86d2c0be22f85af75b9502e5f74ab0cc6905f2cd158d9976dc8b81e58148873d55425975b7cc1b1646956405a8ce1346b2db8965dc0a",
+    "active": true,
+    "verified": false,
+    "addresses": [],
+    "preferences": {
+      "academy": true,
+      "orders": true,
+      "marketing": true
+    },
+    "savedProducts": [],
+    "savedCourses": [],
+    "enrollments": [
+      {
+        "courseId": "academy-product-page",
+        "enrolledAt": "2026-07-28T07:35:31.429Z",
+        "access": "free"
+      }
+    ],
+    "progress": {
+      "academy-product-page": {
+        "completed": [
+          "lesson-1"
+        ],
+        "percent": 100,
+        "updatedAt": "2026-07-28T07:36:30.130Z"
+      }
+    },
+    "createdAt": "2026-07-27T14:57:14.750Z",
+    "lastLogin": "2026-07-29T12:40:04.611Z"
+  }
+]

@@ -1,1 +1,82 @@
-[]
+[
+  {
+    "id": "98f6c8be-1077-40c0-a710-6a6d28f4b05e",
+    "customerId": "96823ff0-c02b-43b0-83e1-178f1df1acb1",
+    "title": "Order confirmed",
+    "message": "JZ-260729-0003 is now confirmed.",
+    "type": "order",
+    "link": "account.html#orders",
+    "createdAt": "2026-07-29T14:48:07.586Z",
+    "readBy": []
+  },
+  {
+    "id": "6cf9755f-175c-4929-8ca5-1af7ba88f482",
+    "customerId": "96823ff0-c02b-43b0-83e1-178f1df1acb1",
+    "title": "Order completed",
+    "message": "JZ-260729-0003 is now completed.",
+    "type": "order",
+    "link": "account.html#orders",
+    "createdAt": "2026-07-29T14:47:35.606Z",
+    "readBy": []
+  },
+  {
+    "id": "611e253c-3548-48e3-b9b4-df6c40f026f9",
+    "customerId": "96823ff0-c02b-43b0-83e1-178f1df1acb1",
+    "title": "Order processing",
+    "message": "JZ-260729-0003 is now processing.",
+    "type": "order",
+    "link": "account.html#orders",
+    "createdAt": "2026-07-29T14:47:11.912Z",
+    "readBy": []
+  },
+  {
+    "id": "b6b22ddd-e1d5-4967-8496-b9f778e884ab",
+    "customerId": "96823ff0-c02b-43b0-83e1-178f1df1acb1",
+    "title": "Order received",
+    "message": "Your order JZ-260729-0003 has been received and is awaiting confirmation.",
+    "type": "order",
+    "link": "account.html#orders",
+    "createdAt": "2026-07-29T14:46:47.174Z",
+    "readBy": []
+  },
+  {
+    "id": "7832daaf-0276-4596-9d1f-cdf17c519b82",
+    "customerId": "96823ff0-c02b-43b0-83e1-178f1df1acb1",
+    "title": "Order confirmed",
+    "message": "JZA-260729-0002 is now confirmed.",
+    "type": "academy",
+    "link": "account.html#orders",
+    "createdAt": "2026-07-29T12:40:56.862Z",
+    "readBy": []
+  },
+  {
+    "id": "6afcb72c-2387-4d6a-8de7-746feaff4443",
+    "customerId": "96823ff0-c02b-43b0-83e1-178f1df1acb1",
+    "title": "Course order received",
+    "message": "Your access request for Build Your First Useful Website is awaiting payment confirmation.",
+    "type": "academy",
+    "link": "account.html#orders",
+    "createdAt": "2026-07-29T12:40:21.206Z",
+    "readBy": []
+  },
+  {
+    "id": "5257f7e1-42bc-4934-b0a2-63b3b142a4f2",
+    "customerId": "96823ff0-c02b-43b0-83e1-178f1df1acb1",
+    "title": "Order confirmed",
+    "message": "JZA-260729-0001 is now confirmed.",
+    "type": "academy",
+    "link": "account.html#orders",
+    "createdAt": "2026-07-29T12:28:51.343Z",
+    "readBy": []
+  },
+  {
+    "id": "c92cb7e2-5b3d-4eaa-8b0a-323a99e4e87e",
+    "customerId": "96823ff0-c02b-43b0-83e1-178f1df1acb1",
+    "title": "Course order received",
+    "message": "Your access request for LEARNING FOR BEGINERS is awaiting payment confirmation.",
+    "type": "academy",
+    "link": "account.html#orders",
+    "createdAt": "2026-07-29T12:27:47.389Z",
+    "readBy": []
+  }
+]

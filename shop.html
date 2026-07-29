@@ -3,169 +3,263 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="JZ Market — considered tech, games, cars, and creator gear with personal support.">
-  <meta name="theme-color" content="#0b0d0c">
-  <title>JZ Market — Considered finds, personally supported</title>
+  <meta name="description" content="JZ Market — considered technology, games, vehicles, and creator gear with personal support.">
+  <meta name="theme-color" content="#10130f">
+  <title>JZ Market — Better things, personally checked</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="shop.css">
+  <link rel="stylesheet" href="shop.css?v=market-20260729-2">
 </head>
 <body class="shop-page" id="top">
+  <a class="market-skip-link" href="#catalog">Skip to products</a>
   <div class="grain" aria-hidden="true"></div>
 
   <div class="market-note">
-    <span>New arrivals added weekly</span>
-    <span>Personal support before and after your order</span>
-    <a href="#catalog">Shop the latest ↓</a>
+    <p><i aria-hidden="true"></i> Store online</p>
+    <p>Personally checked finds · Dubai delivery and collection</p>
+    <a href="#catalog">View the current edit <span>↓</span></a>
   </div>
 
   <header class="site-header shop-header">
-    <a class="brand" href="index.html" aria-label="JZ Market home"><span>JZ</span><i>MARKET</i></a>
-    <nav class="nav" aria-label="Primary navigation">
-      <a href="index.html">Portfolio</a>
-      <a href="#catalog">Shop</a>
-      <a href="#why-jz">Why JZ</a>
-      <a href="account.html">My JZ</a>
-    </nav>
-    <button class="cart-trigger" id="cartTrigger" type="button" aria-label="Open cart">
-      <span class="cart-label">Bag</span><b id="cartCount">0</b>
+    <a class="brand" href="index.html" aria-label="JZ Market home">
+      <span>JZ</span>
+      <i>MARKET</i>
+    </a>
+
+    <button class="market-nav-toggle" id="marketNavToggle" type="button" aria-controls="shopNav" aria-expanded="false">
+      <span></span><span></span>
+      <b>Menu</b>
     </button>
+
+    <nav class="nav shop-nav" id="shopNav" aria-label="Primary navigation">
+      <a href="index.html">Portfolio</a>
+      <a href="#catalog" aria-current="page">Market</a>
+      <a href="streams.html">Academy</a>
+      <a href="#market-service">How it works</a>
+      <a class="nav-mobile-account" href="account.html">My JZ account</a>
+    </nav>
+
+    <div class="market-header-actions">
+      <a class="market-account-link" href="account.html"><span>My JZ</span><b aria-hidden="true">↗</b></a>
+      <button class="cart-trigger" id="cartTrigger" type="button" aria-label="Open shopping bag">
+        <span class="cart-label">Bag</span><b id="cartCount">0</b>
+      </button>
+    </div>
   </header>
 
   <main>
-    <section class="shop-hero">
-      <div class="hero-noise" aria-hidden="true"></div>
-      <div class="shop-hero-copy reveal visible">
-        <p class="overline"><i></i> Independent marketplace / Dubai</p>
-        <h1>GOOD<br>FINDS.<br><span>NO GUESSWORK.</span></h1>
-        <p class="hero-summary">A considered edit of useful tech, games, vehicles, and creator gear — quality checked and personally supported from first question to handover.</p>
-        <div class="hero-actions">
-          <a href="#catalog" class="btn btn-bright">Browse the collection <span>↘</span></a>
-          <a href="#why-jz" class="hero-text-link">How it works <span>→</span></a>
+    <section class="market-hero">
+      <div class="market-hero-grid shell">
+        <div class="market-hero-copy reveal visible">
+          <p class="market-eyebrow"><i aria-hidden="true"></i> Independent marketplace / Dubai</p>
+          <h1>BETTER<br>THINGS.<br><span>LESS NOISE.</span></h1>
+          <p class="market-hero-summary">A focused shortlist of technology, games, vehicles, and creator gear—selected carefully, described honestly, and supported by a real person.</p>
+          <div class="market-hero-actions">
+            <a href="#catalog" class="market-primary-action">Shop the collection <span>↘</span></a>
+            <a href="#market-service" class="market-secondary-action">Why buy from JZ <span>→</span></a>
+          </div>
+          <dl class="market-proof">
+            <div><dt>01</dt><dd><strong>Checked</strong><span>Before handover</span></dd></div>
+            <div><dt>02</dt><dd><strong>Clear</strong><span>Condition notes</span></dd></div>
+            <div><dt>03</dt><dd><strong>Human</strong><span>Support throughout</span></dd></div>
+          </dl>
         </div>
-      </div>
 
-      <div class="market-feature" aria-label="Featured collection">
-        <div class="feature-card feature-primary">
-          <div class="feature-meta"><span>JZ / EDIT 01</span><span>CURATED TECH</span></div>
-          <div class="feature-screen"><b>THE<br>NEXT<br>THING.</b><i>●</i></div>
-          <p>Tools for work, play, and everything between.</p>
-        </div>
-        <div class="feature-card feature-small">
-          <span>QUALITY<br>CHECKED</span><b>✓</b>
-        </div>
-        <div class="feature-label">NEW SEASON / 2026</div>
+        <aside class="market-spotlight" id="heroProductSpotlight" aria-live="polite" aria-label="Featured product">
+          <div class="spotlight-loading">
+            <span class="market-spinner" aria-hidden="true"></span>
+            <p>Preparing this week’s pick…</p>
+          </div>
+        </aside>
       </div>
+      <div class="market-hero-index" aria-hidden="true"><span>JZ / MARKET</span><span>CURATED IN SMALL NUMBERS</span><span>EST. 2026</span></div>
+    </section>
 
-      <div class="hero-proof">
-        <div><strong>01</strong><span>Checked before<br>handover</span></div>
-        <div><strong>02</strong><span>Clear, honest<br>condition notes</span></div>
-        <div><strong>03</strong><span>Real person,<br>real support</span></div>
+    <section class="market-assurance" aria-label="Marketplace promises">
+      <div class="shell">
+        <article><b>✓</b><span><strong>Quality checked</strong><small>Every physical item reviewed</small></span></article>
+        <article><b>◇</b><span><strong>Honest condition</strong><small>Useful details, no surprises</small></span></article>
+        <article><b>↗</b><span><strong>Flexible handover</strong><small>Dubai delivery or collection</small></span></article>
+        <article><b>●</b><span><strong>Direct support</strong><small>A real person when you need help</small></span></article>
       </div>
     </section>
 
-    <section class="market-benefits" aria-label="Marketplace benefits">
-      <div><b>✓</b><span><strong>Quality checked</strong><small>Every physical item reviewed</small></span></div>
-      <div><b>↗</b><span><strong>Personal delivery</strong><small>Clear coordination in Dubai</small></span></div>
-      <div><b>◎</b><span><strong>Human support</strong><small>Talk to a real person anytime</small></span></div>
-      <div><b>↺</b><span><strong>Clear condition</strong><small>No surprises at handover</small></span></div>
-    </section>
-
-    <section id="catalog" class="catalog shell">
-      <header class="catalog-head">
-        <div><p class="overline">The current edit</p><h2>SHOP <span>ALL.</span></h2></div>
-        <p><b id="resultCount">0</b> considered finds</p>
+    <section class="marketplace shell" id="catalog">
+      <header class="marketplace-heading">
+        <div>
+          <p class="market-eyebrow">The current edit</p>
+          <h2>GOOD FINDS,<br><span>READY NOW.</span></h2>
+        </div>
+        <div class="marketplace-heading-copy">
+          <p>Useful things selected in small numbers. Search the shortlist or browse by category.</p>
+          <span><b id="resultCount">0</b> products available to explore</span>
+        </div>
       </header>
 
-      <div class="category-rail" id="categoryRail" aria-label="Shop by category"></div>
+      <div class="marketplace-layout">
+        <button class="filter-overlay" id="filterOverlay" type="button" aria-label="Close product filters"></button>
 
-      <div class="market-tools">
-        <label class="market-search">
-          <span>Search</span>
-          <input id="productSearch" type="search" placeholder="What are you looking for?" autocomplete="off">
-          <b aria-hidden="true">⌕</b>
-        </label>
-        <label class="market-sort">
-          <span>Sort by</span>
-          <select id="productSort">
-            <option value="featured">Featured</option>
-            <option value="price-low">Price: low to high</option>
-            <option value="price-high">Price: high to low</option>
-            <option value="name">Name: A–Z</option>
-          </select>
-        </label>
-      </div>
+        <aside class="catalog-sidebar" id="catalogFilters" aria-labelledby="catalogFilterTitle">
+          <div class="catalog-sidebar-head">
+            <div><small>REFINE THE EDIT</small><h3 id="catalogFilterTitle">Find your thing</h3></div>
+            <button id="filterClose" type="button" aria-label="Close product filters">×</button>
+          </div>
 
-      <div class="filters" role="group" aria-label="Filter products">
-        <button class="filter active" data-filter="all">All</button>
-        <button class="filter" data-filter="phones">Phones</button>
-        <button class="filter" data-filter="laptops">Laptops</button>
-        <button class="filter" data-filter="games">Games</button>
-        <button class="filter" data-filter="cars">Cars</button>
-        <button class="filter" data-filter="gadgets">Creator gear</button>
-      </div>
+          <div class="catalog-filter-group">
+            <span class="filter-label">Category</span>
+            <div class="filters" role="group" aria-label="Filter by category">
+              <button class="filter active" data-filter="all" type="button">All products</button>
+            </div>
+          </div>
 
-      <div class="catalog-status">
-        <p id="catalogSummary">Showing the full collection</p>
-        <div>
-          <button id="clearProductFilters" type="button">Clear filters</button>
-          <button class="saved-products-filter" id="savedProductsFilter" type="button"><span>♡</span> Saved <b id="savedProductCount">0</b></button>
+          <div class="catalog-filter-group">
+            <label class="filter-label" for="priceRange">Price range</label>
+            <select id="priceRange" class="price-filter">
+              <option value="all">Any price</option>
+              <option value="under-100">Under $100</option>
+              <option value="100-500">$100–$500</option>
+              <option value="500-1500">$500–$1,500</option>
+              <option value="over-1500">$1,500+</option>
+            </select>
+          </div>
+
+          <label class="stock-toggle">
+            <span><strong>Available now</strong><small>Hide sold-out products</small></span>
+            <input id="stockOnly" type="checkbox">
+            <i aria-hidden="true"></i>
+          </label>
+
+          <button class="saved-products-filter" id="savedProductsFilter" type="button" aria-pressed="false">
+            <span>♡</span><b>Saved products</b><i id="savedProductCount">0</i>
+          </button>
+
+          <button class="clear-catalog-filters" id="clearProductFilters" type="button">Reset all filters</button>
+
+          <div class="catalog-help-card">
+            <span>Not sure what fits?</span>
+            <strong>Ask before you buy.</strong>
+            <p>Use the chat button and get a straight answer from JZ.</p>
+          </div>
+        </aside>
+
+        <div class="catalog-main">
+          <div class="catalog-toolbar">
+            <label class="market-search">
+              <span class="filter-label">Search the market</span>
+              <span class="market-search-field">
+                <i aria-hidden="true">⌕</i>
+                <input id="productSearch" type="search" placeholder="Phone, laptop, game, creator gear…" autocomplete="off" aria-describedby="catalogSummary">
+                <kbd>ESC</kbd>
+              </span>
+            </label>
+
+            <div class="catalog-toolbar-actions">
+              <button class="mobile-filter-trigger" id="filterToggle" type="button" aria-controls="catalogFilters" aria-expanded="false">
+                Filters <span id="activeFilterCount">0</span>
+              </button>
+              <label class="market-sort">
+                <span class="filter-label">Sort by</span>
+                <select id="productSort">
+                  <option value="featured">JZ recommended</option>
+                  <option value="price-low">Price: low to high</option>
+                  <option value="price-high">Price: high to low</option>
+                  <option value="name">Name: A–Z</option>
+                </select>
+              </label>
+              <div class="catalog-view" role="group" aria-label="Product view">
+                <button id="gridView" class="active" type="button" aria-label="Grid view" aria-pressed="true"><i></i><i></i><i></i><i></i></button>
+                <button id="listView" type="button" aria-label="List view" aria-pressed="false"><i></i><i></i></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="catalog-status">
+            <p id="catalogSummary" aria-live="polite">Preparing the current collection…</p>
+            <span>Personally checked · Current availability</span>
+          </div>
+
+          <div class="product-grid" id="productGrid">
+            <div class="catalog-loading" role="status">
+              <span class="market-spinner" aria-hidden="true"></span>
+              <strong>Preparing the collection</strong>
+              <small>Checking current products and availability…</small>
+            </div>
+          </div>
         </div>
-      </div>
-
-      <div class="product-grid" id="productGrid" aria-live="polite">
-        <div class="catalog-loading">Loading the collection…</div>
       </div>
     </section>
 
-    <section class="market-manifesto" id="why-jz">
+    <section class="market-service" id="market-service">
       <div class="shell">
-        <p class="overline">A better way to buy</p>
-        <div class="manifesto-intro">
-          <h2>THE SERVICE<br>IS PART OF<br><span>THE PRODUCT.</span></h2>
-          <p>No anonymous seller. No vague condition notes. No disappearing after checkout. Every JZ Market order comes with a direct line to the person who selected it.</p>
+        <header>
+          <p class="market-eyebrow">The JZ difference</p>
+          <h2>THE SERVICE IS<br>PART OF <span>THE PRODUCT.</span></h2>
+          <p>No anonymous seller and no vague handover. Every order has a person behind it—from your first question to the moment it reaches you.</p>
+        </header>
+
+        <div class="market-service-grid">
+          <article><span>01 / SELECT</span><strong>A smaller, better collection.</strong><p>Less scrolling. More useful things chosen for how people actually work, create, play, and move.</p></article>
+          <article><span>02 / CHECK</span><strong>Details you can trust.</strong><p>Condition, availability, and the important practical details are made clear before handover.</p></article>
+          <article><span>03 / SUPPORT</span><strong>A direct line to JZ.</strong><p>Ask before ordering, confirm what matters, and get help through payment, delivery, or collection.</p></article>
         </div>
-        <div class="support-grid">
-          <article><b>01</b><h3>Considered selection</h3><p>A focused collection of things worth owning, instead of an endless wall of listings.</p></article>
-          <article><b>02</b><h3>Personally checked</h3><p>Physical items are reviewed before collection or delivery, with condition made clear.</p></article>
-          <article><b>03</b><h3>Human support</h3><p>Ask questions before ordering and get personal help through confirmation and handover.</p></article>
+
+        <div class="market-service-cta">
+          <p><i aria-hidden="true"></i> Have a product question?</p>
+          <button type="button" data-open-support>Start a conversation <span>↗</span></button>
         </div>
+
         <footer>
           <p>© <span id="year">2026</span> JZ Market</p>
-          <div><a href="index.html">Portfolio ↗</a><a href="streams.html">JZ Academy ↗</a></div>
+          <div><a href="index.html">Portfolio ↗</a><a href="streams.html">JZ Academy ↗</a><a href="legal.html">Policies ↗</a></div>
           <a href="#top">Back to top ↑</a>
         </footer>
       </div>
     </section>
   </main>
 
-  <aside class="cart-drawer" id="cartDrawer" aria-hidden="true" aria-label="Shopping bag">
+  <button class="mobile-cart-bar" id="mobileCartBar" type="button" aria-label="Open shopping bag" aria-controls="cartDrawer" aria-expanded="false">
+    <span><b id="mobileCartCount">0 items</b><small>Your shopping bag</small></span>
+    <strong id="mobileCartTotal">$0</strong>
+  </button>
+
+  <aside class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="cartTitle" tabindex="-1">
     <div class="cart-top">
-      <div><small>YOUR SELECTION</small><h2>Shopping bag</h2></div>
-      <button id="cartClose" type="button" aria-label="Close cart">×</button>
+      <div><small>YOUR SELECTION</small><h2 id="cartTitle">Shopping bag</h2></div>
+      <button id="cartClose" type="button" aria-label="Close shopping bag">×</button>
     </div>
+    <div class="cart-progress"><i></i><span>Every order is personally confirmed before payment.</span></div>
     <div class="cart-items" id="cartItems"></div>
-    <div class="cart-empty" id="cartEmpty"><span>0</span><p>Your bag is waiting for a good find.</p><button type="button" id="cartContinue">Continue browsing</button></div>
+    <div class="cart-empty" id="cartEmpty">
+      <span aria-hidden="true">0</span>
+      <strong>Your bag is ready for a good find.</strong>
+      <p>Browse the current edit and add anything you want JZ to confirm.</p>
+      <button type="button" id="cartContinue">Continue browsing</button>
+    </div>
     <div class="cart-footer">
-      <div><span>Estimated total</span><strong id="cartTotal">$0</strong></div>
-      <a id="checkoutLink" href="checkout.html">Continue to order <span>↗</span></a>
+      <div class="cart-total-row"><span>Estimated total<small>Delivery confirmed separately</small></span><strong id="cartTotal">$0</strong></div>
+      <a id="checkoutLink" href="checkout.html" aria-disabled="true" tabindex="-1">Continue to order <span>↗</span></a>
+      <div class="cart-assurance" aria-label="Checkout assurances">
+        <span>Secure checkout</span><span>Human confirmation</span><span>Clear delivery</span>
+      </div>
       <small>No payment is taken yet. Availability, delivery, and payment are personally confirmed.</small>
     </div>
   </aside>
   <button class="cart-overlay" id="cartOverlay" type="button" aria-label="Close shopping bag"></button>
 
   <div class="product-modal" id="productModal" aria-hidden="true">
-    <button class="product-modal-backdrop" type="button" data-close-product aria-label="Close product details"></button>
-    <section class="product-modal-panel" role="dialog" aria-modal="true" aria-labelledby="productModalTitle">
+    <button class="product-modal-backdrop" type="button" data-close-product tabindex="-1" aria-label="Close product details"></button>
+    <section class="product-modal-panel" role="dialog" aria-modal="true" aria-labelledby="productModalTitle" tabindex="-1">
       <button class="product-modal-close" type="button" data-close-product aria-label="Close product details">×</button>
       <div id="productModalContent"></div>
     </section>
   </div>
+
   <div class="market-toast" id="marketToast" role="status" aria-live="polite"></div>
 
   <script src="script.js"></script>
-  <script src="shop.js"></script>
+  <script src="shop.js?v=market-20260729-2"></script>
+  <script src="support-chat.js"></script>
 </body>
 </html>

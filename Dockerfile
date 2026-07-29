@@ -17,6 +17,7 @@ RUN rm -f /app/data/users.json \
     /app/data/analytics.json \
     /app/data/notifications.json \
     /app/data/support.json \
+    /app/data/complaints.json \
     /app/data/reviews.json \
     && mkdir -p /app/assets/uploads /app/backups \
     && chown -R node:node /app/data /app/assets/uploads /app/backups

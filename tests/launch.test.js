@@ -62,3 +62,43 @@ test('production server restricts public files and validates required secrets', 
   assert.match(source, /Strict-Transport-Security/);
   assert.match(source, /Graceful shutdown started/);
 });
+
+test('visitor complaints use hashed access tokens and authenticated admin routes', () => {
+  const root = path.resolve(__dirname, '..');
+  const source = fs.readFileSync(path.join(root, 'server.js'), 'utf8');
+  const widget = fs.readFileSync(path.join(root, 'support-chat.js'), 'utf8');
+  const adminPage = fs.readFileSync(path.join(root, 'admin.html'), 'utf8');
+  const adminClient = fs.readFileSync(path.join(root, 'admin.js'), 'utf8');
+  assert.match(source, /const COMPLAINTS_FILE/);
+  assert.match(source, /complaintTokenHash/);
+  assert.match(source, /crypto\.timingSafeEqual/);
+  assert.match(source, /visitorTokenHash:complaintTokenHash\(visitorToken\)/);
+  assert.match(source, /\/api\/complaints/);
+  assert.match(source, /\/api\/admin\/complaints/);
+  assert.match(source, /complaints:readJson\(COMPLAINTS_FILE\)/);
+  assert.match(source, /Array\.isArray\(data\.complaints\)/);
+  assert.match(source, /'support-chat\.css'/);
+  assert.match(source, /'support-chat\.js'/);
+  assert.match(widget, /X-Visitor-Token/);
+  assert.match(widget, /\/api\/complaints/);
+  assert.match(adminPage, /id="supportView"/);
+  assert.match(adminPage, /id="supportThread"/);
+  assert.match(adminClient, /\/api\/admin\/complaints/);
+});
+
+test('marketplace discovery, mobile controls, and aggregate stock protection stay wired', () => {
+  const root = path.resolve(__dirname, '..');
+  const page = fs.readFileSync(path.join(root, 'shop.html'), 'utf8');
+  const client = fs.readFileSync(path.join(root, 'shop.js'), 'utf8');
+  const server = fs.readFileSync(path.join(root, 'server.js'), 'utf8');
+  for (const id of ['heroProductSpotlight', 'catalogFilters', 'filterToggle', 'priceRange', 'stockOnly', 'mobileCartBar', 'productModal']) {
+    assert.match(page, new RegExp(`id="${id}"`));
+  }
+  assert.match(page, /shop\.css\?v=market-/);
+  assert.match(page, /shop\.js\?v=market-/);
+  assert.doesNotMatch(page, /\sonclick=/);
+  assert.match(client, /trapFocus/);
+  assert.match(client, /productQuantity/);
+  assert.match(client, /notifyAdjustments/);
+  assert.match(server, /requestedTotals/);
+});

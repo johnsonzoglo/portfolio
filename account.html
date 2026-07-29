@@ -11,10 +11,15 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="account.css">
 </head>
-<body class="account-page">
+<body class="account-page" aria-busy="true">
+  <a class="account-skip" href="#accountContent">Skip to account content</a>
   <div class="account-shell">
-    <aside class="account-sidebar">
+    <aside class="account-sidebar" id="accountSidebar">
       <a class="brand" href="index.html"><span>JZ</span><i>MY SPACE</i></a>
+      <div class="account-member">
+        <span id="accountSidebarAvatar">JZ</span>
+        <div><small>Signed in as</small><strong id="accountSidebarName">JZ member</strong><em id="accountSidebarEmail">Your private space</em></div>
+      </div>
       <nav aria-label="Account navigation">
         <button class="active" type="button" data-account-view="overview"><span>01</span> Overview</button>
         <button type="button" data-account-view="academy"><span>02</span> My Academy</button>
@@ -27,11 +32,16 @@
       <div class="account-side-links"><a href="streams.html">Academy ↗</a><a href="shop.html">Market ↗</a></div>
       <button class="account-logout" id="accountLogout" type="button">Sign out</button>
     </aside>
-    <main class="account-main">
+    <main class="account-main" id="accountContent">
+      <div class="account-loading" id="accountLoading" role="status">
+        <span aria-hidden="true"></span>
+        <strong>Opening your JZ space</strong>
+        <small>Bringing your courses, orders, and saved items together…</small>
+      </div>
       <header class="account-topbar">
-        <button class="account-mobile-menu" id="accountMobileMenu" type="button">Menu</button>
+        <button class="account-mobile-menu" id="accountMobileMenu" type="button" aria-controls="accountSidebar" aria-expanded="false"><span aria-hidden="true">☰</span> Menu</button>
         <div><p class="account-overline" id="accountEyebrow">Your JZ world</p><h1 id="accountViewTitle">Overview</h1></div>
-        <button class="notification-button" id="notificationButton" type="button"><span>Notifications</span><b id="notificationCount">0</b></button>
+        <button class="notification-button" id="notificationButton" type="button" aria-controls="notificationDrawer" aria-expanded="false"><span>Notifications</span><b id="notificationCount">0</b></button>
       </header>
 
       <section class="account-view active" id="overviewView">
@@ -42,6 +52,11 @@
           <article><small>Orders</small><strong id="metricOrders">0</strong><span>orders placed</span></article>
           <article><small>Saved</small><strong id="metricSaved">0</strong><span>items kept</span></article>
         </div>
+        <nav class="account-quick-actions" aria-label="Quick actions">
+          <a href="streams.html"><span><small>Keep building</small><strong>Explore Academy</strong></span><b>↗</b></a>
+          <a href="shop.html"><span><small>See what is new</small><strong>Browse Market</strong></span><b>↗</b></a>
+          <button type="button" data-go-account="support"><span><small>Talk to a person</small><strong>Get support</strong></span><b>→</b></button>
+        </nav>
         <div class="account-overview-grid"><section class="account-card"><header><div><p class="account-overline">Pick up where you left off</p><h2>Continue learning</h2></div><button data-go-account="academy">View all →</button></header><div id="continueLearning"></div></section><section class="account-card"><header><div><p class="account-overline">Latest</p><h2>Order activity</h2></div><button data-go-account="orders">View all →</button></header><div id="recentAccountOrders"></div></section></div>
       </section>
 
@@ -64,23 +79,24 @@
 
       <section class="account-view" id="reviewsView">
         <div class="account-section-intro"><div><p class="account-overline">Share your experience</p><h2>YOUR<br><span>REVIEWS.</span></h2></div></div>
-        <div class="review-layout"><form class="account-form" id="reviewForm"><h3>Write a review</h3><label>Review type<select name="targetType" id="reviewType"><option value="product">Product</option><option value="course">Course</option></select></label><label>Choose item<select name="targetId" id="reviewTarget" required></select></label><label>Rating<select name="rating"><option value="5">5 — Excellent</option><option value="4">4 — Very good</option><option value="3">3 — Good</option><option value="2">2 — Fair</option><option value="1">1 — Needs work</option></select></label><label>Review title<input name="title" maxlength="100"></label><label>Your review<textarea name="comment" rows="5" maxlength="1000" required></textarea></label><button>Submit review</button><p id="reviewMessage"></p></form><section class="account-card"><header><div><p class="account-overline">History</p><h2>Submitted reviews</h2></div></header><div id="accountReviews"></div></section></div>
+        <div class="review-layout"><form class="account-form" id="reviewForm"><div class="form-heading"><span>01</span><div><p class="account-overline">Your experience</p><h3>Write a review</h3></div></div><label>Review type<select name="targetType" id="reviewType"><option value="product">Product</option><option value="course">Course</option></select></label><label>Choose item<select name="targetId" id="reviewTarget" required></select></label><label>Rating<select name="rating"><option value="5">5 — Excellent</option><option value="4">4 — Very good</option><option value="3">3 — Good</option><option value="2">2 — Fair</option><option value="1">1 — Needs work</option></select></label><label>Review title<input name="title" maxlength="100" placeholder="Summarize your experience"></label><label>Your review<textarea name="comment" rows="5" maxlength="1000" placeholder="What was useful? What should others know?" required></textarea></label><button type="submit">Submit review <span>→</span></button><p id="reviewMessage" role="status"></p></form><section class="account-card"><header><div><p class="account-overline">History</p><h2>Submitted reviews</h2></div></header><div id="accountReviews"></div></section></div>
       </section>
 
       <section class="account-view" id="supportView">
         <div class="account-section-intro"><div><p class="account-overline">Real human help</p><h2>HOW CAN WE<br><span>HELP?</span></h2></div></div>
-        <div class="support-layout"><form class="account-form" id="supportForm"><h3>Start a conversation</h3><label>Subject<input name="subject" maxlength="120" required></label><label>Message<textarea name="message" rows="6" maxlength="2000" required></textarea></label><button>Send message</button><p id="supportMessage"></p></form><section class="account-card"><header><div><p class="account-overline">Your conversations</p><h2>Support history</h2></div></header><div id="supportHistory"></div></section></div>
+        <div class="support-layout"><form class="account-form" id="supportForm"><div class="form-heading"><span>01</span><div><p class="account-overline">Direct line</p><h3>Start a conversation</h3></div></div><label>Subject<input name="subject" maxlength="120" placeholder="What can we help with?" required></label><label>Message<textarea name="message" rows="6" maxlength="2000" placeholder="Share the details and we will reply here." required></textarea></label><button type="submit">Send message <span>→</span></button><p id="supportMessage" role="status"></p></form><section class="account-card"><header><div><p class="account-overline">Your conversations</p><h2>Support history</h2></div></header><div id="supportHistory"></div></section></div>
       </section>
 
       <section class="account-view" id="profileView">
         <div class="account-section-intro"><div><p class="account-overline">Account settings</p><h2>YOUR<br><span>DETAILS.</span></h2></div></div>
-        <form class="profile-form" id="profileForm"><section><h3>Personal information</h3><div class="profile-avatar"><span id="profileAvatar">JZ</span><label>Change photo<input id="profileAvatarFile" type="file" accept="image/png,image/jpeg,image/webp"></label></div><label>Full name<input name="name" required></label><label>Email address<input name="email" type="email" disabled></label><label>Phone / WhatsApp<input name="phone"></label></section><section><h3>Delivery addresses</h3><label>Address label<input name="addressLabel" placeholder="Home, office…"></label><label>Full address<textarea name="address" rows="4"></textarea></label></section><section><h3>Notifications</h3><label class="setting-check"><input name="academy" type="checkbox"> Academy updates</label><label class="setting-check"><input name="orders" type="checkbox"> Order updates</label><label class="setting-check"><input name="marketing" type="checkbox"> Offers and announcements</label></section><section><h3>Change password</h3><label>Current password<input name="currentPassword" type="password"></label><label>New password<input name="newPassword" type="password" minlength="8"></label></section><button class="profile-save">Save account changes</button><p id="profileMessage"></p></form>
+        <form class="profile-form" id="profileForm"><section><h3>Personal information</h3><div class="profile-avatar"><span id="profileAvatar">JZ</span><label>Change photo<input id="profileAvatarFile" type="file" accept="image/png,image/jpeg,image/webp"></label></div><label>Full name<input name="name" autocomplete="name" required></label><label>Email address<input name="email" type="email" autocomplete="email" disabled></label><label>Phone / WhatsApp<input name="phone" autocomplete="tel" inputmode="tel"></label></section><section><h3>Delivery addresses</h3><label>Address label<input name="addressLabel" placeholder="Home, office…"></label><label>Full address<textarea name="address" rows="4" autocomplete="street-address" placeholder="Building, street, area"></textarea></label></section><section><h3>Notifications</h3><p class="profile-section-copy">Choose the updates that are useful to you.</p><label class="setting-check"><input name="academy" type="checkbox"> Academy updates</label><label class="setting-check"><input name="orders" type="checkbox"> Order updates</label><label class="setting-check"><input name="marketing" type="checkbox"> Offers and announcements</label></section><section><h3>Change password</h3><p class="profile-section-copy">Leave these fields empty to keep your current password.</p><label>Current password<input name="currentPassword" type="password" autocomplete="current-password"></label><label>New password<input name="newPassword" type="password" minlength="8" autocomplete="new-password"></label></section><button class="profile-save" type="submit">Save account changes <span>→</span></button><p id="profileMessage" role="status"></p></form>
       </section>
     </main>
   </div>
-  <aside class="notification-drawer" id="notificationDrawer"><header><div><p class="account-overline">Updates</p><h2>Notifications</h2></div><button id="notificationClose" type="button">×</button></header><div id="notificationList"></div></aside>
+  <aside class="notification-drawer" id="notificationDrawer" aria-hidden="true"><header><div><p class="account-overline">Updates</p><h2>Notifications</h2></div><button id="notificationClose" type="button" aria-label="Close notifications">×</button></header><div id="notificationList"></div></aside>
   <button class="account-overlay" id="accountOverlay" type="button" aria-label="Close panel"></button>
   <div class="account-toast" id="accountToast" role="status" aria-live="polite"></div>
   <script src="account.js"></script>
+  <script src="support-chat.js"></script>
 </body>
 </html>

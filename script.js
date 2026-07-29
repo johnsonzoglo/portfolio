@@ -93,3 +93,43 @@ document.querySelectorAll('.project-visual').forEach((card) => {
     card.style.setProperty('--y', `${event.clientY - rect.top}px`);
   });
 });
+
+const homeHeader = document.querySelector('.home-header');
+const homeMenu = document.querySelector('.home-menu');
+if (homeHeader && homeMenu) {
+  const closeHomeMenu = () => {
+    homeHeader.classList.remove('menu-open');
+    homeMenu.setAttribute('aria-expanded', 'false');
+    homeMenu.setAttribute('aria-label', 'Open navigation');
+  };
+  homeMenu.addEventListener('click', () => {
+    const open = !homeHeader.classList.contains('menu-open');
+    homeHeader.classList.toggle('menu-open', open);
+    homeMenu.setAttribute('aria-expanded', String(open));
+    homeMenu.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+  });
+  homeHeader.querySelectorAll('.nav a').forEach((link) => link.addEventListener('click', closeHomeMenu));
+  document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeHomeMenu(); });
+  const updateHomeHeader = () => homeHeader.classList.toggle('scrolled', scrollY > 24);
+  addEventListener('scroll', updateHomeHeader, { passive: true });
+  updateHomeHeader();
+}
+
+const legalProgress = document.querySelector('#legalProgress');
+if (legalProgress) {
+  const updateLegalProgress = () => {
+    const distance = document.documentElement.scrollHeight - innerHeight;
+    legalProgress.style.width = `${distance > 0 ? Math.min(100, scrollY / distance * 100) : 0}%`;
+  };
+  const legalLinks = [...document.querySelectorAll('.legal-layout aside a')];
+  const legalSections = [...document.querySelectorAll('.legal-layout article section')];
+  const legalObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      legalLinks.forEach((link) => link.classList.toggle('active', link.hash === `#${entry.target.id}`));
+    });
+  }, { rootMargin: '-25% 0px -65% 0px' });
+  legalSections.forEach((section) => legalObserver.observe(section));
+  addEventListener('scroll', updateLegalProgress, { passive: true });
+  updateLegalProgress();
+}

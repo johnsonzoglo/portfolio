@@ -1,1 +1,123 @@
-[]
+[
+  {
+    "id": "1c020cbc-db02-43de-b153-2beb75538ebf",
+    "number": "JZA-260729-0001",
+    "accountId": "96823ff0-c02b-43b0-83e1-178f1df1acb1",
+    "courseId": "3f5b53e7-c8a1-47ce-acd8-4ab1e5a7e21f",
+    "orderType": "academy",
+    "createdAt": "2026-07-29T12:27:47.388Z",
+    "status": "confirmed",
+    "paymentStatus": "pending",
+    "paymentMethod": "bank",
+    "trackingNumber": "",
+    "customer": {
+      "name": "zoglo johnson",
+      "email": "zoglojohnson@gmail.com",
+      "phone": "0529528091",
+      "address": "Digital access",
+      "note": ""
+    },
+    "items": [
+      {
+        "id": "3f5b53e7-c8a1-47ce-acd8-4ab1e5a7e21f",
+        "name": "LEARNING FOR BEGINERS",
+        "category": "academy",
+        "variant": "course",
+        "price": 30,
+        "quantity": 1,
+        "subtotal": 30
+      }
+    ],
+    "subtotal": 30,
+    "discountCode": "",
+    "discountAmount": 0,
+    "deliveryZone": "digital",
+    "deliveryName": "Digital access",
+    "deliveryFee": 0,
+    "tax": 0,
+    "total": 30
+  },
+  {
+    "id": "f750907b-971b-4b2c-9a44-c562fcf59fda",
+    "number": "JZA-260729-0002",
+    "accountId": "96823ff0-c02b-43b0-83e1-178f1df1acb1",
+    "courseId": "academy-web-first-site",
+    "orderType": "academy",
+    "createdAt": "2026-07-29T12:40:21.206Z",
+    "status": "confirmed",
+    "paymentStatus": "pending",
+    "paymentMethod": "bank",
+    "trackingNumber": "",
+    "customer": {
+      "name": "zoglo johnson",
+      "email": "zoglojohnson@gmail.com",
+      "phone": "0529528091",
+      "address": "Digital access",
+      "note": ""
+    },
+    "items": [
+      {
+        "id": "academy-web-first-site",
+        "name": "Build Your First Useful Website",
+        "category": "academy",
+        "variant": "course",
+        "price": 49,
+        "quantity": 1,
+        "subtotal": 49
+      }
+    ],
+    "subtotal": 49,
+    "discountCode": "",
+    "discountAmount": 0,
+    "deliveryZone": "digital",
+    "deliveryName": "Digital access",
+    "deliveryFee": 0,
+    "tax": 0,
+    "total": 49
+  },
+  {
+    "id": "ae5dd0a5-9d81-46fa-8cd2-7825841e8fae",
+    "number": "JZ-260729-0003",
+    "accountId": "96823ff0-c02b-43b0-83e1-178f1df1acb1",
+    "createdAt": "2026-07-29T14:46:47.173Z",
+    "status": "confirmed",
+    "paymentStatus": "pending",
+    "paymentMethod": "cash",
+    "trackingNumber": "",
+    "customer": {
+      "name": "zoglo johnson",
+      "email": "zoglojohnson@gmail.com",
+      "phone": "0529528091",
+      "address": "Naif building baniyas",
+      "note": ""
+    },
+    "items": [
+      {
+        "id": "creator-camera-kit",
+        "name": "Creator Camera Kit",
+        "category": "gadgets",
+        "variant": "",
+        "price": 899,
+        "quantity": 1,
+        "subtotal": 899
+      },
+      {
+        "id": "thinkpad-x1-carbon",
+        "name": "ThinkPad X1 Carbon",
+        "category": "laptops",
+        "variant": "",
+        "price": 1299,
+        "quantity": 1,
+        "subtotal": 1299
+      }
+    ],
+    "subtotal": 2198,
+    "discountCode": "",
+    "discountAmount": 0,
+    "deliveryZone": "pickup",
+    "deliveryName": "Collection / Pickup",
+    "deliveryFee": 0,
+    "tax": 0,
+    "total": 2198
+  }
+]

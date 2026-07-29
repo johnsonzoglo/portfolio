@@ -7,9 +7,20 @@
     "stock": 4,
     "condition": "new",
     "description": "256GB, unlocked, titanium finish.",
-    "image": "",
-    "art": "phone-apple",
-    "active": true
+    "image": "assets/uploads/ChatGPT-Image-Jul-29-2026-06_15_29-PM-4-1785334557555-5bf8de.png",
+    "art": "",
+    "active": true,
+    "collection": "",
+    "salePrice": 0,
+    "images": [
+      "assets/uploads/ChatGPT-Image-Jul-29-2026-06_15_29-PM-4-1785334557555-5bf8de.png",
+      "assets/uploads/ChatGPT-Image-Jul-29-2026-06_15_29-PM-3-1785334557662-dfb1c4.png",
+      "assets/uploads/ChatGPT-Image-Jul-29-2026-06_15_29-PM-4-1785334557736-9a7fee.png",
+      "assets/uploads/ChatGPT-Image-Jul-29-2026-06_15_28-PM-1-1785334557809-6a5b62.png",
+      "assets/uploads/ChatGPT-Image-Jul-29-2026-06_15_28-PM-2-1785334557876-917e7d.png"
+    ],
+    "variants": [],
+    "featured": true
   },
   {
     "id": "galaxy-s24-ultra",
@@ -19,9 +30,21 @@
     "stock": 3,
     "condition": "new",
     "description": "256GB, unlocked, AI-ready performance.",
-    "image": "",
-    "art": "phone-galaxy",
-    "active": true
+    "image": "assets/uploads/galaxy_s24_ultra_back_view-1785335224963-10a2eb.png",
+    "art": "",
+    "active": true,
+    "collection": "",
+    "salePrice": 0,
+    "images": [
+      "assets/uploads/galaxy_s24_ultra_back_view-1785335224963-10a2eb.png",
+      "assets/uploads/ChatGPT-Image-Jul-29-2026-06_26_40-PM-1785335225112-d94fb5.png",
+      "assets/uploads/galaxy_s24_ultra_camera_view-1785335225151-8db1c9.png",
+      "assets/uploads/galaxy_s24_ultra_side_views-1785335225179-5d4856.png",
+      "assets/uploads/galaxy_s24_ultra_back_view-1-1785335225212-2d0df4.png",
+      "assets/uploads/galaxy_s24_ultra_back_view-1785335225237-7a38cd.png"
+    ],
+    "variants": [],
+    "featured": false
   },
   {
     "id": "macbook-air-m3",
@@ -31,21 +54,45 @@
     "stock": 3,
     "condition": "new",
     "description": "16GB memory and 512GB storage.",
-    "image": "",
-    "art": "laptop",
-    "active": true
+    "image": "assets/uploads/macbook_air_m3_back_view-1785334924965-849874.png",
+    "art": "",
+    "active": true,
+    "collection": "",
+    "salePrice": 0,
+    "images": [
+      "assets/uploads/macbook_air_m3_back_view-1785334924965-849874.png",
+      "assets/uploads/ChatGPT-Image-Jul-29-2026-06_21_17-PM-1785334925030-319799.png",
+      "assets/uploads/macbook_air_m3_side_view-1785334925052-52358d.png",
+      "assets/uploads/macbook_air_m3_keyboard_screen_view-1785334925078-5d7d0b.png",
+      "assets/uploads/macbook_air_m3_back_view-1785334925097-e9ef05.png",
+      "assets/uploads/macbook_air_m3_front_view-1785334925125-64b87d.png"
+    ],
+    "variants": [],
+    "featured": false
   },
   {
     "id": "thinkpad-x1-carbon",
     "name": "ThinkPad X1 Carbon",
     "category": "laptops",
     "price": 1299,
-    "stock": 2,
+    "stock": 1,
     "condition": "refurbished",
     "description": "A lightweight workhorse with 16GB memory.",
-    "image": "",
-    "art": "thinkpad",
-    "active": true
+    "image": "assets/uploads/thinkpad_x1_carbon_front_view-1785335789650-4c788c.png",
+    "art": "",
+    "active": true,
+    "collection": "",
+    "salePrice": 0,
+    "images": [
+      "assets/uploads/thinkpad_x1_carbon_front_view-1785335789650-4c788c.png",
+      "assets/uploads/ChatGPT-Image-Jul-29-2026-06_33_31-PM-1785335789764-35d38f.png",
+      "assets/uploads/thinkpad_x1_carbon_keyboard_screen_view-1785335789801-740279.png",
+      "assets/uploads/thinkpad_x1_carbon_side_views-1785335789823-f4be1f.png",
+      "assets/uploads/thinkpad_x1_carbon_back_view-1785335789848-3b0113.png",
+      "assets/uploads/thinkpad_x1_carbon_front_view-1785335789877-553a34.png"
+    ],
+    "variants": [],
+    "featured": false
   },
   {
     "id": "fc-26",
@@ -55,9 +102,16 @@
     "stock": 8,
     "condition": "new",
     "description": "The world's game for PlayStation 5.",
-    "image": "",
-    "art": "game-fc",
-    "active": true
+    "image": "assets/uploads/fc_26_cover-1785336574015-070798.png",
+    "art": "",
+    "active": true,
+    "collection": "",
+    "salePrice": 0,
+    "images": [
+      "assets/uploads/fc_26_cover-1785336574015-070798.png"
+    ],
+    "variants": [],
+    "featured": false
   },
   {
     "id": "forza-horizon-5",
@@ -67,9 +121,16 @@
     "stock": 6,
     "condition": "new",
     "description": "Open-world driving for Xbox and PC.",
-    "image": "",
-    "art": "game-forza",
-    "active": true
+    "image": "assets/uploads/forza_horizon_5_cover-1785336583897-8d0343.png",
+    "art": "",
+    "active": true,
+    "collection": "",
+    "salePrice": 0,
+    "images": [
+      "assets/uploads/forza_horizon_5_cover-1785336583897-8d0343.png"
+    ],
+    "variants": [],
+    "featured": false
   },
   {
     "id": "toyota-camry-2022",
@@ -79,9 +140,20 @@
     "stock": 1,
     "condition": "used",
     "description": "Automatic, verified, with 38,000 km.",
-    "image": "",
-    "art": "car-sky",
-    "active": true
+    "image": "assets/uploads/ChatGPT-Image-Jul-29-2026-06_04_31-PM-1-1785333921198-cf47bb.png",
+    "art": "",
+    "active": true,
+    "collection": "",
+    "salePrice": 0,
+    "images": [
+      "assets/uploads/ChatGPT-Image-Jul-29-2026-06_04_31-PM-1-1785333921198-cf47bb.png",
+      "assets/uploads/ChatGPT-Image-Jul-29-2026-06_04_33-PM-4-1785333921325-0ce6a1.png",
+      "assets/uploads/ChatGPT-Image-Jul-29-2026-06_04_31-PM-1-1785333921410-6605d2.png",
+      "assets/uploads/ChatGPT-Image-Jul-29-2026-06_04_32-PM-2-1785333921496-080dee.png",
+      "assets/uploads/ChatGPT-Image-Jul-29-2026-06_04_32-PM-3-1785333921575-e42a71.png"
+    ],
+    "variants": [],
+    "featured": false
   },
   {
     "id": "mercedes-benz-c300",
@@ -91,21 +163,44 @@
     "stock": 1,
     "condition": "used",
     "description": "Automatic, verified, with 26,000 km.",
-    "image": "",
-    "art": "car-night",
-    "active": true
+    "image": "assets/uploads/ChatGPT-Image-Jul-29-2026-06_08_46-PM-1-1785334171866-c7d6ca.png",
+    "art": "",
+    "active": true,
+    "collection": "",
+    "salePrice": 0,
+    "images": [
+      "assets/uploads/ChatGPT-Image-Jul-29-2026-06_08_46-PM-1-1785334171866-c7d6ca.png",
+      "assets/uploads/ChatGPT-Image-Jul-29-2026-06_08_47-PM-4-1785334171999-93f06b.png",
+      "assets/uploads/ChatGPT-Image-Jul-29-2026-06_08_46-PM-1-1785334172093-eb3afb.png",
+      "assets/uploads/ChatGPT-Image-Jul-29-2026-06_08_46-PM-2-1785334172203-0f9289.png",
+      "assets/uploads/ChatGPT-Image-Jul-29-2026-06_08_47-PM-3-1785334172293-03dbaf.png"
+    ],
+    "variants": [],
+    "featured": false
   },
   {
     "id": "creator-camera-kit",
     "name": "Creator Camera Kit",
     "category": "gadgets",
     "price": 899,
-    "stock": 4,
+    "stock": 3,
     "condition": "new",
     "description": "A compact 4K setup built for creators.",
-    "image": "",
-    "art": "camera",
-    "active": true
+    "image": "assets/uploads/creator_camera_kit_front_view-1785335976025-49aa6d.png",
+    "art": "",
+    "active": true,
+    "collection": "",
+    "salePrice": 0,
+    "images": [
+      "assets/uploads/creator_camera_kit_front_view-1785335976025-49aa6d.png",
+      "assets/uploads/ChatGPT-Image-Jul-29-2026-06_38_29-PM-1785335922604-8a5199.png",
+      "assets/uploads/creator_camera_kit_in_use-1785335976054-2c7615.png",
+      "assets/uploads/creator_camera_kit_included_items-1785335976085-67f2c6.png",
+      "assets/uploads/creator_camera_kit_side_view-1785335976116-3a75eb.png",
+      "assets/uploads/creator_camera_kit_front_view-1785335976147-010d59.png"
+    ],
+    "variants": [],
+    "featured": false
   },
   {
     "id": "streaming-microphone",
@@ -115,8 +210,20 @@
     "stock": 7,
     "condition": "new",
     "description": "Clean USB audio for streams and calls.",
-    "image": "",
-    "art": "mic",
-    "active": true
+    "image": "assets/uploads/usb_streaming_microphone_front_view-1785336204063-026a17.png",
+    "art": "",
+    "active": true,
+    "collection": "",
+    "salePrice": 0,
+    "images": [
+      "assets/uploads/usb_streaming_microphone_front_view-1785336204063-026a17.png",
+      "assets/uploads/usb_streaming_microphone_in_use-1785336204108-82a243.png",
+      "assets/uploads/usb_streaming_microphone_included_items-1785336204132-945370.png",
+      "assets/uploads/usb_streaming_microphone_side_view-1785336204159-4c3494.png",
+      "assets/uploads/usb_streaming_microphone_front_view-1785336204188-c2ca21.png",
+      "assets/uploads/ChatGPT-Image-Jul-29-2026-06_42_36-PM-1785336204260-e4a0a2.png"
+    ],
+    "variants": [],
+    "featured": false
   }
 ]

@@ -4,118 +4,264 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Learn practical skills with JZ Academy.">
-  <meta name="theme-color" content="#0c100e">
+  <meta name="theme-color" content="#0d110e">
   <title>Learning · JZ Academy</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="learn.css">
+  <link rel="stylesheet" href="learn.css?v=academy-20260729-3">
 </head>
 <body class="learn-page">
+  <a class="learn-skip-link" href="#learningSpace">Skip to lesson</a>
   <div class="grain" aria-hidden="true"></div>
 
   <header class="learn-header">
-    <a class="brand" href="streams.html"><span>JZ</span><i>ACADEMY</i></a>
-    <nav aria-label="Learning navigation">
-      <a href="streams.html">← Academy</a>
-      <a href="index.html">Portfolio</a>
-      <a href="shop.html">Market</a>
-      <a href="account.html">My JZ</a>
-    </nav>
-    <button class="learn-save" id="learnSave" type="button">♡ Save course</button>
+    <a class="brand" href="streams.html" aria-label="JZ Academy course library">
+      <span>JZ</span><i>ACADEMY</i>
+    </a>
+    <a class="learn-back" href="streams.html"><span aria-hidden="true">←</span><b>Course library</b></a>
+    <div class="learn-header-course">
+      <span>Now learning</span>
+      <strong id="headerCourseTitle">Course workspace</strong>
+    </div>
+    <div class="learn-header-actions">
+      <div class="header-progress" id="headerProgress" aria-label="Course progress">
+        <i id="headerProgressRing"><b></b></i>
+        <span><small>Progress</small><strong id="headerProgressValue">0%</strong></span>
+      </div>
+      <button class="learn-save" id="learnSave" type="button" aria-pressed="false">♡ Save</button>
+      <a class="learn-account" href="account.html" aria-label="Open My JZ account">My JZ <span aria-hidden="true">↗</span></a>
+    </div>
   </header>
 
   <main id="learnMain">
-    <section class="learn-loading" id="learnLoading">
-      <span>JZ / ACADEMY</span>
-      <div></div>
-      <p>Preparing your learning space…</p>
+    <section class="learn-loading" id="learnLoading" role="status" aria-live="polite">
+      <div class="learn-loading-copy">
+        <span>JZ / ACADEMY</span>
+        <h1>Preparing your learning space</h1>
+        <p>Loading the course, your access, and your latest progress…</p>
+      </div>
+      <div class="learn-loading-layout" aria-hidden="true">
+        <aside><i></i><i></i><i></i><i></i></aside>
+        <div><b></b><b></b><b></b><b></b></div>
+      </div>
     </section>
 
     <div id="learnExperience" hidden>
-      <section class="course-intro">
+      <section class="course-intro" aria-labelledby="courseTitle">
         <div class="course-intro-grid" aria-hidden="true"></div>
-        <div class="course-intro-copy">
-          <p class="learn-overline" id="courseEyebrow">JZ Academy / Course</p>
-          <h1 id="courseTitle">Course title</h1>
-          <p id="courseDescription"></p>
-          <div class="course-facts">
-            <span><small>Level</small><strong id="courseLevel">All levels</strong></span>
-            <span><small>Duration</small><strong id="courseDuration">Focused</strong></span>
-            <span><small>Lessons</small><strong id="courseLessonCount">1 lesson</strong></span>
+        <div class="course-intro-layout">
+          <div class="course-intro-copy">
+            <a class="course-breadcrumb" href="streams.html">← All Academy courses</a>
+            <div class="course-kicker">
+              <p class="learn-overline" id="courseEyebrow">JZ Academy / Course</p>
+              <span id="courseAccessLabel">Open access</span>
+            </div>
+            <h1 id="courseTitle">Course title</h1>
+            <p id="courseDescription"></p>
+            <dl class="course-facts">
+              <div><dt>Level</dt><dd id="courseLevel">All levels</dd></div>
+              <div><dt>Duration</dt><dd id="courseDuration">Self-paced</dd></div>
+              <div><dt>Lessons</dt><dd id="courseLessonCount">1 lesson</dd></div>
+              <div><dt>Format</dt><dd id="courseFormat">Course</dd></div>
+            </dl>
+          </div>
+
+          <aside class="course-summary" aria-label="Course progress">
+            <div class="course-cover" id="courseCover">
+              <div class="course-cover-fallback" aria-hidden="true">
+                <small>JZ / ACADEMY</small>
+                <strong>LEARN.<br>BUILD.<br>USE.</strong>
+              </div>
+              <img id="courseCoverImage" alt="" hidden>
+            </div>
+            <div class="course-progress-card">
+              <div><span>Your progress</span><strong id="courseProgressValue">0%</strong></div>
+              <div class="progress-track" role="progressbar" aria-label="Course progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="courseProgressBar"></i></div>
+              <p id="courseProgressCopy">Start your first lesson.</p>
+              <a id="coursePrimaryAction" href="#learningSpace">Continue learning <b aria-hidden="true">↓</b></a>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="access-gate shell" id="accessGate" hidden aria-labelledby="accessGateTitle">
+        <div class="access-gate-copy">
+          <p class="learn-overline">Premium Academy access</p>
+          <h2 id="accessGateTitle">UNLOCK THE<br>FULL <span>COURSE.</span></h2>
+          <p id="accessGateCopy">Get every lesson, resource, future update, and synced course progress.</p>
+          <div class="access-preview">
+            <header><span>Course preview</span><strong id="accessPreviewCount">0 lessons</strong></header>
+            <div id="accessCurriculum"></div>
           </div>
         </div>
-        <aside class="course-progress-card">
-          <span>Your progress</span>
-          <strong id="courseProgressValue">0%</strong>
-          <div class="progress-track"><i id="courseProgressBar"></i></div>
-          <p id="courseProgressCopy">Start your first lesson.</p>
-          <a href="#learningSpace">Continue learning <b>↓</b></a>
+        <aside class="access-card">
+          <div class="access-card-head"><span>One-time access</span><small>Yours to revisit</small></div>
+          <strong id="accessPrice">$0</strong>
+          <ul>
+            <li>Every published course lesson</li>
+            <li>All included videos and downloads</li>
+            <li>Saved progress across your account</li>
+            <li>Future course updates</li>
+          </ul>
+          <label for="coursePaymentMethod">Payment method
+            <select id="coursePaymentMethod">
+              <option value="stripe" id="courseStripePayment">Card — instant access</option>
+              <option value="bank">Bank transfer</option>
+              <option value="cash">Cash payment</option>
+            </select>
+          </label>
+          <p class="payment-method-hint" id="paymentMethodHint">Card payment unlocks the course after secure checkout.</p>
+          <button id="purchaseCourse" type="button">Unlock this course <b aria-hidden="true">↗</b></button>
+          <small>Manual payments unlock after confirmation. By continuing you accept the <a href="legal.html#terms">Terms</a>.</small>
+          <p id="purchaseMessage" role="status" aria-live="polite"></p>
         </aside>
       </section>
 
-      <section class="access-gate shell" id="accessGate" hidden>
-        <div><p class="learn-overline">Paid Academy access</p><h2>UNLOCK THE<br>FULL <span>COURSE.</span></h2><p id="accessGateCopy">Get every lesson, video, resource, and future update for this course.</p></div>
-        <aside><span>One-time access</span><strong id="accessPrice">$0</strong><ul><li>All course lessons</li><li>Protected video and downloadable resources</li><li>Synced progress and certificate</li></ul><label>Payment method<select id="coursePaymentMethod"><option value="stripe" id="courseStripePayment">Card — instant access</option><option value="bank">Bank transfer</option><option value="cash">Cash payment</option></select></label><button id="purchaseCourse" type="button">Unlock course <b>↗</b></button><small>Card access unlocks automatically. Manual payments unlock after confirmation. By continuing you accept the <a href="legal.html#terms">Terms</a>.</small><p id="purchaseMessage"></p></aside>
-      </section>
+      <section class="learning-space shell" id="learningSpace" aria-labelledby="learningSpaceTitle">
+        <header class="learning-toolbar">
+          <div>
+            <p class="learn-overline">Your learning space</p>
+            <h2 id="learningSpaceTitle">Course curriculum</h2>
+          </div>
+          <div class="learning-toolbar-progress">
+            <span id="toolbarProgress">0 of 0 complete</span>
+            <i><b id="toolbarProgressBar"></b></i>
+          </div>
+          <button id="curriculumToggle" type="button" aria-expanded="true" aria-controls="curriculumPanel" aria-label="Close course content">
+            <span>Course content</span><b aria-hidden="true">−</b>
+          </button>
+        </header>
 
-      <section class="learning-space" id="learningSpace">
-        <aside class="curriculum-panel">
-          <header>
-            <div><span>Course content</span><strong id="curriculumCount">0 lessons</strong></div>
-            <button id="curriculumToggle" type="button" aria-expanded="true">Hide</button>
-          </header>
-          <div class="curriculum-list" id="curriculumList"></div>
-        </aside>
+        <button class="curriculum-overlay" id="curriculumOverlay" type="button" aria-label="Close course curriculum"></button>
 
-        <article class="lesson-stage">
-          <div class="lesson-player" id="lessonPlayer"></div>
-          <div class="lesson-stage-copy">
-            <div class="lesson-stage-meta"><span id="lessonPosition">Lesson 01</span><span id="lessonDuration">Focused lesson</span></div>
-            <h2 id="lessonTitle">Getting started</h2>
-            <p id="lessonDescription">Select a lesson from the course content to begin.</p>
-            <div class="lesson-actions">
-              <button id="previousLesson" type="button">← Previous</button>
-              <button class="complete-lesson" id="completeLesson" type="button">Mark lesson complete</button>
-              <button id="nextLesson" type="button">Next →</button>
+        <div class="learning-layout">
+          <aside class="curriculum-panel" id="curriculumPanel" aria-labelledby="curriculumPanelTitle">
+            <header>
+              <div>
+                <span id="curriculumPanelTitle">Course content</span>
+                <strong id="curriculumCount">0 lessons</strong>
+              </div>
+              <small>Select a lesson to begin</small>
+              <button id="curriculumClose" type="button" aria-label="Close course curriculum">×</button>
+            </header>
+            <div class="curriculum-list" id="curriculumList"></div>
+          </aside>
+
+          <article class="lesson-stage" aria-labelledby="lessonTitle">
+            <div class="lesson-player-wrap">
+              <div class="lesson-player" id="lessonPlayer"></div>
+              <div class="player-corner-label"><i aria-hidden="true"></i><span>JZ Academy player</span></div>
             </div>
-          </div>
 
-          <div class="lesson-support">
-            <section>
-              <p class="learn-overline">Build as you learn</p>
-              <h3>Turn this lesson into action.</h3>
-              <p>Pause when you need to, try each step yourself, and mark the lesson complete when you have applied the idea.</p>
-            </section>
-            <section class="lesson-resource" id="lessonResource">
-              <span>Lesson resource</span>
-              <strong>No download for this lesson</strong>
-              <p>Any worksheets, references, or downloads added by the instructor will appear here.</p>
-            </section>
-          </div>
-          <section class="course-reviews">
-            <header><div><p class="learn-overline">Student feedback</p><h3>Course reviews</h3></div><a href="account.html#reviews">Write a review →</a></header>
-            <div id="courseReviewList"></div>
-          </section>
-        </article>
+            <div class="lesson-stage-copy">
+              <div class="lesson-stage-meta">
+                <span id="lessonPosition">Lesson 01</span>
+                <span id="lessonDuration">Focused lesson</span>
+              </div>
+              <h2 id="lessonTitle">Getting started</h2>
+              <p id="lessonDescription">Select a lesson from the course content to begin.</p>
+
+              <div class="lesson-actions" aria-label="Lesson navigation">
+                <button id="previousLesson" type="button"><span aria-hidden="true">←</span><b>Previous</b></button>
+                <button class="complete-lesson" id="completeLesson" type="button" aria-pressed="false">Mark lesson complete</button>
+                <button id="nextLesson" type="button"><b>Next</b><span aria-hidden="true">→</span></button>
+              </div>
+            </div>
+
+            <nav class="lesson-tabs" role="tablist" aria-label="Lesson details">
+              <button class="active" id="overviewTab" type="button" role="tab" aria-selected="true" aria-controls="overviewPanel" data-lesson-tab="overview">Overview</button>
+              <button id="notesTab" type="button" role="tab" aria-selected="false" aria-controls="notesPanel" data-lesson-tab="notes">My notes</button>
+              <button id="resourcesTab" type="button" role="tab" aria-selected="false" aria-controls="resourcesPanel" data-lesson-tab="resources">Resources</button>
+            </nav>
+
+            <div class="lesson-tab-panels">
+              <section class="lesson-tab-panel active" id="overviewPanel" role="tabpanel" aria-labelledby="overviewTab" data-lesson-panel="overview">
+                <div class="lesson-support">
+                  <section>
+                    <p class="learn-overline">Build as you learn</p>
+                    <h3>Turn this lesson into action.</h3>
+                    <p>Pause when you need to, try each step yourself, and mark the lesson complete only after you have applied the idea.</p>
+                  </section>
+                  <section>
+                    <p class="learn-overline">Learning rhythm</p>
+                    <ol>
+                      <li><b>01</b><span>Watch the idea</span></li>
+                      <li><b>02</b><span>Try the step</span></li>
+                      <li><b>03</b><span>Save your notes</span></li>
+                    </ol>
+                  </section>
+                </div>
+              </section>
+
+              <section class="lesson-tab-panel" id="notesPanel" role="tabpanel" aria-labelledby="notesTab" data-lesson-panel="notes" hidden>
+                <div class="lesson-notes">
+                  <div>
+                    <p class="learn-overline">Private lesson notes</p>
+                    <h3>Keep the useful parts.</h3>
+                    <p>Your notes are saved in this browser for each lesson.</p>
+                  </div>
+                  <label for="lessonNotes">Notes for this lesson
+                    <textarea id="lessonNotes" rows="9" maxlength="10000" placeholder="Write an idea, action step, question, or reminder…"></textarea>
+                  </label>
+                  <p id="notesStatus" role="status" aria-live="polite">Notes save automatically.</p>
+                </div>
+              </section>
+
+              <section class="lesson-tab-panel" id="resourcesPanel" role="tabpanel" aria-labelledby="resourcesTab" data-lesson-panel="resources" hidden>
+                <section class="lesson-resource" id="lessonResource">
+                  <span>Lesson resource</span>
+                  <strong>No download for this lesson</strong>
+                  <p>Worksheets, references, and files added by the instructor will appear here.</p>
+                </section>
+              </section>
+            </div>
+
+          </article>
+        </div>
+      </section>
+
+      <section class="course-reviews course-reviews-section shell" aria-labelledby="courseReviewsTitle">
+        <header>
+          <div><p class="learn-overline">Student feedback</p><h3 id="courseReviewsTitle">Course reviews</h3></div>
+          <a href="account.html#reviews">Write a review →</a>
+        </header>
+        <div id="courseReviewList" aria-live="polite">
+          <p class="review-loading">Loading student feedback…</p>
+        </div>
+      </section>
+
+      <section class="course-about shell">
+        <div>
+          <p class="learn-overline">Designed for progress</p>
+          <h2>WATCH LESS.<br><span>BUILD MORE.</span></h2>
+        </div>
+        <div class="course-about-grid">
+          <article><b>01</b><strong>Focused lessons</strong><p>Clear steps without unnecessary filler.</p></article>
+          <article><b>02</b><strong>Practical progress</strong><p>Finish each lesson with an action you can use.</p></article>
+          <article><b>03</b><strong>Come back anytime</strong><p>Your completed lessons and notes stay ready.</p></article>
+        </div>
       </section>
 
       <section class="next-course shell">
         <div><p class="learn-overline">Keep building</p><h2>ONE USEFUL<br>SKILL AT A TIME.</h2></div>
-        <a href="streams.html">Explore more learning <span>↗</span></a>
+        <a href="streams.html">Explore more learning <span aria-hidden="true">↗</span></a>
       </section>
     </div>
 
-    <section class="learn-error" id="learnError" hidden>
-      <span>404 / LESSON NOT FOUND</span>
-      <h1>This learning page isn’t available.</h1>
-      <p>The course may have been removed or the link is incomplete.</p>
-      <a href="streams.html">Return to JZ Academy →</a>
+    <section class="learn-error" id="learnError" hidden aria-live="polite">
+      <span id="learnErrorCode">404 / COURSE NOT FOUND</span>
+      <h1 id="learnErrorTitle">This learning page isn’t available.</h1>
+      <p id="learnErrorCopy">The course may have been removed, or the link is incomplete.</p>
+      <div><button id="retryLearning" type="button">Try again</button><a href="streams.html">Return to JZ Academy →</a></div>
     </section>
   </main>
 
+  <p class="sr-only" id="lessonStatus" role="status" aria-live="polite"></p>
   <div class="learn-toast" id="learnToast" role="status" aria-live="polite"></div>
-  <script src="learn.js"></script>
+
+  <script src="learn.js?v=academy-20260729-3"></script>
+  <script src="support-chat.js"></script>
 </body>
 </html>

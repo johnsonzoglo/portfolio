@@ -1,7 +1,43 @@
 [
   {
+    "id": "3f5b53e7-c8a1-47ce-acd8-4ab1e5a7e21f",
+    "title": "LEARNING FOR BEGINERS",
+    "game": "CREATOR",
+    "date": "2026-07-28",
+    "contentType": "course",
+    "accessType": "paid",
+    "price": 30,
+    "level": "Beginner",
+    "duration": "10",
+    "lessons": 1,
+    "description": "For beginner",
+    "coverImage": "assets/uploads/ChatGPT-Image-Jul-28-2026-04_20_04-PM-1785242340266-e0f7aa.png",
+    "modules": [
+      {
+        "id": "d745bd90-7d00-4cbc-a326-2a80332ac262",
+        "title": "Getting started",
+        "lessons": [
+          {
+            "id": "57595a67-dd1c-468f-8847-e4a660d01c8b",
+            "title": "Lesson 1",
+            "duration": "",
+            "description": "",
+            "video": "",
+            "resource": ""
+          }
+        ]
+      }
+    ],
+    "publishAt": "2026-07-28T04:22:00.000Z",
+    "src": "",
+    "size": 0,
+    "published": true,
+    "featured": false,
+    "createdAt": "2026-07-28T12:23:14.737Z"
+  },
+  {
     "id": "academy-creator-launchpad",
-    "title": "Creator Launchpad",
+    "title": "WEB DESIGN COURSE",
     "game": "Creator foundations",
     "date": "2026-07-27",
     "contentType": "course",
@@ -9,13 +45,31 @@
     "price": 0,
     "level": "Beginner",
     "duration": "2 hr 10 min",
-    "lessons": 6,
+    "lessons": 1,
     "description": "Build a practical content system covering ideas, camera confidence, audio, editing, and consistent publishing.",
     "src": "",
     "size": 0,
     "published": true,
     "featured": false,
-    "createdAt": "2026-07-27T08:00:00.000Z"
+    "createdAt": "2026-07-27T08:00:00.000Z",
+    "coverImage": "assets/uploads/ChatGPT-Image-Jul-28-2026-11_23_09-PM-1-1785333265441-bb5859.png",
+    "modules": [
+      {
+        "id": "39e9ef64-ab6f-41e0-a0cc-466419cb225c",
+        "title": "Getting started",
+        "lessons": [
+          {
+            "id": "5f6da38e-cba1-4ddf-993b-b139a195101a",
+            "title": "Lesson 1",
+            "duration": "",
+            "description": "",
+            "video": "",
+            "resource": ""
+          }
+        ]
+      }
+    ],
+    "publishAt": ""
   },
   {
     "id": "academy-web-first-site",
@@ -27,13 +81,31 @@
     "price": 49,
     "level": "Beginner",
     "duration": "1 hr 45 min",
-    "lessons": 5,
+    "lessons": 1,
     "description": "Move from an idea to a clear, responsive website while learning the building blocks that make the web work.",
     "src": "",
     "size": 0,
     "published": true,
     "featured": false,
-    "createdAt": "2026-07-26T08:00:00.000Z"
+    "createdAt": "2026-07-26T08:00:00.000Z",
+    "coverImage": "assets/uploads/ChatGPT-Image-Jul-29-2026-02_05_35-PM-1785319856597-375983.png",
+    "modules": [
+      {
+        "id": "8b2076ac-e9cb-4bb6-84b6-c38d3073c0af",
+        "title": "Getting started",
+        "lessons": [
+          {
+            "id": "5e1512ff-54f5-4898-bb1f-3641180ce32b",
+            "title": "Lesson 1",
+            "duration": "",
+            "description": "",
+            "video": "",
+            "resource": ""
+          }
+        ]
+      }
+    ],
+    "publishAt": ""
   },
   {
     "id": "academy-content-commerce",
@@ -73,7 +145,7 @@
   },
   {
     "id": "academy-product-page",
-    "title": "What Makes a Product Page Convert",
+    "title": "How to start streaming like a Pro",
     "game": "Business and marketing",
     "date": "2026-07-23",
     "contentType": "video",
@@ -88,7 +160,7 @@
     "published": true,
     "featured": true,
     "createdAt": "2026-07-23T08:00:00.000Z",
-    "coverImage": "assets/uploads/ChatGPT-Image-Jul-13-2026-02_47_01-PM-1785156710867-edbc05.png",
+    "coverImage": "assets/uploads/ChatGPT-Image-Jul-28-2026-11_25_01-PM-1785319827859-9ae9ee.png",
     "modules": [],
     "publishAt": ""
   }
