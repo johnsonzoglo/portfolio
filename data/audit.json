@@ -1,5 +1,19 @@
 [
   {
+    "id": "da4c5f4f-6daf-48ca-b7c2-65fe39075183",
+    "at": "2026-07-29T18:06:08.121Z",
+    "user": "owner",
+    "action": "academy.updated",
+    "detail": "WEB DESIGN COURSE"
+  },
+  {
+    "id": "7fee286c-a959-4cfc-b300-85323972ff8d",
+    "at": "2026-07-29T18:05:42.593Z",
+    "user": "owner",
+    "action": "academy.updated",
+    "detail": "WEB DESIGN COURSE"
+  },
+  {
     "id": "dd52bfb3-f5cf-4d51-8084-2db95de5fe1a",
     "at": "2026-07-29T14:49:43.913Z",
     "user": "owner",

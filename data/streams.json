@@ -50,7 +50,7 @@
     "src": "",
     "size": 0,
     "published": true,
-    "featured": false,
+    "featured": true,
     "createdAt": "2026-07-27T08:00:00.000Z",
     "coverImage": "assets/uploads/ChatGPT-Image-Jul-28-2026-11_23_09-PM-1-1785333265441-bb5859.png",
     "modules": [
@@ -158,7 +158,7 @@
     "src": "",
     "size": 0,
     "published": true,
-    "featured": true,
+    "featured": false,
     "createdAt": "2026-07-23T08:00:00.000Z",
     "coverImage": "assets/uploads/ChatGPT-Image-Jul-28-2026-11_25_01-PM-1785319827859-9ae9ee.png",
     "modules": [],

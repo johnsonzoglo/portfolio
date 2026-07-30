@@ -1,5 +1,109 @@
 [
   {
+    "id": "4c7edc41-ba83-4602-8661-c95ee597ccb7",
+    "type": "page_view",
+    "path": "/index.html",
+    "itemId": "",
+    "label": "",
+    "at": "2026-07-30T18:33:14.573Z"
+  },
+  {
+    "id": "2944d328-7deb-44a1-82a7-2d8837d96de7",
+    "type": "page_view",
+    "path": "/shop.html",
+    "itemId": "",
+    "label": "",
+    "at": "2026-07-30T18:17:46.267Z"
+  },
+  {
+    "id": "3d420cbd-a18c-486e-ab17-8ba934911eef",
+    "type": "page_view",
+    "path": "/index.html",
+    "itemId": "",
+    "label": "",
+    "at": "2026-07-30T18:17:32.205Z"
+  },
+  {
+    "id": "39c1060f-5b94-4990-906b-b0453031ae8d",
+    "type": "product_view",
+    "path": "/shop.html",
+    "itemId": "iphone-15-pro",
+    "label": "iPhone 15 Pro",
+    "at": "2026-07-30T18:17:21.314Z"
+  },
+  {
+    "id": "9ff6ddfa-c1e9-492e-896a-a02eb78c75a2",
+    "type": "product_view",
+    "path": "/shop.html",
+    "itemId": "iphone-15-pro",
+    "label": "iPhone 15 Pro",
+    "at": "2026-07-30T07:47:24.071Z"
+  },
+  {
+    "id": "7f09cda2-2de3-4cfe-8422-be88c245c2f5",
+    "type": "page_view",
+    "path": "/shop.html",
+    "itemId": "",
+    "label": "",
+    "at": "2026-07-30T07:14:49.190Z"
+  },
+  {
+    "id": "51ab7c7c-4b5f-4e19-a46c-8bee212a1a99",
+    "type": "page_view",
+    "path": "/streams.html",
+    "itemId": "",
+    "label": "",
+    "at": "2026-07-30T07:14:22.959Z"
+  },
+  {
+    "id": "9dbca86e-e02c-4b37-a437-270994ffc80d",
+    "type": "course_view",
+    "path": "/learn.html",
+    "itemId": "academy-creator-launchpad",
+    "label": "WEB DESIGN COURSE",
+    "at": "2026-07-30T07:13:58.761Z"
+  },
+  {
+    "id": "a52a7dc1-fa83-4554-9730-34aac694e011",
+    "type": "page_view",
+    "path": "/streams.html",
+    "itemId": "",
+    "label": "",
+    "at": "2026-07-30T06:58:17.392Z"
+  },
+  {
+    "id": "ba8ebffc-2bb2-43b2-84f5-ff4d8ce5a07a",
+    "type": "page_view",
+    "path": "/",
+    "itemId": "",
+    "label": "",
+    "at": "2026-07-30T05:58:59.346Z"
+  },
+  {
+    "id": "674ee7e6-0c91-4e4b-af8e-4ed8fe17a238",
+    "type": "page_view",
+    "path": "/streams.html",
+    "itemId": "",
+    "label": "",
+    "at": "2026-07-29T18:06:14.581Z"
+  },
+  {
+    "id": "1132a159-9f2d-4ddd-a180-3f3b6de5a5ec",
+    "type": "page_view",
+    "path": "/streams.html",
+    "itemId": "",
+    "label": "",
+    "at": "2026-07-29T18:06:13.591Z"
+  },
+  {
+    "id": "ba078ef8-0733-4afd-b812-c169b78016a4",
+    "type": "page_view",
+    "path": "/streams.html",
+    "itemId": "",
+    "label": "",
+    "at": "2026-07-29T18:05:52.620Z"
+  },
+  {
     "id": "72e72338-23e7-4449-a5a3-0922a7963b00",
     "type": "page_view",
     "path": "/streams.html",
