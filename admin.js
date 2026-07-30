@@ -275,9 +275,6 @@ function setView(view){
 $$('.nav-item').forEach(item=>item.addEventListener('click',()=>setView(item.dataset.view)));
 document.addEventListener('click',event=>{const button=event.target.closest('[data-go-view]');if(button)setView(button.dataset.goView);const quickEdit=event.target.closest('[data-quick-edit]');if(quickEdit)openEditor(products.find(product=>product.id===quickEdit.dataset.quickEdit));if(event.target.closest('[data-create-course]'))openStreamEditor()});
 
-function openEditor(product){
-  closeStreamEditor();$('#editorTitle').textContent=product?'Edit product':'Add product';$('#productId').value=product?.id||'';$('#productName').value=product?.name||'';$('#productCategory').value=product?.category||'phones';$('#productPrice').value=product?.price??'';$('#productSalePrice').value=product?.salePrice||'';$('#productStock').value=product?.stock??0;$('#productCollection').value=product?.collection||'';$('#productVariants').value=(product?.variants||[]).join(', ');$('#productCondition').value=product?.condition||'new';$('#productDescription').value=product?.description||'';$('#productImage').value=product?.image||'';$('#productImages').value=JSON.stringify(product?.images||[]);$('#productActive').checked=product?.active!==false;$('#productFeatured').checked=Boolean(product?.featured);$('#productPhoto').value='';$('#productGallery').value='';$('#photoName').textContent=product?.image?'Keep current image or choose a replacement':'Choose product image';$('#galleryName').textContent=(product?.images||[]).length?`${product.images.length} current gallery images`:'Add gallery images';$('#editorMessage').textContent='';editor.classList.add('open');editorOverlay.classList.add('open');document.body.classList.add('editor-open');editor.setAttribute('aria-hidden','false');setTimeout(()=>$('#productName').focus(),200);
-}
 function closeEditor(){editor.classList.remove('open');editorOverlay.classList.remove('open');document.body.classList.remove('editor-open');editor.setAttribute('aria-hidden','true')}
 function renderModules(modules){
   const list=modules||[];
@@ -370,8 +367,45 @@ $('#supportThread').addEventListener('submit',async event=>{
 });
 $('#ordersList').addEventListener('click',async event=>{const button=event.target.closest('[data-expand]');if(button)button.closest('.order-card').classList.toggle('open');const contact=event.target.closest('[data-contact]');if(contact){const order=orders.find(item=>item.id===contact.closest('[data-order-id]').dataset.orderId),channel=contact.dataset.contact,defaultMessage=`Hello ${order.customer.name}, here is an update for order ${order.number}. Its current status is ${order.status}. The order total is ${money(order.total)}. Reply if you have any questions. — JZ Market`,message=prompt('Review your message before sending',defaultMessage),subject=`JZ Market order ${order.number}`;if(!message)return;if(channel==='email')window.open(`mailto:${encodeURIComponent(order.customer.email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`,'_blank');else window.open(`https://wa.me/${String(order.customer.phone).replace(/\D/g,'')}?text=${encodeURIComponent(message)}`,'_blank');await api(`/api/admin/orders/${order.id}/communications`,{method:'POST',body:JSON.stringify({channel,template:'order status update',message})});orders=await api('/api/admin/orders');renderOrders()}});
 $('#ordersList').addEventListener('change',async event=>{if(event.target.dataset.status){await api(`/api/admin/orders/${event.target.dataset.status}`,{method:'PATCH',body:JSON.stringify({status:event.target.value})});orders=await api('/api/admin/orders');renderAll()}});
+const productImagePreview=$('#productImagePreview');
+const productImagePreviewImg=$('#productImagePreviewImg');
+const productGalleryPreview=$('#productGalleryPreview');
+
+function renderProductImagePreview(image){
+  if(!image){
+    productImagePreview.hidden=true;
+    productImagePreviewImg.src='';
+    return;
+  }
+  productImagePreview.hidden=false;
+  productImagePreviewImg.src=image;
+}
+
+function renderProductGalleryPreview(images){
+  const gallery=Array.isArray(images)?images:[];
+  if(!gallery.length){
+    productGalleryPreview.innerHTML='';
+    return;
+  }
+  productGalleryPreview.innerHTML=gallery.map((image,index)=>`
+    <div class="gallery-thumbnail" data-gallery-index="${index}">
+      <img src="${esc(image)}" alt="Product gallery image ${index+1}">
+      <button class="secondary-button" type="button" data-remove-gallery-image="${index}">Remove</button>
+    </div>
+  `).join('');
+}
+
+function setProductGallery(images){
+  const gallery=Array.isArray(images)?images.slice(0,12):[];
+  $('#productImages').value=JSON.stringify(gallery);
+  renderProductGalleryPreview(gallery);
+  $('#galleryName').textContent=gallery.length?`${gallery.length} current gallery images`:'Add gallery images';
+}
+
 $('#productPhoto').addEventListener('change',event=>{$('#photoName').textContent=event.target.files[0]?.name||'Choose product image'});
 $('#productGallery').addEventListener('change',event=>{$('#galleryName').textContent=plural(event.target.files.length,'new image')});
+$('#removeProductImage').addEventListener('click',()=>{$('#productImage').value='';renderProductImagePreview('');$('#photoName').textContent='Choose product image';});
+$('#productGalleryPreview').addEventListener('click',event=>{const button=event.target.closest('[data-remove-gallery-image]');if(!button)return;const index=Number(button.dataset.removeGalleryImage);const images=JSON.parse($('#productImages').value||'[]');if(Number.isFinite(index)&&index>=0&&index<images.length){images.splice(index,1);setProductGallery(images);}});
 $('#productForm').addEventListener('submit',async event=>{
   event.preventDefault();const message=$('#editorMessage'),button=event.submitter,isEditing=Boolean($('#productId').value);message.textContent='';setButtonBusy(button,true,'Saving…');
   try{
@@ -380,9 +414,14 @@ $('#productForm').addEventListener('submit',async event=>{
     for(const galleryFile of [...$('#productGallery').files])images.push(await uploadImage(galleryFile));
     if(image&&!images.includes(image))images.unshift(image);
     const id=$('#productId').value,payload={name:$('#productName').value,category:$('#productCategory').value,collection:$('#productCollection').value,price:Number($('#productPrice').value),salePrice:Number($('#productSalePrice').value)||0,stock:Number($('#productStock').value),variants:$('#productVariants').value,condition:$('#productCondition').value,description:$('#productDescription').value,image,images:images.slice(0,12),featured:$('#productFeatured').checked,active:$('#productActive').checked};
-    await api(id?`/api/admin/products/${id}`:'/api/admin/products',{method:id?'PUT':'POST',body:JSON.stringify(payload)});products=await api('/api/admin/products');renderAll();closeEditor();event.target.reset();notify(isEditing?'Product changes saved.':'Product added to inventory.');
+    await api(id?`/api/admin/products/${id}`:'/api/admin/products',{method:id?'PUT':'POST',body:JSON.stringify(payload)});products=await api('/api/admin/products');renderAll();closeEditor();event.target.reset();renderProductImagePreview('');setProductGallery([]);notify(isEditing?'Product changes saved.':'Product added to inventory.');
   }catch(error){message.textContent=error.message;notify(error.message,'error')}finally{setButtonBusy(button,false)}
 });
+
+function openEditor(product){
+  closeStreamEditor();$('#editorTitle').textContent=product?'Edit product':'Add product';$('#productId').value=product?.id||'';$('#productName').value=product?.name||'';$('#productCategory').value=product?.category||'phones';$('#productPrice').value=product?.price??'';$('#productSalePrice').value=product?.salePrice||'';$('#productStock').value=product?.stock??0;$('#productCollection').value=product?.collection||'';$('#productVariants').value=(product?.variants||[]).join(', ');$('#productCondition').value=product?.condition||'new';$('#productDescription').value=product?.description||'';$('#productImage').value=product?.image||'';$('#productGallery').value='';$('#productImages').value=JSON.stringify(product?.images||[]);$('#productActive').checked=product?.active!==false;$('#productFeatured').checked=Boolean(product?.featured);$('#productPhoto').value='';$('#photoName').textContent=product?.image?'Keep current image or choose a replacement':'Choose product image';$('#galleryName').textContent=(product?.images||[]).length?`${product.images.length} current gallery images`:'Add gallery images';$('#editorMessage').textContent='';renderProductImagePreview(product?.image||'');setProductGallery(product?.images||[]);editor.classList.add('open');editorOverlay.classList.add('open');document.body.classList.add('editor-open');editor.setAttribute('aria-hidden','false');setTimeout(()=>$('#productName').focus(),200);
+}
+
 $('#streamFile').addEventListener('change',event=>{$('#streamFileName').textContent=event.target.files[0]?.name||'Choose main video';updateAcademyReadiness()});
 $('#streamCoverPhoto').addEventListener('change',event=>{const file=event.target.files[0];$('#streamCoverName').textContent=file?.name||'Choose course cover image';if(streamCoverObjectUrl)URL.revokeObjectURL(streamCoverObjectUrl);streamCoverObjectUrl=file?URL.createObjectURL(file):'';updateStreamCoverPreview(streamCoverObjectUrl||$('#streamCoverImage').value);updateAcademyReadiness()});
 $('#streamType').addEventListener('change',()=>{const isCourse=$('#streamType').value==='course';$('#courseBuilder').hidden=!isCourse;$('#streamUploadField').hidden=isCourse;if(isCourse&&!collectModules().length)renderModules([{title:'Getting started',lessons:[]}]);else updateCurriculumStatus()});

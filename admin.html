@@ -299,8 +299,13 @@
       </div>
       <label class="upload-field"><input id="productPhoto" type="file" accept="image/png,image/jpeg,image/webp"><i data-lucide="image-plus"></i><span id="photoName">Choose product image</span><small>PNG, JPEG or WebP, up to 5MB</small></label>
       <input type="hidden" id="productImage">
+      <div class="product-image-preview" id="productImagePreview" hidden>
+        <div class="product-image-preview-card"><img id="productImagePreviewImg" alt="Current product image"></div>
+        <button class="secondary-button" type="button" id="removeProductImage">Remove current image</button>
+      </div>
       <label class="upload-field"><input id="productGallery" type="file" multiple accept="image/png,image/jpeg,image/webp"><i data-lucide="images"></i><span id="galleryName">Add gallery images</span><small>Up to 12 product photos</small></label>
       <input type="hidden" id="productImages">
+      <div class="product-gallery-preview" id="productGalleryPreview"></div>
       <label class="visibility-control"><span><strong>Visible in market</strong><small>Customers can see and order this product</small></span><input id="productActive" type="checkbox" checked></label>
       <label class="visibility-control"><span><strong>Featured product</strong><small>Give this product priority in the market</small></span><input id="productFeatured" type="checkbox"></label>
       <p class="form-message" id="editorMessage" role="alert"></p>
