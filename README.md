@@ -1,6 +1,6 @@
 # Johnson Zoglo — Portfolio & JZ Market
 
-A creator portfolio, local Stream Vault, and general marketplace for games, phones, laptops, cars, gadgets, and other products.
+A creator portfolio, learning academy, and general marketplace for games, phones, laptops, cars, gadgets, and other products.
 
 ## Run locally
 
@@ -13,17 +13,17 @@ npm start
 
 Then open:
 
-- Portfolio: <http://localhost:8002>
-- Market: <http://localhost:8002/shop.html>
-- Stream Vault: <http://localhost:8002/streams.html>
-- Owner dashboard: <http://localhost:8002/admin.html>
-- Business operations: <http://localhost:8002/operations.html>
-- Team access: <http://localhost:8002/team.html>
+- Portfolio: <http://localhost:8000>
+- Market: <http://localhost:8000/shop.html>
+- JZ Academy: <http://localhost:8000/streams.html>
+- Owner dashboard: <http://localhost:8000/admin.html>
+- Business operations: <http://localhost:8000/operations.html>
+- Team access: <http://localhost:8000/team.html>
 
 You can also use the launcher:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\server.ps1 -Port 8002 -AdminPassword 'choose-a-private-password'
+powershell -ExecutionPolicy Bypass -File .\server.ps1 -Port 8000 -AdminPassword 'choose-a-private-password'
 ```
 
 The password prompt hides the value while you type. There is no default admin password.
@@ -31,25 +31,60 @@ The password prompt hides the value while you type. There is no default admin pa
 ## Deploy with Dokploy
 
 1. Create a Docker Compose service from this GitHub repository.
-2. Deploy using `docker-compose.yml`.
-3. Open the `portfolio` container terminal and run `npm run seed:admin`.
-4. Enter a password of at least 12 characters at the hidden prompt.
-5. In the Domains tab, add a domain for the `portfolio` service on port `8002`.
+2. Copy `.env.example` to a private `.env` configuration.
+3. Set the public HTTPS `APP_URL`, a unique `ADMIN_PASSWORD`, and two different random signing secrets of at least 32 characters.
+4. Add Stripe and Resend credentials when card payments and transactional email are required. Each integration must be configured as a complete key pair.
+5. Deploy using `docker-compose.yml`.
+6. In the Domains tab, add the HTTPS domain for the `portfolio` service on port `8000`.
+7. In Stripe, send `checkout.session.completed` webhooks to `https://your-domain/api/payments/stripe/webhook`.
 
-The `portfolio_data_clean` and `portfolio_uploads_clean` named volumes preserve store data and uploaded product photos across redeployments. Run `npm run seed:admin` again whenever the owner password needs to be reset.
+The data, uploads, and backup named volumes preserve business records and media across redeployments. Automated full snapshots use `BACKUP_INTERVAL_HOURS` and remove snapshots older than `BACKUP_RETENTION_DAYS`. Run `npm run seed:admin` whenever the owner password needs to be reset.
+
+The server refuses to start in production when the public URL is not HTTPS, required secrets are weak or missing, the first owner password is missing, or only half of an external integration is configured. The container runs without Linux capabilities, with a read-only application filesystem and writable volumes only for data, uploads, backups, and temporary files.
 
 ## Commerce features
 
 - Products are stored in `data/products.json`.
 - Orders are stored in `data/orders.json`.
 - The owner dashboard manages product details, pricing, inventory, condition, visibility, and product photos.
-- Guest checkout supports cash on delivery/collection and bank transfer after confirmation.
+- Products support galleries, collections, variants, sale pricing, featured placement, and bulk inventory actions.
+- Checkout supports Stripe card payment, cash on delivery/collection, and bank transfer.
+- Stripe webhooks mark orders paid automatically; Academy payments immediately unlock the purchased course.
 - Stock is checked and deducted by the server when an order is placed.
 - Uploaded product photos are limited to PNG, JPEG, or WebP files under 5MB and stored in `assets/uploads/`.
 - The operations center manages customers, delivery zones, tax, discounts, payments, refunds, reports, invoices, audit history, and backup/recovery.
 
-Online card payments, transactional email, delivery pricing, tax, customer accounts, and production database hosting still require external services and production configuration.
+Card payment and transactional email activate when their environment credentials are present. Without credentials, the site safely keeps cash and bank-transfer workflows available.
 
-## Stream storage
+## Academy storage
 
-The Stream Vault is managed from the admin dashboard. Video metadata is stored in `data/streams.json`, and uploaded replay files are stored in the persistent `assets/uploads/` volume.
+JZ Academy is managed from the admin dashboard. Courses support modules, ordered lessons, cover images, scheduled publishing, free or paid access, video links, and downloadable resources. Direct public access to local paid-course files is denied. Enrolled customers receive expiring, signed media links that are checked against their active course access.
+
+## Content, media, and analytics
+
+- Homepage copy, links, SEO preview text, and feature images can be drafted and published from the admin dashboard.
+- The reusable media library manages uploaded images, PDFs, and ZIP downloads.
+- Privacy-friendly analytics record page, product, course, cart, and checkout activity without storing visitor identities.
+- Customer email and WhatsApp actions create editable order-status messages and keep a communication history on each order.
+
+## Production services
+
+- **Payments:** Stripe Checkout. Set `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET`.
+- **Email:** Resend. Set `RESEND_API_KEY` and a verified `EMAIL_FROM`.
+- **Recovery:** Password-reset links are one-time, hashed in storage, and expire after 30 minutes.
+- **Media:** Paid local uploads use signed, one-hour delivery URLs. For large production video libraries, place the origin behind a CDN and keep JZ access checks in front of delivery.
+- **Security:** HTTPS should be terminated by the deployment platform. The server adds content, framing, referrer, and browser-permission security headers.
+- **Public files:** Only approved frontend pages, styles, scripts, and assets are served. Source code, environment files, backups, customer records, password hashes, and Git metadata are not web-accessible or copied into production image layers.
+- **Legal:** Terms, privacy, refund, Academy access, and cookie policies are available at `/legal.html`.
+- **Health:** Deployment monitoring uses `/api/health` for liveness and `/api/ready` for writable-storage and owner-account readiness.
+- **Runtime:** Graceful shutdown waits for queued data writes before the container exits. Proxy-aware login throttling is enabled with `TRUST_PROXY=true`.
+
+This deployment is designed for one application instance using persistent volumes. Before horizontally scaling to multiple replicas, migrate the JSON business store and in-memory sessions to shared database and session services.
+
+## Verification
+
+Run the syntax and launch tests before deployment:
+
+```powershell
+npm run check
+```

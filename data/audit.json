@@ -1,1 +1,352 @@
-[]
+[
+  {
+    "id": "da4c5f4f-6daf-48ca-b7c2-65fe39075183",
+    "at": "2026-07-29T18:06:08.121Z",
+    "user": "owner",
+    "action": "academy.updated",
+    "detail": "WEB DESIGN COURSE"
+  },
+  {
+    "id": "7fee286c-a959-4cfc-b300-85323972ff8d",
+    "at": "2026-07-29T18:05:42.593Z",
+    "user": "owner",
+    "action": "academy.updated",
+    "detail": "WEB DESIGN COURSE"
+  },
+  {
+    "id": "dd52bfb3-f5cf-4d51-8084-2db95de5fe1a",
+    "at": "2026-07-29T14:49:43.913Z",
+    "user": "owner",
+    "action": "product.updated",
+    "detail": "Forza Horizon 5"
+  },
+  {
+    "id": "784e4ad4-16f8-4040-adbb-304153c17f04",
+    "at": "2026-07-29T14:49:34.034Z",
+    "user": "owner",
+    "action": "product.updated",
+    "detail": "FC 26"
+  },
+  {
+    "id": "46c50235-ba3e-43b5-9d36-d64ce6074067",
+    "at": "2026-07-29T14:48:07.590Z",
+    "user": "owner",
+    "action": "order.updated",
+    "detail": "JZ-260729-0003 · confirmed · pending"
+  },
+  {
+    "id": "8672445a-1ac3-41f3-b63e-4109da6dcc12",
+    "at": "2026-07-29T14:47:35.613Z",
+    "user": "owner",
+    "action": "order.updated",
+    "detail": "JZ-260729-0003 · completed · pending"
+  },
+  {
+    "id": "2bec8d6f-0dcb-4c65-ac27-af9c0f4aa0bb",
+    "at": "2026-07-29T14:47:11.916Z",
+    "user": "owner",
+    "action": "order.updated",
+    "detail": "JZ-260729-0003 · processing · pending"
+  },
+  {
+    "id": "f6c3584c-b7ff-4656-993f-f43d619489ac",
+    "at": "2026-07-29T14:46:47.189Z",
+    "user": "customer",
+    "action": "order.created",
+    "detail": "JZ-260729-0003 · zoglo johnson · $2198"
+  },
+  {
+    "id": "b3e2d482-c10c-4436-8839-00a6516aef87",
+    "at": "2026-07-29T14:43:24.280Z",
+    "user": "owner",
+    "action": "product.updated",
+    "detail": "USB Streaming Microphone"
+  },
+  {
+    "id": "a7603008-6ab4-4f13-9b77-ac8a3c5bd212",
+    "at": "2026-07-29T14:39:36.164Z",
+    "user": "owner",
+    "action": "product.updated",
+    "detail": "Creator Camera Kit"
+  },
+  {
+    "id": "4234d621-5813-4c67-a392-dea8026df9ff",
+    "at": "2026-07-29T14:38:42.625Z",
+    "user": "owner",
+    "action": "product.updated",
+    "detail": "Creator Camera Kit"
+  },
+  {
+    "id": "86a4d536-ae85-488c-9609-e4729ff12106",
+    "at": "2026-07-29T14:36:29.893Z",
+    "user": "owner",
+    "action": "product.updated",
+    "detail": "ThinkPad X1 Carbon"
+  },
+  {
+    "id": "838565e1-467b-4114-8369-8341fc50c817",
+    "at": "2026-07-29T14:27:05.253Z",
+    "user": "owner",
+    "action": "product.updated",
+    "detail": "Galaxy S24 Ultra"
+  },
+  {
+    "id": "9cae93eb-ef34-4420-a952-8c00c084c299",
+    "at": "2026-07-29T14:22:05.146Z",
+    "user": "owner",
+    "action": "product.updated",
+    "detail": "MacBook Air M3"
+  },
+  {
+    "id": "9af46612-ca24-4ce4-9df1-33fccc66962c",
+    "at": "2026-07-29T14:16:02.316Z",
+    "user": "owner",
+    "action": "product.updated",
+    "detail": "iPhone 15 Pro"
+  },
+  {
+    "id": "c42073ee-af28-44a1-8663-0de7ef48a557",
+    "at": "2026-07-29T14:15:57.894Z",
+    "user": "owner",
+    "action": "product.updated",
+    "detail": "iPhone 15 Pro"
+  },
+  {
+    "id": "f519bad4-298c-4ced-a361-8a534a6949e8",
+    "at": "2026-07-29T14:09:32.317Z",
+    "user": "owner",
+    "action": "product.updated",
+    "detail": "Mercedes-Benz C300"
+  },
+  {
+    "id": "269b39ba-dae5-4568-a7d4-8525dca028c0",
+    "at": "2026-07-29T14:05:21.599Z",
+    "user": "owner",
+    "action": "product.updated",
+    "detail": "Toyota Camry 2022"
+  },
+  {
+    "id": "318e0a7f-1ee8-483c-8201-e182f5571605",
+    "at": "2026-07-29T13:54:25.513Z",
+    "user": "owner",
+    "action": "academy.updated",
+    "detail": "WEB DESIGN COURSE"
+  },
+  {
+    "id": "d0110427-4bb6-4a99-b116-9597a186762d",
+    "at": "2026-07-29T12:40:56.872Z",
+    "user": "owner",
+    "action": "order.updated",
+    "detail": "JZA-260729-0002 · confirmed · pending"
+  },
+  {
+    "id": "2491c40d-4f52-4581-a4e0-19226b0942a9",
+    "at": "2026-07-29T12:40:51.655Z",
+    "user": "owner",
+    "action": "auth.login",
+    "detail": "owner"
+  },
+  {
+    "id": "bbbadb7b-20af-48bc-8276-4c227af3202b",
+    "at": "2026-07-29T12:40:21.216Z",
+    "user": "customer",
+    "action": "academy.purchase-requested",
+    "detail": "Build Your First Useful Website · zoglojohnson@gmail.com"
+  },
+  {
+    "id": "24ba1771-b49a-4043-839f-c8b3d096cd76",
+    "at": "2026-07-29T12:28:51.352Z",
+    "user": "owner",
+    "action": "order.updated",
+    "detail": "JZA-260729-0001 · confirmed · pending"
+  },
+  {
+    "id": "d4d0cee5-ba92-4451-912b-954edd6bed01",
+    "at": "2026-07-29T12:28:41.410Z",
+    "user": "owner",
+    "action": "auth.login",
+    "detail": "owner"
+  },
+  {
+    "id": "173a9434-8f6a-4414-a8e1-d0c0895650ba",
+    "at": "2026-07-29T12:27:47.396Z",
+    "user": "customer",
+    "action": "academy.purchase-requested",
+    "detail": "LEARNING FOR BEGINERS · zoglojohnson@gmail.com"
+  },
+  {
+    "id": "76808a18-756f-493b-9c02-d2950fc81767",
+    "at": "2026-07-29T11:37:00.984Z",
+    "user": "owner",
+    "action": "auth.login",
+    "detail": "owner"
+  },
+  {
+    "id": "b6771326-ca5b-4d55-8ac9-721d77875b91",
+    "at": "2026-07-29T11:05:07.524Z",
+    "user": "owner",
+    "action": "auth.login",
+    "detail": "owner"
+  },
+  {
+    "id": "f026da74-9228-4127-b974-cbf795474c59",
+    "at": "2026-07-29T11:04:12.157Z",
+    "user": "owner",
+    "action": "auth.login",
+    "detail": "owner"
+  },
+  {
+    "id": "df980950-006d-48f4-9691-129747872f48",
+    "at": "2026-07-29T10:45:29.713Z",
+    "user": "owner",
+    "action": "site-content.publish",
+    "detail": "Homepage published"
+  },
+  {
+    "id": "00aa2168-6fe9-4b51-b0d5-3d2b7e63d7b7",
+    "at": "2026-07-29T10:32:30.797Z",
+    "user": "owner",
+    "action": "site-content.publish",
+    "detail": "Homepage published"
+  },
+  {
+    "id": "2e26ea27-c10d-462e-9935-36d4ad650054",
+    "at": "2026-07-29T10:19:01.944Z",
+    "user": "owner",
+    "action": "academy.updated",
+    "detail": "LEARNING FOR BEGINERS"
+  },
+  {
+    "id": "ae35d5c2-367e-4b4d-ad09-cbee6a2ee032",
+    "at": "2026-07-29T10:10:56.614Z",
+    "user": "owner",
+    "action": "academy.updated",
+    "detail": "Build Your First Useful Website"
+  },
+  {
+    "id": "a1378df7-2d78-42da-bfa7-120b9c3c24b7",
+    "at": "2026-07-29T10:10:27.891Z",
+    "user": "owner",
+    "action": "academy.updated",
+    "detail": "How to start streaming like a Pro"
+  },
+  {
+    "id": "93c424fd-d0f2-4609-85df-adada41a5447",
+    "at": "2026-07-29T10:10:00.665Z",
+    "user": "owner",
+    "action": "academy.updated",
+    "detail": "WEB DESIGN COURSE"
+  },
+  {
+    "id": "cf3e479e-5d14-4b63-a3a0-f9c523fb04ce",
+    "at": "2026-07-29T07:48:38.457Z",
+    "user": "owner",
+    "action": "auth.login",
+    "detail": "owner"
+  },
+  {
+    "id": "cbd1bdaa-be8e-4303-9518-747119e25815",
+    "at": "2026-07-29T07:45:27.681Z",
+    "user": "owner",
+    "action": "auth.login",
+    "detail": "owner"
+  },
+  {
+    "id": "fbb9b82a-30a8-4aed-ba72-884494691181",
+    "at": "2026-07-28T12:42:44.142Z",
+    "user": "owner",
+    "action": "media.deleted",
+    "detail": "ChatGPT-Image-Jul-28-2026-04_20_04-PM-1785242053736-21418f.png"
+  },
+  {
+    "id": "ede05fdf-acb2-42d9-8941-c70f012bd535",
+    "at": "2026-07-28T12:41:58.041Z",
+    "user": "owner",
+    "action": "site-content.publish",
+    "detail": "Homepage published"
+  },
+  {
+    "id": "1c8c2a67-3377-4178-a728-b8eb0c95b9fd",
+    "at": "2026-07-28T12:41:23.312Z",
+    "user": "owner",
+    "action": "auth.login",
+    "detail": "owner"
+  },
+  {
+    "id": "0a171735-eed4-4857-809b-a35ca7f76639",
+    "at": "2026-07-28T12:39:00.294Z",
+    "user": "owner",
+    "action": "academy.updated",
+    "detail": "LEARNING FOR BEGINERS"
+  },
+  {
+    "id": "083cc5b2-757a-47df-a9d4-ed4e236cb9fc",
+    "at": "2026-07-28T12:37:14.076Z",
+    "user": "owner",
+    "action": "auth.login",
+    "detail": "owner"
+  },
+  {
+    "id": "73f21fb5-7cbe-4f11-b822-096c46535a36",
+    "at": "2026-07-28T12:33:22.722Z",
+    "user": "owner",
+    "action": "auth.login",
+    "detail": "owner"
+  },
+  {
+    "id": "24cd880a-f5ee-4f69-8678-68e24edae200",
+    "at": "2026-07-28T12:30:45.813Z",
+    "user": "owner",
+    "action": "auth.login",
+    "detail": "owner"
+  },
+  {
+    "id": "fed969a8-9e59-4a09-a3b5-95ed6a790e18",
+    "at": "2026-07-28T12:30:44.883Z",
+    "user": "owner",
+    "action": "auth.login",
+    "detail": "owner"
+  },
+  {
+    "id": "e466d858-ddc6-4cd2-b7ea-4c059c12eb34",
+    "at": "2026-07-28T12:25:15.045Z",
+    "user": "owner",
+    "action": "auth.login",
+    "detail": "owner"
+  },
+  {
+    "id": "e23b741d-b635-4420-8444-24b034db7987",
+    "at": "2026-07-28T12:24:26.430Z",
+    "user": "owner",
+    "action": "auth.login",
+    "detail": "owner"
+  },
+  {
+    "id": "8a9b4e78-daa4-4560-b964-20f4048d1052",
+    "at": "2026-07-28T12:23:14.745Z",
+    "user": "owner",
+    "action": "academy.created",
+    "detail": "LEARNING FOR BEGINERS"
+  },
+  {
+    "id": "e1b80dfd-ed58-4bbd-b7b6-60191d585622",
+    "at": "2026-07-28T12:21:25.443Z",
+    "user": "owner",
+    "action": "auth.login",
+    "detail": "owner"
+  },
+  {
+    "id": "f03eeee4-5ed7-4bbc-964e-68603dfc698d",
+    "at": "2026-07-27T14:58:18.735Z",
+    "user": "customer",
+    "action": "customer.profile-updated",
+    "detail": "zoglojohnson@gmail.com"
+  },
+  {
+    "id": "066ee035-2ce6-4018-adfd-2bc44f7fd2da",
+    "at": "2026-07-27T14:57:14.753Z",
+    "user": "customer",
+    "action": "customer.registered",
+    "detail": "zoglojohnson@gmail.com"
+  }
+]

@@ -1,81 +1,170 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Johnson Zoglo — content creator, gamer, web developer and photographer." />
-  <meta name="theme-color" content="#090a0f" />
-  <title>Johnson Zoglo — Creator, Gamer & Developer</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" /><link rel="stylesheet" href="social-icons.css" />
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1841852553167828" crossorigin="anonymous"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Johnson Zoglo — creator, builder, educator, and founder of JZ Academy and JZ Market.">
+  <meta name="theme-color" content="#0b0e0c">
+  <title>Johnson Zoglo — Create, teach, and build</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="social-icons.css">
+  <link rel="stylesheet" href="home.css">
 </head>
-<body>
+<body class="home-page" id="top">
   <div class="grain" aria-hidden="true"></div>
-  <header class="site-header">
-    <a class="brand" href="#top"><span>JZ</span><i>STUDIO</i></a>
+
+  <header class="site-header home-header">
+    <a class="brand" href="#top" aria-label="Johnson Zoglo home"><span>JZ</span><i>STUDIO</i></a>
     <nav class="nav" aria-label="Main navigation">
-      <a href="#work">Work</a><a href="streams.html">Streams</a><a href="shop.html">Shop</a>
+      <a href="#about">About</a>
+      <a href="streams.html">Academy</a>
+      <a href="shop.html">Market</a>
+      <a href="#work">Work</a>
+      <a href="account.html">My JZ</a>
     </nav>
-    <a class="header-cta" href="#contact"><span></span> Let’s create</a>
+    <a class="home-contact-link" href="#contact"><i></i> Start a conversation</a>
+    <button class="home-menu" type="button" aria-label="Open navigation" aria-expanded="false"><span></span><span></span></button>
   </header>
+
   <aside class="social-rail" aria-label="Social media links">
-    <span>Follow JZ</span>
-    <a href="https://discord.com/" target="_blank" rel="noreferrer" aria-label="Johnson Zoglo on Discord"><img src="assets/social/discord.svg" alt="" /><i>Discord</i></a>
-    <a href="https://www.facebook.com/" target="_blank" rel="noreferrer" aria-label="Johnson Zoglo on Facebook"><img src="assets/social/facebook.svg" alt="" /><i>Facebook</i></a>
-    <a href="https://www.tiktok.com/" target="_blank" rel="noreferrer" aria-label="Johnson Zoglo on TikTok"><img src="assets/social/tiktok.svg" alt="" /><i>TikTok</i></a>
-    <a href="https://www.instagram.com/" target="_blank" rel="noreferrer" aria-label="Johnson Zoglo on Instagram"><img src="assets/social/instagram.svg" alt="" /><i>Instagram</i></a>
+    <span>Connect</span>
+    <a href="https://discord.com/" target="_blank" rel="noreferrer" aria-label="Johnson Zoglo on Discord"><img src="assets/social/discord.svg" alt=""><i>Discord</i></a>
+    <a href="https://www.facebook.com/" target="_blank" rel="noreferrer" aria-label="Johnson Zoglo on Facebook"><img src="assets/social/facebook.svg" alt=""><i>Facebook</i></a>
+    <a href="https://www.tiktok.com/" target="_blank" rel="noreferrer" aria-label="Johnson Zoglo on TikTok"><img src="assets/social/tiktok.svg" alt=""><i>TikTok</i></a>
+    <a href="https://www.instagram.com/" target="_blank" rel="noreferrer" aria-label="Johnson Zoglo on Instagram"><img src="assets/social/instagram.svg" alt=""><i>Instagram</i></a>
   </aside>
 
-  <main id="top">
-    <section class="hero">
-      <div class="hero-grid" aria-hidden="true"></div>
-      <div class="hero-copy reveal visible">
-        <p class="overline">Digital creator / Accra, Ghana</p>
-        <h1>I PLAY.<br />I <span>CREATE.</span><br />I BUILD.</h1>
-        <p class="hero-intro">I’m Johnson — a content creator, gamer, photographer and web developer turning ideas into experiences people remember.</p>
-        <div class="hero-actions"><a class="btn btn-bright" href="#work">Explore my world ↘</a><a class="text-link" href="streams.html">Watch stream replays ↗</a></div>
+  <main>
+    <section class="home-hero">
+      <div class="home-grid" aria-hidden="true"></div>
+      <div class="home-hero-copy reveal visible">
+        <p class="overline"><i></i> <span data-site-text="heroEyebrow">Creator / Builder / Educator</span></p>
+        <h1>IDEAS<br>SHOULD<br><span>MOVE.</span></h1>
+        <p data-site-text="heroIntro">I’m Johnson Zoglo. I create stories, build digital experiences, teach practical skills, and turn useful ideas into things people can actually use.</p>
+        <div class="home-hero-actions">
+          <a class="btn btn-bright" href="#world"><span data-site-text="heroPrimaryLabel">Enter my world</span> <b>↘</b></a>
+          <a href="streams.html" data-site-href="heroSecondaryUrl"><span data-site-text="heroSecondaryLabel">Start learning</span> <b>→</b></a>
+        </div>
       </div>
-      <div class="hero-portrait reveal visible">
-        <div class="portrait-frame"><img src="assets/johnson-zoglo-portrait.png" alt="Johnson Zoglo smiling in his creative studio" /></div>
-        <div class="status-card"><i></i><div><small>CURRENT STATUS</small><b>Creating something new</b></div></div>
-        <span class="hero-tag tag-one">WEB_DEV</span><span class="hero-tag tag-two">PHOTO_01</span>
+
+      <div class="home-portrait reveal visible">
+        <div class="portrait-card">
+          <img src="assets/johnson-zoglo-portrait.png" alt="Johnson Zoglo smiling in his creative studio">
+          <div class="portrait-caption"><span>JOHNSON ZOGLO / 2026</span><b>BUILDING IN PUBLIC</b></div>
+        </div>
+        <div class="portrait-stamp"><span>CREATE<br>TEACH<br>BUILD</span><b>✦</b></div>
+        <div class="availability"><i></i><span>Open to collaborations</span></div>
       </div>
-      <div class="scroll-mark"><span>Scroll to explore</span><i>↓</i></div>
-    </section>
 
-    <section class="ticker" aria-label="Creative disciplines"><div><span>CONTENT CREATION</span><i>✦</i><span>GAMING</span><i>✦</i><span>WEB DEVELOPMENT</span><i>✦</i><span>PHOTOGRAPHY</span><i>✦</i><span>CONTENT CREATION</span><i>✦</i><span>GAMING</span><i>✦</i><span>WEB DEVELOPMENT</span><i>✦</i><span>PHOTOGRAPHY</span><i>✦</i></div></section>
-
-    <section id="about" class="disciplines shell">
-      <div class="section-top reveal"><p class="overline">01 / What I do</p><h2>Four worlds.<br /><span>One creator.</span></h2></div>
-      <div class="discipline-grid">
-        <article class="discipline reveal"><b>01</b><div class="discipline-icon">▶</div><h3>Content Creator</h3><p>Stories, videos and digital content designed to connect, entertain and build community.</p><span>Video · Social · Storytelling</span></article>
-        <article class="discipline reveal"><b>02</b><div class="discipline-icon controller">＋</div><h3>Gamer</h3><p>Gameplay, reviews and honest conversations about the games and gear worth your time.</p><span>Streaming · Reviews · Community</span></article>
-        <article class="discipline reveal"><b>03</b><div class="discipline-icon">&lt;/&gt;</div><h3>Web Developer</h3><p>Fast, responsive websites that make brands look sharp and work beautifully everywhere.</p><span>Design · Code · Launch</span></article>
-        <article class="discipline reveal"><b>04</b><div class="discipline-icon lens"></div><h3>Photographer</h3><p>Bold portraits, events and everyday moments captured with energy and intention.</p><span>Portrait · Events · Lifestyle</span></article>
+      <div class="hero-index">
+        <span>01 / JZ STUDIO</span><span>02 / JZ ACADEMY</span><span>03 / JZ MARKET</span>
       </div>
     </section>
 
-    <section id="work" class="work shell">
-      <div class="section-top reveal"><p class="overline">02 / Selected work</p><h2>Made with<br /><span>purpose + play.</span></h2></div>
-      <div class="work-grid">
-        <article class="work-card work-video reveal"><div class="work-visual"><span class="play-button">▶</span><b>01:24</b><div class="scanlines"></div></div><div class="work-info"><p>Content / Gaming</p><h3>The Next Level</h3><span>A high-energy gaming series for the community.</span></div></article>
-        <article class="work-card work-photo reveal"><div class="work-visual"><img src="assets/johnson-zoglo-portrait.png" alt="Professional portrait photography example" /><b>PORTRAIT / 01</b></div><div class="work-info"><p>Photography</p><h3>Focus & Ambition</h3><span>Professional portrait and personal brand campaign.</span></div></article>
-        <article class="work-card work-web reveal"><div class="work-visual"><div class="browser"><i></i><i></i><i></i><strong>STRONG<br />TOWER.</strong><span>Faith. Family. Future.</span></div></div><div class="work-info"><p>Web development</p><h3>Strong Tower</h3><span>A digital home for a church and school community.</span></div></article>
+    <div class="home-ticker" aria-label="Johnson Zoglo disciplines">
+      <div><span>CONTENT</span><i>✦</i><span>ACADEMY</span><i>✦</i><span>COMMERCE</span><i>✦</i><span>DESIGN</span><i>✦</i><span>PHOTOGRAPHY</span><i>✦</i><span>CONTENT</span><i>✦</i><span>ACADEMY</span><i>✦</i><span>COMMERCE</span><i>✦</i><span>DESIGN</span><i>✦</i><span>PHOTOGRAPHY</span><i>✦</i></div>
+    </div>
+
+    <section class="home-world shell" id="world">
+      <header class="home-section-head reveal">
+        <div><p class="overline">Three connected worlds</p><h2>ONE NAME.<br><span>MORE THAN ONE LANE.</span></h2></div>
+        <p>Everything I make connects: the work creates the experience, the academy shares the knowledge, and the market puts useful things in people’s hands.</p>
+      </header>
+
+      <div class="world-grid">
+        <article class="world-card studio-card reveal">
+          <div class="world-top"><span>01 / CREATIVE WORK</span><b>JZ STUDIO</b></div>
+          <div class="studio-mark" aria-hidden="true"><img class="world-custom-image" data-site-image="studioImage" alt=""><span>J</span><span>Z</span></div>
+          <div class="world-copy"><h3 data-site-text="studioTitle">Ideas made visible.</h3><p data-site-text="studioDescription">Content, photography, creative direction, and web experiences with energy and intent.</p><a href="#work" data-site-href="studioCtaUrl"><span data-site-text="studioCtaLabel">View selected work</span> <b>→</b></a></div>
+        </article>
+
+        <article class="world-card academy-card reveal">
+          <div class="world-top"><span>02 / PRACTICAL LEARNING</span><b>JZ ACADEMY</b></div>
+          <div class="academy-visual" aria-hidden="true"><img class="world-custom-image" data-site-image="academyImage" alt=""><small>COURSE 01</small><strong>LEARN.<br>BUILD.<br>USE.</strong><i>▶</i></div>
+          <div class="world-copy"><h3 data-site-text="academyTitle">Skills that leave the screen.</h3><p data-site-text="academyDescription">Courses and focused video lessons for creators, builders, and growing digital brands.</p><a href="streams.html" data-site-href="academyCtaUrl"><span data-site-text="academyCtaLabel">Explore the academy</span> <b>→</b></a></div>
+        </article>
+
+        <article class="world-card market-card reveal">
+          <div class="world-top"><span>03 / CONSIDERED COMMERCE</span><b>JZ MARKET</b></div>
+          <div class="market-visual" aria-hidden="true"><img class="world-custom-image" data-site-image="marketImage" alt=""><div class="market-phone"><i></i></div><div class="market-label">GOOD<br>FINDS.</div><span>QUALITY CHECKED</span></div>
+          <div class="world-copy"><h3 data-site-text="marketTitle">Useful things, personally supported.</h3><p data-site-text="marketDescription">A considered marketplace for technology, games, cars, and creator gear.</p><a href="shop.html" data-site-href="marketCtaUrl"><span data-site-text="marketCtaLabel">Shop the current edit</span> <b>→</b></a></div>
+        </article>
       </div>
     </section>
 
-    <section class="shop-callout shell reveal">
-      <div><p class="overline">JZ Market</p><h2>Good finds.<br /><span>One trusted place.</span></h2><p>Shop games, phones, laptops, cars, creator gadgets and more with personal support.</p><a class="btn btn-dark" href="shop.html">Explore the market ↗</a></div>
-      <div class="shop-art" aria-hidden="true"><div class="console-card">JZ<span>PLAY</span><i></i></div><div class="pad"><b>+</b><i></i><i></i></div><span class="orbit">NEW DROPS · CREATOR GEAR ·</span></div>
+    <section class="home-about" id="about">
+      <div class="shell">
+        <p class="overline">About Johnson</p>
+        <div class="about-statement reveal">
+          <h2>I’M INTERESTED IN THE SPACE BETWEEN <span>AN IDEA</span> AND <span>SOMETHING REAL.</span></h2>
+        </div>
+        <div class="about-grid">
+          <div class="about-number">04<br><span>disciplines</span></div>
+          <p>I work across content, development, photography, and digital business. That mix lets me see the whole picture—from the first story to the finished product and the people it serves.</p>
+          <div class="about-list">
+            <span><b>01</b> Content & storytelling</span>
+            <span><b>02</b> Web design & development</span>
+            <span><b>03</b> Photography & visual direction</span>
+            <span><b>04</b> Education & digital commerce</span>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <section id="contact" class="contact">
-      <div class="shell"><p class="overline">03 / Start a project</p><div class="contact-row"><h2>LET’S MAKE<br /><span>NOISE.</span></h2><a href="mailto:hello@johnsonzoglo.com" class="contact-orb">Tell me<br />your idea <b>↗</b></a></div><footer><p>© <span id="year">2026</span> Johnson Zoglo</p><div><a href="https://discord.com/" target="_blank" rel="noreferrer">Discord ↗</a><a href="https://www.facebook.com/" target="_blank" rel="noreferrer">Facebook ↗</a><a href="https://www.tiktok.com/" target="_blank" rel="noreferrer">TikTok ↗</a><a href="https://www.instagram.com/" target="_blank" rel="noreferrer">Instagram ↗</a></div><a href="#top">Back to top ↑</a></footer></div>
+    <section class="home-work shell" id="work">
+      <header class="home-section-head reveal">
+        <div><p class="overline">Selected work</p><h2>BUILT WITH<br><span>PURPOSE + PLAY.</span></h2></div>
+        <p>A small look at the kind of experiences I enjoy making—clear, memorable, and useful.</p>
+      </header>
+
+      <div class="featured-work">
+        <article class="work-feature work-feature-main reveal">
+          <div class="work-feature-visual">
+            <div class="academy-demo"><span>JZ / ACADEMY</span><b>LEARN BY<br>BUILDING.</b><i>▶</i></div>
+          </div>
+          <div class="work-feature-info"><span>Product / Education</span><h3>JZ Academy</h3><p>A practical learning platform for courses and focused video lessons.</p><a href="streams.html">Open project ↗</a></div>
+        </article>
+        <article class="work-feature reveal">
+          <div class="work-feature-visual market-demo"><span>THE CURRENT EDIT</span><strong>GOOD<br>FINDS.</strong><b>JZ MARKET</b></div>
+          <div class="work-feature-info"><span>Product / Commerce</span><h3>JZ Market</h3><p>A curated, personally supported marketplace experience.</p><a href="shop.html">Open project ↗</a></div>
+        </article>
+        <article class="work-feature reveal">
+          <div class="work-feature-visual portrait-demo"><img src="assets/johnson-zoglo-portrait.png" alt="Johnson Zoglo portrait photography"><span>PORTRAIT / DIRECTION</span></div>
+          <div class="work-feature-info"><span>Photography / Brand</span><h3>Focus & Ambition</h3><p>Portraiture and personal brand direction with confidence and energy.</p><a href="#contact">Create together ↗</a></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="home-bridge">
+      <div class="shell">
+        <p class="overline">Not sure where to start?</p>
+        <div class="bridge-grid">
+          <a href="streams.html"><span>Learn a practical skill</span><strong>GO TO<br>ACADEMY</strong><b>↗</b></a>
+          <a href="shop.html"><span>Find your next useful thing</span><strong>VISIT<br>THE MARKET</strong><b>↗</b></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="home-contact" id="contact">
+      <div class="shell">
+        <p class="overline">Have an idea?</p>
+        <div class="contact-main reveal">
+          <h2 data-site-text="contactTitle">LET’S MAKE IT MOVE.</h2>
+          <a href="mailto:hello@johnsonzoglo.com"><span>Tell me about<br>your project</span><b>↗</b></a>
+        </div>
+        <footer>
+          <p>© <span id="year">2026</span> Johnson Zoglo</p>
+          <div><a href="legal.html#terms">Terms</a><a href="legal.html#privacy">Privacy</a><a href="legal.html#refunds">Refunds</a></div>
+          <a href="#top">Back to top ↑</a>
+        </footer>
+      </div>
     </section>
   </main>
+
   <script src="script.js"></script>
+  <script src="support-chat.js"></script>
 </body>
 </html>

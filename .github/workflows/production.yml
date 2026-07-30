@@ -1,0 +1,44 @@
+name: Production readiness
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run application and production checks
+        run: npm run check
+      - name: Build production container
+        run: docker build -t jz-platform:test .
+      - name: Smoke-test hardened container
+        shell: bash
+        run: |
+          docker run --detach --name jz-platform-test --publish 18000:8000 \
+            --env APP_URL=https://example.com \
+            --env ADMIN_PASSWORD='CI-owner-password-2026!' \
+            --env SESSION_SECRET='ci-session-secret-0123456789-abcdefghijk' \
+            --env MEDIA_SIGNING_SECRET='ci-media-secret-9876543210-abcdefghijklm' \
+            jz-platform:test
+          for attempt in {1..20}; do
+            if curl --fail --silent http://127.0.0.1:18000/api/ready >/dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          curl --fail http://127.0.0.1:18000/api/ready
+          test "$(curl --silent --output /dev/null --write-out '%{http_code}' http://127.0.0.1:18000/data/users.json)" = "404"
+          test "$(curl --silent --output /dev/null --write-out '%{http_code}' http://127.0.0.1:18000/server.js)" = "404"
+      - name: Show container logs on failure
+        if: failure()
+        run: docker logs jz-platform-test || true

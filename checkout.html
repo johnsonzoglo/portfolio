@@ -1,1 +1,112 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#090a0f"><title>Checkout — JZ Market</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="checkout.css"></head><body class="checkout-page"><header class="checkout-header"><a class="brand" href="index.html"><span>JZ</span><i>MARKET</i></a><a href="shop.html">← Continue shopping</a></header><main class="checkout-shell"><section><p class="overline">Secure order request</p><h1>CHECKOUT.</h1><form id="checkoutForm"><div class="field-grid"><label>Full name<input name="name" required autocomplete="name"></label><label>Email address<input name="email" type="email" required autocomplete="email"></label><label>Phone / WhatsApp<input name="phone" required autocomplete="tel"></label><label>Payment method<select name="paymentMethod"><option value="cash">Cash on delivery / collection</option><option value="bank">Bank transfer after confirmation</option></select></label><label>Delivery method<select name="deliveryZone" id="deliveryZone"></select></label><label>Discount code<input name="discountCode" placeholder="Optional"></label></div><label>Delivery address<textarea name="address" required rows="3" autocomplete="street-address"></textarea></label><label>Order note <span>(optional)</span><textarea name="note" rows="2" placeholder="Delivery instructions, preferred color, or questions"></textarea></label><label class="agreement"><input type="checkbox" required> I confirm my contact and delivery information is correct.</label><p id="checkoutMessage" role="status"></p><button class="place-order" type="submit">Place order request <span>↗</span></button></form><div class="order-success" id="orderSuccess"><small>ORDER RECEIVED</small><h2>Thank you.</h2><p>Your order number is <b id="orderNumber"></b>. Johnson will contact you to confirm availability, delivery, and payment.</p><a href="shop.html" class="btn btn-bright">Return to market</a></div></section><aside><div class="summary-top"><h2>Your order</h2><span id="summaryCount">0 items</span></div><div id="summaryItems"></div><div class="summary-total"><span>Product subtotal</span><strong id="summaryTotal">$0</strong></div><small>Delivery, discount, and configured tax are calculated securely when the order is placed. No card payment is collected yet.</small></aside></main><script src="checkout.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Complete your JZ Market order with secure payment options and personal delivery confirmation.">
+  <meta name="theme-color" content="#10140f">
+  <title>Checkout — JZ Market</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="checkout.css">
+</head>
+<body class="checkout-page">
+  <a class="checkout-skip" href="#checkoutForm">Skip to checkout form</a>
+
+  <header class="checkout-header">
+    <a class="brand" href="index.html" aria-label="JZ Market home"><span>JZ</span><i>MARKET</i></a>
+    <div class="checkout-header-status"><i aria-hidden="true"></i><span>Secure order</span></div>
+    <a href="shop.html"><span aria-hidden="true">←</span> Continue shopping</a>
+  </header>
+
+  <main class="checkout-shell">
+    <section class="checkout-content">
+      <div class="checkout-intro">
+        <p class="overline">Secure checkout</p>
+        <h1>ALMOST<br><span>YOURS.</span></h1>
+        <p>Share your details below. We will confirm availability, delivery, and the best handover time personally.</p>
+      </div>
+
+      <ol class="checkout-steps" aria-label="Checkout progress">
+        <li class="active"><span>01</span><strong>Your details</strong></li>
+        <li><span>02</span><strong>Confirmation</strong></li>
+        <li><span>03</span><strong>Handover</strong></li>
+      </ol>
+
+      <form id="checkoutForm">
+        <fieldset class="checkout-form-section">
+          <legend><span>01</span><strong>Contact details</strong><small>Where should we send your confirmation?</small></legend>
+          <div class="field-grid">
+            <label>Full name<input name="name" required autocomplete="name" placeholder="Your full name"></label>
+            <label>Email address<input name="email" type="email" required autocomplete="email" inputmode="email" placeholder="you@example.com"></label>
+            <label class="field-wide">Phone / WhatsApp<input name="phone" required autocomplete="tel" inputmode="tel" placeholder="+971 …"></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="checkout-form-section">
+          <legend><span>02</span><strong>Delivery</strong><small>Choose how you would like to receive your order.</small></legend>
+          <div class="field-grid">
+            <label>Delivery method<select name="deliveryZone" id="deliveryZone" aria-label="Delivery method"><option>Loading delivery options…</option></select></label>
+            <label>Discount code<input name="discountCode" autocomplete="off" placeholder="Optional code"></label>
+          </div>
+          <label>Delivery address<textarea name="address" required rows="3" autocomplete="street-address" placeholder="Building, street, area, and any helpful directions"></textarea></label>
+        </fieldset>
+
+        <fieldset class="checkout-form-section">
+          <legend><span>03</span><strong>Payment & notes</strong><small>Payment is only completed after your order is checked.</small></legend>
+          <label>Payment method<select name="paymentMethod">
+            <option value="stripe" id="stripePayment">Card — secure online payment</option>
+            <option value="cash">Cash on delivery / collection</option>
+            <option value="bank">Bank transfer after confirmation</option>
+          </select></label>
+          <label>Order note <span>(optional)</span><textarea name="note" rows="3" placeholder="Preferred delivery time, color, or any questions"></textarea></label>
+        </fieldset>
+
+        <label class="agreement">
+          <input type="checkbox" required>
+          <span>I confirm my information and accept the <a href="legal.html#terms" target="_blank" rel="noopener">Terms</a>, <a href="legal.html#privacy" target="_blank" rel="noopener">Privacy Policy</a>, and <a href="legal.html#refunds" target="_blank" rel="noopener">Refund Policy</a>.</span>
+        </label>
+
+        <p id="checkoutMessage" class="checkout-message" role="status" aria-live="polite"></p>
+        <button class="place-order" type="submit">
+          <span><small>Review and continue</small>Continue securely</span>
+          <b aria-hidden="true">↗</b>
+        </button>
+        <div class="checkout-form-assurance" aria-label="Checkout assurances">
+          <span><b aria-hidden="true">✓</b> Encrypted checkout</span>
+          <span><b aria-hidden="true">✓</b> Personally confirmed</span>
+          <span><b aria-hidden="true">✓</b> Clear refund terms</span>
+        </div>
+      </form>
+
+      <div class="order-success" id="orderSuccess" aria-live="polite">
+        <span class="success-mark" aria-hidden="true">✓</span>
+        <small>ORDER RECEIVED</small>
+        <h2>Thank you.</h2>
+        <p>Your order number is <b id="orderNumber"></b>. Johnson will contact you to confirm availability, delivery, and payment.</p>
+        <a href="shop.html" class="btn btn-bright">Return to market <span>→</span></a>
+      </div>
+    </section>
+
+    <aside class="checkout-summary" aria-label="Order summary">
+      <div class="summary-top">
+        <div><small>Your selection</small><h2>Order summary</h2></div>
+        <span id="summaryCount">0 items</span>
+      </div>
+      <div id="summaryItems" class="summary-items">
+        <div class="summary-loading"><i></i><span>Loading your bag…</span></div>
+      </div>
+      <div class="summary-total"><span>Product subtotal<small>Delivery confirmed separately</small></span><strong id="summaryTotal">$0</strong></div>
+      <div class="summary-promise">
+        <span aria-hidden="true">JZ</span>
+        <div><strong>A real person checks every order.</strong><p>No surprise payment. We confirm stock, delivery, and next steps with you first.</p></div>
+      </div>
+      <div class="payment-note"><i aria-hidden="true">⌁</i><small>Card payments use Stripe Checkout when enabled. Bank transfer and cash remain available.</small></div>
+    </aside>
+  </main>
+
+  <script src="checkout.js"></script>
+</body>
+</html>

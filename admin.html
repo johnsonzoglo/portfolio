@@ -11,8 +11,11 @@
   <link rel="stylesheet" href="admin.css">
 </head>
 <body class="admin-page">
+  <a class="skip-link" href="#adminMain">Skip to dashboard content</a>
+  <div class="admin-loading-bar" id="adminLoadingBar" aria-hidden="true"><span></span></div>
+  <div class="admin-toast" id="adminToast" role="status" aria-live="polite" aria-atomic="true"></div>
   <section class="admin-login" id="loginView">
-    <div class="login-brand" aria-label="JZ Market"><span>JZ</span><strong>Market Admin</strong></div>
+    <div class="login-brand" aria-label="JZ Market"><span>JZ</span><div><strong>Market Admin</strong><small>Commerce & learning workspace</small></div></div>
     <form id="loginForm" class="login-panel">
       <div class="login-icon"><i data-lucide="lock-keyhole"></i></div>
       <p class="eyebrow">Secure workspace</p>
@@ -28,12 +31,16 @@
 
   <div class="admin-shell" id="dashboard">
     <aside class="sidebar" id="sidebar">
-      <a class="sidebar-brand" href="index.html"><span>JZ</span><strong>Market</strong></a>
+      <a class="sidebar-brand" href="index.html"><span>JZ</span><div><strong>Market</strong><small>Admin workspace</small></div></a>
+      <p class="sidebar-label">Workspace</p>
       <nav class="sidebar-nav" aria-label="Admin navigation">
-        <button class="nav-item active" data-view="overview"><i data-lucide="layout-dashboard"></i><span>Overview</span></button>
+        <button class="nav-item active" data-view="overview" aria-current="page"><i data-lucide="layout-dashboard"></i><span>Overview</span></button>
+        <button class="nav-item" data-view="media"><i data-lucide="panels-top-left"></i><span>Content & media</span></button>
         <button class="nav-item" data-view="products"><i data-lucide="package"></i><span>Products</span></button>
-        <button class="nav-item" data-view="streams"><i data-lucide="clapperboard"></i><span>Streams</span></button>
+        <button class="nav-item" data-view="streams"><i data-lucide="graduation-cap"></i><span>Academy</span></button>
         <button class="nav-item" data-view="orders"><i data-lucide="shopping-bag"></i><span>Orders</span><b id="newOrders">0</b></button>
+        <button class="nav-item" data-view="support"><i data-lucide="messages-square"></i><span>Visitor support</span><b id="openComplaints">0</b></button>
+        <button class="nav-item" data-view="analytics"><i data-lucide="chart-no-axes-combined"></i><span>Analytics</span></button>
       </nav>
       <div class="sidebar-section">
         <span>Manage</span>
@@ -43,28 +50,37 @@
       </div>
       <div class="account-block">
         <div class="account-avatar" id="accountAvatar">JZ</div>
-        <div><strong id="accountName">Owner</strong><span>Administrator</span></div>
+        <div><strong id="accountName">Owner</strong><span id="accountRole">Administrator</span></div>
         <button class="icon-button" id="logout" type="button" title="Sign out" aria-label="Sign out"><i data-lucide="log-out"></i></button>
       </div>
     </aside>
 
-    <main class="admin-main">
+    <main class="admin-main" id="adminMain" tabindex="-1">
       <header class="topbar">
         <button class="icon-button mobile-menu" id="mobileMenu" type="button" title="Open navigation" aria-label="Open navigation"><i data-lucide="menu"></i></button>
-        <div><p class="eyebrow" id="viewEyebrow">Business snapshot</p><h1 id="viewTitle">Overview</h1></div>
+        <div class="topbar-title"><p class="eyebrow" id="viewEyebrow">Business snapshot</p><h1 id="viewTitle">Overview</h1></div>
         <div class="topbar-actions">
-          <button class="icon-button" id="refreshData" type="button" title="Refresh data" aria-label="Refresh data"><i data-lucide="refresh-cw"></i></button>
+          <span class="system-status"><i></i> Store online</span>
+          <button class="icon-button" id="refreshData" type="button" title="Refresh data" aria-label="Refresh dashboard data"><i data-lucide="refresh-cw"></i></button>
           <button class="primary-button compact" id="newProduct" type="button"><i data-lucide="plus"></i><span>Add product</span></button>
-          <button class="primary-button compact" id="newStream" type="button" hidden><i data-lucide="upload"></i><span>Upload stream</span></button>
+          <button class="primary-button compact" id="newStream" type="button" hidden><i data-lucide="plus"></i><span>New course</span></button>
         </div>
       </header>
 
       <section class="app-view active" id="overviewView">
+        <div class="overview-welcome">
+          <div>
+            <p class="eyebrow">JZ Market command center</p>
+            <h2>Good <span id="dayPeriod">day</span>, <b id="welcomeName">Owner</b>.</h2>
+            <p>Here is what needs your attention across the store today.</p>
+          </div>
+          <div class="welcome-date"><span id="currentDate">Today</span><small>Live business overview</small></div>
+        </div>
         <div class="metric-strip">
-          <article><span>Revenue</span><strong id="overviewRevenue">$0</strong><small>Non-cancelled orders</small></article>
-          <article><span>Open orders</span><strong id="overviewOpen">0</strong><small>Awaiting completion</small></article>
-          <article><span>Products</span><strong id="overviewProducts">0</strong><small id="overviewStock">0 units in stock</small></article>
-          <article><span>Low stock</span><strong id="overviewLow">0</strong><small>Below 3 units</small></article>
+          <article><div class="metric-label"><span>Revenue</span><i data-lucide="banknote"></i></div><strong id="overviewRevenue">$0</strong><small>Non-cancelled orders</small><em></em></article>
+          <article><div class="metric-label"><span>Open orders</span><i data-lucide="shopping-bag"></i></div><strong id="overviewOpen">0</strong><small>Awaiting completion</small><em></em></article>
+          <article><div class="metric-label"><span>Products</span><i data-lucide="package"></i></div><strong id="overviewProducts">0</strong><small id="overviewStock">0 units in stock</small><em></em></article>
+          <article><div class="metric-label"><span>Low stock</span><i data-lucide="triangle-alert"></i></div><strong id="overviewLow">0</strong><small>Below 3 units</small><em></em></article>
         </div>
         <div class="overview-grid">
           <section class="workspace-section">
@@ -78,6 +94,121 @@
         </div>
       </section>
 
+      <section class="app-view" id="mediaView">
+        <div class="media-intro">
+          <div><p class="eyebrow">Homepage content</p><h2>Control the images visitors see.</h2><p>Upload images for the three main homepage cards. Changes appear on the public page after you save.</p></div>
+          <a href="index.html#world" target="_blank" rel="noopener">Preview homepage <i data-lucide="external-link"></i></a>
+        </div>
+        <form id="pageMediaForm">
+          <div class="visual-editor">
+            <aside class="editor-sections" aria-label="Homepage sections">
+              <div class="editor-sections-head"><span class="editor-mark">JZ</span><div><strong>Page editor</strong><small>Homepage</small></div></div>
+              <p>Page sections</p>
+              <button class="editor-section-tab active" type="button" data-editor-section="hero"><i data-lucide="sparkles"></i><span><strong>Hero</strong><small>Opening message</small></span></button>
+              <button class="editor-section-tab" type="button" data-editor-section="studio"><i data-lucide="palette"></i><span><strong>Studio</strong><small>Creative work</small></span></button>
+              <button class="editor-section-tab" type="button" data-editor-section="academy"><i data-lucide="graduation-cap"></i><span><strong>Academy</strong><small>Courses</small></span></button>
+              <button class="editor-section-tab" type="button" data-editor-section="market"><i data-lucide="shopping-bag"></i><span><strong>Market</strong><small>Products</small></span></button>
+              <button class="editor-section-tab" type="button" data-editor-section="images"><i data-lucide="images"></i><span><strong>Images</strong><small>Card artwork</small></span></button>
+              <button class="editor-section-tab" type="button" data-editor-section="seo"><i data-lucide="search-check"></i><span><strong>SEO & contact</strong><small>Search and footer</small></span></button>
+              <div class="editor-tip"><i data-lucide="mouse-pointer-click"></i><p><strong>Tip</strong> Click highlighted content inside the preview to edit it.</p></div>
+            </aside>
+
+            <section class="editor-controls">
+              <header class="editor-controls-head">
+                <div><p class="eyebrow">Editing section</p><h2 id="editorPanelTitle">Hero</h2><span id="editorPanelCopy">Set the first message visitors see.</span></div>
+                <span class="draft-status" id="draftStatus">Published</span>
+              </header>
+              <div class="editor-panel active" data-editor-panel="hero">
+                <div class="field-note"><i data-lucide="wand-sparkles"></i><p>Keep the introduction short and direct. Changes appear in the preview instantly.</p></div>
+                <div class="content-fields">
+                  <label class="wide">Small heading<input id="contentHeroEyebrow" maxlength="180"></label>
+                  <label class="wide">Main introduction<textarea id="contentHeroIntro" rows="5" maxlength="500"></textarea><small>Recommended: 1–3 short sentences</small></label>
+                  <label>Primary button<input id="contentHeroPrimaryLabel" maxlength="80"></label>
+                  <label>Academy button<input id="contentHeroSecondaryLabel" maxlength="80"></label>
+                  <label class="wide">Academy button link<input id="contentHeroSecondaryUrl" maxlength="180"></label>
+                </div>
+              </div>
+              <div class="editor-panel" data-editor-panel="studio">
+                <div class="content-fields">
+                  <label class="wide">Section title<input id="contentStudioTitle" maxlength="180"></label>
+                  <label class="wide">Description<textarea id="contentStudioDescription" rows="5" maxlength="500"></textarea></label>
+                  <label>Button label<input id="contentStudioCtaLabel" maxlength="80"></label>
+                  <label>Button link<input id="contentStudioCtaUrl" maxlength="180"></label>
+                </div>
+              </div>
+              <div class="editor-panel" data-editor-panel="academy">
+                <div class="content-fields">
+                  <label class="wide">Section title<input id="contentAcademyTitle" maxlength="180"></label>
+                  <label class="wide">Description<textarea id="contentAcademyDescription" rows="5" maxlength="500"></textarea></label>
+                  <label>Button label<input id="contentAcademyCtaLabel" maxlength="80"></label>
+                  <label>Button link<input id="contentAcademyCtaUrl" maxlength="180"></label>
+                </div>
+              </div>
+              <div class="editor-panel" data-editor-panel="market">
+                <div class="content-fields">
+                  <label class="wide">Section title<input id="contentMarketTitle" maxlength="180"></label>
+                  <label class="wide">Description<textarea id="contentMarketDescription" rows="5" maxlength="500"></textarea></label>
+                  <label>Button label<input id="contentMarketCtaLabel" maxlength="80"></label>
+                  <label>Button link<input id="contentMarketCtaUrl" maxlength="180"></label>
+                </div>
+              </div>
+              <div class="editor-panel editor-images-panel" data-editor-panel="images">
+                <div class="field-note"><i data-lucide="image-plus"></i><p>Choose a strong image for each card. Images are uploaded when you save or publish.</p></div>
+                <div class="media-card-grid">
+                  <article class="media-upload-card" data-media-card="studio">
+                    <div class="media-preview studio-media-preview"><img id="studioImagePreview" alt="Studio card preview"><span><i data-lucide="palette"></i> JZ Studio</span></div>
+                    <div class="media-card-copy"><div><small>Card 01</small><h3>Studio image</h3></div><label class="secondary-button">Choose<input id="studioImageFile" type="file" accept="image/png,image/jpeg,image/webp"></label></div>
+                    <label class="media-alt">Image description<input id="studioImageAlt" maxlength="180" placeholder="Describe this image"></label><input id="studioImageUrl" type="hidden"><button class="remove-media" type="button" data-remove-media="studio">Remove custom image</button>
+                  </article>
+                  <article class="media-upload-card" data-media-card="academy">
+                    <div class="media-preview academy-media-preview"><img id="academyImagePreview" alt="Academy card preview"><span><i data-lucide="graduation-cap"></i> JZ Academy</span></div>
+                    <div class="media-card-copy"><div><small>Card 02</small><h3>Academy image</h3></div><label class="secondary-button">Choose<input id="academyImageFile" type="file" accept="image/png,image/jpeg,image/webp"></label></div>
+                    <label class="media-alt">Image description<input id="academyImageAlt" maxlength="180" placeholder="Describe this image"></label><input id="academyImageUrl" type="hidden"><button class="remove-media" type="button" data-remove-media="academy">Remove custom image</button>
+                  </article>
+                  <article class="media-upload-card" data-media-card="market">
+                    <div class="media-preview market-media-preview"><img id="marketImagePreview" alt="Market card preview"><span><i data-lucide="shopping-bag"></i> JZ Market</span></div>
+                    <div class="media-card-copy"><div><small>Card 03</small><h3>Market image</h3></div><label class="secondary-button">Choose<input id="marketImageFile" type="file" accept="image/png,image/jpeg,image/webp"></label></div>
+                    <label class="media-alt">Image description<input id="marketImageAlt" maxlength="180" placeholder="Describe this image"></label><input id="marketImageUrl" type="hidden"><button class="remove-media" type="button" data-remove-media="market">Remove custom image</button>
+                  </article>
+                </div>
+              </div>
+              <div class="editor-panel" data-editor-panel="seo">
+                <div class="search-preview"><small>GOOGLE PREVIEW</small><strong id="searchPreviewTitle">JZ — Creator, Academy & Market</strong><span>yourwebsite.com</span><p id="searchPreviewDescription">A creative studio, practical academy, and considered marketplace.</p></div>
+                <div class="content-fields">
+                  <label class="wide">Browser and search title<input id="contentSiteTitle" maxlength="180"></label>
+                  <label class="wide">Search description<textarea id="contentMetaDescription" rows="4" maxlength="500"></textarea></label>
+                  <label class="wide">Contact headline<input id="contentContactTitle" maxlength="180"></label>
+                </div>
+              </div>
+            </section>
+
+            <aside class="editor-canvas">
+              <header class="canvas-toolbar">
+                <div><strong>Live preview</strong><small>Draft changes</small></div>
+                <div class="device-switcher" aria-label="Preview size">
+                  <button class="active" type="button" data-preview-device="desktop" title="Desktop"><i data-lucide="monitor"></i></button>
+                  <button type="button" data-preview-device="tablet" title="Tablet"><i data-lucide="tablet"></i></button>
+                  <button type="button" data-preview-device="mobile" title="Mobile"><i data-lucide="smartphone"></i></button>
+                </div>
+                <button class="canvas-action" id="previewRefresh" type="button" title="Refresh preview"><i data-lucide="refresh-cw"></i></button>
+                <a class="canvas-action" href="index.html" target="_blank" rel="noopener" title="Open homepage"><i data-lucide="external-link"></i></a>
+              </header>
+              <div class="preview-stage">
+                <div class="preview-frame-wrap desktop" id="previewFrameWrap">
+                  <iframe id="homepagePreview" src="index.html?editor-preview=1" title="Live homepage preview"></iframe>
+                </div>
+              </div>
+            </aside>
+          </div>
+          <div class="media-save-bar"><p class="form-message" id="mediaMessage" role="status"></p><button class="secondary-button" type="submit" name="mode" value="draft"><i data-lucide="file-pen-line"></i><span>Save draft</span></button><button class="primary-button" type="submit" name="mode" value="publish"><i data-lucide="send"></i><span>Publish homepage</span></button></div>
+        </form>
+        <section class="media-library-section">
+          <div class="section-heading"><div><p class="eyebrow">Reusable files</p><h2>Media library</h2></div><label class="primary-button compact">Upload files<input id="libraryUpload" type="file" multiple accept="image/png,image/jpeg,image/webp,application/pdf,application/zip"></label></div>
+          <p class="library-help">Reuse images on homepage cards, update names and descriptions, or remove files that are no longer used.</p>
+          <div class="media-library-grid" id="mediaLibraryGrid"></div>
+        </section>
+      </section>
+
       <section class="app-view" id="productsView">
         <div class="control-row">
           <label class="search-control"><i data-lucide="search"></i><input id="productSearch" type="search" placeholder="Search products"></label>
@@ -86,18 +217,24 @@
           </select>
           <span class="result-count" id="productResultCount">0 products</span>
         </div>
+        <div class="bulk-toolbar" id="bulkToolbar"><span id="selectedProductCount">0 selected</span><button type="button" data-bulk-action="show">Show</button><button type="button" data-bulk-action="hide">Hide</button><button type="button" data-bulk-action="feature">Feature</button><button type="button" data-bulk-action="unfeature">Unfeature</button><button type="button" data-bulk-action="stock">Add stock</button></div>
         <div class="data-surface"><div class="product-table" id="productsTable"></div></div>
       </section>
 
       <section class="app-view" id="streamsView">
-        <div class="control-row">
-          <label class="search-control"><i data-lucide="search"></i><input id="streamSearch" type="search" placeholder="Search streams"></label>
-          <select id="streamFilter" aria-label="Filter streams">
-            <option value="all">All streams</option><option value="published">Published</option><option value="draft">Drafts</option><option value="featured">Featured</option>
+        <section class="academy-admin-hero">
+          <div><p class="eyebrow">Learning management</p><h2>Build courses students finish.</h2><p>Create structured learning paths, manage every lesson and control how students access your knowledge.</p><button class="academy-hero-action" type="button" data-create-course><i data-lucide="plus"></i><span>Create a course</span></button></div>
+          <div class="academy-admin-stats"><article><strong id="academyCourseCount">0</strong><span>Courses</span></article><article><strong id="academyLessonCount">0</strong><span>Lessons</span></article><article><strong id="academyPaidCount">0</strong><span>Paid</span></article></div>
+        </section>
+        <div class="academy-workflow" aria-label="Course publishing workflow"><span><b>01</b> Create course</span><i data-lucide="arrow-right"></i><span><b>02</b> Build curriculum</span><i data-lucide="arrow-right"></i><span><b>03</b> Set access</span><i data-lucide="arrow-right"></i><span><b>04</b> Publish</span></div>
+        <div class="control-row academy-controls">
+          <label class="search-control"><i data-lucide="search"></i><input id="streamSearch" type="search" placeholder="Search courses and videos"></label>
+          <select id="streamFilter" aria-label="Filter academy content">
+            <option value="all">All content</option><option value="course">Courses</option><option value="video">Video lessons</option><option value="published">Published</option><option value="draft">Drafts</option><option value="featured">Featured</option>
           </select>
-          <span class="result-count" id="streamResultCount">0 streams</span>
+          <span class="result-count" id="streamResultCount">0 resources</span>
         </div>
-        <div class="data-surface"><div class="stream-table" id="streamsTable"></div></div>
+        <div class="academy-library" id="streamsTable"></div>
       </section>
 
       <section class="app-view" id="ordersView">
@@ -110,45 +247,132 @@
         </div>
         <div class="order-list" id="ordersList"></div>
       </section>
+
+      <section class="app-view" id="supportView">
+        <section class="support-admin-hero">
+          <div><p class="eyebrow">Visitor care</p><h2>Turn complaints into trust.</h2><p>Read every visitor message, reply directly and keep each conversation moving toward a clear resolution.</p></div>
+          <div class="support-admin-stats"><article><strong id="supportOpenCount">0</strong><span>Open</span></article><article><strong id="supportProgressCount">0</strong><span>In progress</span></article><article><strong id="supportResolvedCount">0</strong><span>Resolved</span></article></div>
+        </section>
+        <div class="control-row support-controls">
+          <label class="search-control"><i data-lucide="search"></i><input id="supportSearch" type="search" placeholder="Search visitor, email or subject"></label>
+          <select id="supportFilter" aria-label="Filter support conversations">
+            <option value="all">All conversations</option><option value="open">Open</option><option value="in-progress">In progress</option><option value="resolved">Resolved</option><option value="closed">Closed</option>
+          </select>
+          <span class="result-count" id="supportResultCount">0 conversations</span>
+        </div>
+        <div class="support-inbox">
+          <aside class="support-conversation-list" id="supportConversationList" aria-label="Visitor conversations"></aside>
+          <section class="support-thread" id="supportThread" aria-label="Selected conversation" aria-live="polite"></section>
+        </div>
+      </section>
+
+      <section class="app-view" id="analyticsView">
+        <div class="analytics-strip">
+          <article><span>Page views</span><strong id="analyticsPageViews">0</strong></article>
+          <article><span>Product views</span><strong id="analyticsProductViews">0</strong></article>
+          <article><span>Course views</span><strong id="analyticsCourseViews">0</strong></article>
+          <article><span>Cart additions</span><strong id="analyticsCartAdds">0</strong></article>
+          <article><span>Checkout starts</span><strong id="analyticsCheckoutStarts">0</strong></article>
+        </div>
+        <div class="analytics-grid">
+          <section class="workspace-section"><div class="section-heading"><div><p class="eyebrow">Traffic</p><h2>Top pages</h2></div></div><div id="analyticsTopPages" class="compact-list"></div></section>
+          <section class="workspace-section"><div class="section-heading"><div><p class="eyebrow">Live activity</p><h2>Recent events</h2></div></div><div id="analyticsRecent" class="compact-list"></div></section>
+        </div>
+      </section>
     </main>
   </div>
 
-  <div class="drawer" id="editor" aria-hidden="true">
+  <div class="drawer" id="editor" role="dialog" aria-modal="true" aria-labelledby="editorTitle" aria-hidden="true">
     <form id="productForm">
       <header class="drawer-header"><div><p class="eyebrow">Inventory</p><h2 id="editorTitle">Add product</h2></div><button class="icon-button" type="button" id="editorClose" title="Close" aria-label="Close"><i data-lucide="x"></i></button></header>
       <input type="hidden" id="productId">
       <div class="form-grid">
         <label class="wide">Product name<input id="productName" required maxlength="100"></label>
-        <label>Category<select id="productCategory"><option>phones</option><option>laptops</option><option>games</option><option>cars</option><option>gadgets</option><option>fashion</option><option>home</option><option>other</option></select></label>
+        <label>Category<input id="productCategory" list="productCategories" required maxlength="30"><datalist id="productCategories"><option value="phones"><option value="laptops"><option value="games"><option value="cars"><option value="gadgets"><option value="fashion"><option value="home"></datalist></label>
         <label>Condition<select id="productCondition"><option value="new">New</option><option value="used">Used</option><option value="refurbished">Refurbished</option></select></label>
         <label>Price (USD)<input id="productPrice" type="number" min="0" step="0.01" required></label>
+        <label>Sale price (optional)<input id="productSalePrice" type="number" min="0" step="0.01"></label>
         <label>Stock quantity<input id="productStock" type="number" min="0" step="1" required></label>
+        <label>Collection<input id="productCollection" maxlength="60" placeholder="e.g. Creator essentials"></label>
+        <label class="wide">Variants<input id="productVariants" maxlength="500" placeholder="Black, Silver, 256GB (comma separated)"></label>
         <label class="wide">Description<textarea id="productDescription" rows="4" maxlength="500"></textarea></label>
       </div>
       <label class="upload-field"><input id="productPhoto" type="file" accept="image/png,image/jpeg,image/webp"><i data-lucide="image-plus"></i><span id="photoName">Choose product image</span><small>PNG, JPEG or WebP, up to 5MB</small></label>
       <input type="hidden" id="productImage">
+      <div class="product-image-preview" id="productImagePreview" hidden>
+        <div class="product-image-preview-card"><img id="productImagePreviewImg" alt="Current product image"></div>
+        <button class="secondary-button" type="button" id="removeProductImage">Remove current image</button>
+      </div>
+      <label class="upload-field"><input id="productGallery" type="file" multiple accept="image/png,image/jpeg,image/webp"><i data-lucide="images"></i><span id="galleryName">Add gallery images</span><small>Up to 12 product photos</small></label>
+      <input type="hidden" id="productImages">
+      <div class="product-gallery-preview" id="productGalleryPreview"></div>
       <label class="visibility-control"><span><strong>Visible in market</strong><small>Customers can see and order this product</small></span><input id="productActive" type="checkbox" checked></label>
+      <label class="visibility-control"><span><strong>Featured product</strong><small>Give this product priority in the market</small></span><input id="productFeatured" type="checkbox"></label>
       <p class="form-message" id="editorMessage" role="alert"></p>
       <footer class="drawer-actions"><button class="secondary-button" type="button" id="editorCancel">Cancel</button><button class="primary-button" type="submit"><i data-lucide="save"></i><span>Save product</span></button></footer>
     </form>
   </div>
-  <button class="drawer-overlay" id="editorOverlay" type="button" aria-label="Close product editor"></button>
+  <button class="drawer-overlay" id="editorOverlay" type="button" aria-label="Close open editor"></button>
 
-  <div class="drawer" id="streamEditor" aria-hidden="true">
+  <div class="drawer" id="streamEditor" role="dialog" aria-modal="true" aria-labelledby="streamEditorTitle" aria-hidden="true">
     <form id="streamForm">
-      <header class="drawer-header"><div><p class="eyebrow">Stream Vault</p><h2 id="streamEditorTitle">Upload stream</h2></div><button class="icon-button" type="button" id="streamEditorClose" title="Close" aria-label="Close"><i data-lucide="x"></i></button></header>
+      <header class="drawer-header academy-editor-header"><div><p class="eyebrow">JZ Academy / Course builder</p><h2 id="streamEditorTitle">Add learning resource</h2><p id="streamEditorSummary">Set up the course and build its curriculum.</p></div><div class="academy-editor-header-actions"><a class="secondary-button" id="streamPreviewLink" href="streams.html" target="_blank" rel="noopener"><i data-lucide="external-link"></i> Preview</a><button class="icon-button" type="button" id="streamEditorClose" title="Close" aria-label="Close"><i data-lucide="x"></i></button></div></header>
       <input type="hidden" id="streamId">
-      <div class="form-grid">
-        <label class="wide">Stream title<input id="streamTitle" required maxlength="80"></label>
-        <label>Game or category<input id="streamGame" required maxlength="50"></label>
-        <label>Stream date<input id="streamDate" type="date" required></label>
+      <input type="hidden" id="streamSource">
+      <div class="academy-editor-layout">
+        <div class="academy-editor-main">
+          <section class="academy-editor-section">
+            <div class="academy-editor-section-head"><span>01</span><div><strong>Course details</strong><small>What students see before they enroll</small></div></div>
+            <div class="form-grid">
+              <label class="wide">Course title<input id="streamTitle" required maxlength="80" placeholder="e.g. Creator Launchpad"></label>
+              <label>Content type<select id="streamType"><option value="course">Full course</option><option value="video">Single video lesson</option></select></label>
+              <label>Topic or learning path<input id="streamGame" required maxlength="50" placeholder="e.g. Creator skills"></label>
+              <label>Level<select id="streamLevel"><option value="Beginner">Beginner</option><option value="Intermediate">Intermediate</option><option value="Advanced">Advanced</option><option value="All levels">All levels</option></select></label>
+              <label>Duration<input id="streamDuration" maxlength="20" placeholder="e.g. 2 hr 30 min"></label>
+              <label>Lessons<input id="streamLessons" type="number" min="1" max="100" value="1" readonly><small class="field-helper">Calculated from the curriculum</small></label>
+              <label class="wide">Course description<textarea id="streamDescription" rows="5" maxlength="500" placeholder="Explain what students will learn and build."></textarea></label>
+            </div>
+          </section>
+          <section class="course-builder academy-editor-section" id="courseBuilder">
+            <div class="course-builder-head"><div class="academy-editor-section-head"><span>02</span><div><strong>Curriculum</strong><small>Arrange modules, lessons, videos, and downloads</small></div></div><button class="secondary-button" id="addModule" type="button"><i data-lucide="plus"></i> Add module</button></div>
+            <div class="curriculum-empty" id="curriculumEmpty"><i data-lucide="layers-3"></i><strong>No modules yet</strong><p>Add a module, then add lessons and upload their content.</p></div>
+            <div id="moduleList"></div>
+          </section>
+        </div>
+        <aside class="academy-editor-sidebar">
+          <section class="academy-editor-section">
+            <div class="academy-editor-section-head"><span>03</span><div><strong>Cover & media</strong><small>Course artwork and optional main video</small></div></div>
+            <div class="academy-cover-preview" id="streamCoverPreview"><img id="streamCoverPreviewImage" alt=""><div id="streamCoverPreviewEmpty"><i data-lucide="image"></i><span>Your course cover</span><small>16:9 works best</small></div></div>
+            <label class="upload-field academy-cover-upload"><input id="streamCoverPhoto" type="file" accept="image/png,image/jpeg,image/webp"><i data-lucide="image-plus"></i><span id="streamCoverName">Choose course cover image</span><small>PNG, JPEG or WebP, up to 5MB</small></label>
+            <input type="hidden" id="streamCoverImage">
+            <label class="upload-field" id="streamUploadField"><input id="streamFile" type="file" accept="video/mp4,video/webm,video/ogg,video/quicktime,.mov"><i data-lucide="file-video"></i><span id="streamFileName">Choose main video</span><small>For a single video lesson, up to 500MB</small></label>
+          </section>
+          <section class="academy-editor-section academy-readiness">
+            <div class="academy-editor-section-head"><span><i data-lucide="sparkles"></i></span><div><strong>Ready to publish?</strong><small id="academyReadinessSummary">Complete the course essentials</small></div></div>
+            <div class="readiness-meter"><i id="academyReadinessMeter"></i></div>
+            <div class="readiness-list">
+              <span data-readiness="details"><i data-lucide="circle"></i> Course details</span>
+              <span data-readiness="cover"><i data-lucide="circle"></i> Cover image</span>
+              <span data-readiness="curriculum"><i data-lucide="circle"></i> Curriculum</span>
+              <span data-readiness="access"><i data-lucide="circle"></i> Access configured</span>
+            </div>
+          </section>
+          <section class="academy-editor-section">
+            <div class="academy-editor-section-head"><span>04</span><div><strong>Access & publishing</strong><small>Control price and visibility</small></div></div>
+            <div class="form-grid one-column">
+              <label>Access<select id="streamAccess"><option value="free">Free access</option><option value="paid">Paid access</option></select></label>
+              <label>Price (USD)<input id="streamPrice" type="number" min="0" step="0.01" value="0"></label>
+              <label>Publish date<input id="streamDate" type="date" required></label>
+              <label>Schedule publish<input id="streamPublishAt" type="datetime-local"></label>
+            </div>
+            <label class="visibility-control"><span><strong>Published</strong><small>Show in the public Academy</small></span><input id="streamPublished" type="checkbox" checked></label>
+            <label class="visibility-control"><span><strong>Featured resource</strong><small>Prioritize this course</small></span><input id="streamFeatured" type="checkbox"></label>
+          </section>
+        </aside>
       </div>
-      <label class="upload-field" id="streamUploadField"><input id="streamFile" type="file" accept="video/mp4,video/webm,video/ogg,video/quicktime,.mov"><i data-lucide="file-video"></i><span id="streamFileName">Choose replay video</span><small>MP4, WebM, OGG or MOV, up to 500MB</small></label>
-      <label class="visibility-control"><span><strong>Published</strong><small>Show this replay in the public Stream Vault</small></span><input id="streamPublished" type="checkbox" checked></label>
-      <label class="visibility-control"><span><strong>Featured stream</strong><small>Move this replay to the front of the vault</small></span><input id="streamFeatured" type="checkbox"></label>
       <div class="upload-meter" id="streamUploadMeter" hidden><i></i><span>Uploading video...</span></div>
       <p class="form-message" id="streamEditorMessage" role="alert"></p>
-      <footer class="drawer-actions"><button class="secondary-button" type="button" id="streamEditorCancel">Cancel</button><button class="primary-button" type="submit"><i data-lucide="save"></i><span id="streamSaveLabel">Upload stream</span></button></footer>
+      <footer class="drawer-actions academy-editor-actions"><div><strong id="curriculumStatus">0 modules · 0 lessons</strong><small>Changes are saved only when you press Save.</small></div><button class="secondary-button" type="button" id="streamEditorCancel">Cancel</button><button class="primary-button" type="submit"><i data-lucide="save"></i><span id="streamSaveLabel">Save course</span></button></footer>
     </form>
   </div>
   <button class="sidebar-overlay" id="sidebarOverlay" type="button" aria-label="Close navigation"></button>

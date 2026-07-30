@@ -1,1 +1,47 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Team Access — JZ Market</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="operations.css"></head><body class="ops-page"><header><a class="brand" href="admin.html"><span>JZ</span><i>TEAM ACCESS</i></a><nav><a href="operations.html">Operations</a><a href="admin.html">Dashboard</a></nav></header><main><div class="ops-title"><p class="overline">Owner only</p><h1>TEAM.</h1></div><section class="ops-panel active"><h2>Add staff account</h2><form id="teamForm" class="inline-form"><input name="name" placeholder="Full name" required><input name="username" placeholder="Username" required><select name="role"><option value="staff">Staff</option><option value="manager">Manager</option><option value="owner">Owner</option></select><input name="password" type="password" minlength="8" placeholder="Password (8+ characters)" required><button>Add account</button></form><p id="teamMessage"></p><h2>Accounts</h2><div id="teamList" class="data-list"></div></section></main><script src="team.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b0c11">
+  <title>Team Access — JZ Market</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="operations.css">
+</head>
+<body class="ops-page team-page">
+  <header>
+    <a class="brand" href="admin.html"><span>JZ</span><i>TEAM ACCESS</i></a>
+    <nav><a href="operations.html">Operations</a><a href="admin.html">Dashboard</a></nav>
+  </header>
+  <main>
+    <div class="ops-title operations-title">
+      <div><p class="overline">Owner controls</p><h1>TEAM.</h1></div>
+      <div class="ops-health"><i></i><span><strong>Protected access</strong><small>Roles, accounts and passwords</small></span></div>
+    </div>
+
+    <section class="team-role-grid" aria-label="Access levels">
+      <article><span>01</span><strong>Owner</strong><p>Full business, staff and recovery control.</p></article>
+      <article><span>02</span><strong>Manager</strong><p>Customers, content and daily operations.</p></article>
+      <article><span>03</span><strong>Staff</strong><p>Focused access for routine store tasks.</p></article>
+    </section>
+
+    <section class="ops-panel active team-panel">
+      <header class="team-panel-head"><div><p class="overline">Invite securely</p><h2>Add staff account</h2></div><p>Give each teammate their own login. Never share the owner password.</p></header>
+      <form id="teamForm" class="inline-form team-form">
+        <label>Full name<input name="name" placeholder="e.g. Ama Mensah" required autocomplete="name"></label>
+        <label>Username<input name="username" placeholder="e.g. ama" required autocomplete="username"></label>
+        <label>Role<select name="role"><option value="staff">Staff</option><option value="manager">Manager</option><option value="owner">Owner</option></select></label>
+        <label>Temporary password<input name="password" type="password" minlength="8" placeholder="8+ characters" required autocomplete="new-password"></label>
+        <button type="submit">Add account</button>
+      </form>
+      <p id="teamMessage" role="status"></p>
+      <div class="team-list-head"><div><p class="overline">Current access</p><h2>Team accounts</h2></div><span>Change roles or disable access at any time.</span></div>
+      <div id="teamList" class="data-list"></div>
+    </section>
+  </main>
+  <script src="team.js"></script>
+</body>
+</html>

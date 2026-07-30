@@ -6,6 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "seed:admin": "node scripts/seed-admin.js",
-    "check": "node --check server.js && node --check business.js && node --check scripts/seed-admin.js && node --check shop.js && node --check checkout.js && node --check admin.js"
+    "test": "node --test tests/*.test.js",
+    "check:production": "node scripts/production-check.js",
+    "check": "node --check server.js && node --check launch-services.js && node --check business.js && node --check scripts/seed-admin.js && node --check scripts/production-check.js && node --check script.js && node --check shop.js && node --check streams.js && node --check learn.js && node --check auth.js && node --check account.js && node --check checkout.js && node --check admin.js && node --check operations.js && node --check team.js && node --check invoice.js && npm test && npm run check:production"
   }
 }
